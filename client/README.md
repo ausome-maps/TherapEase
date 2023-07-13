@@ -1,8 +1,13 @@
 # TherapEase (based on Tailwind CSS + Nuxt.js + Flowbite Starter (Vite))
 
-Get started with this starter project based on a Tailwind CSS, Nuxt.js and Flowbite configuration to help you get started building website applications based on the utility classes from Tailwind CSS and components from Flowbite. 
 
 This repository is based on the [Tailwind CSS + Nuxt.js](https://flowbite.com/docs/getting-started/nuxt-js/) guide on the Flowbite website.
+
+## Node and NPM versions
+
+Node v16.14.2
+
+npm v9.5.0
 
 ## Getting started
 
@@ -246,10 +251,3 @@ $buttonElement.addEventListener('click', () => modal.toggle());
 modal.show();
 ```
 
-## Flowbite Vue Library
-
-We also started working on a [standalone Flowbite Vue 3 UI component library](https://github.com/themesberg/flowbite-vue) which when launched in a stable version will be the recommended way of working in a Vue 3 or Nuxt.js environment. Contributions are more than welcome!
-
-## License
-
-This project is open-source under the MIT license.
