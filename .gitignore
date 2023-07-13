@@ -1,0 +1,8 @@
+client/node_modules
+client/*.log*
+client/.nuxt
+client/.nitro
+client/.cache
+client/.output
+client/.env
+client/dist
