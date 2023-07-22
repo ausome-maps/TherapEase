@@ -6,3 +6,5 @@ client/.cache
 client/.output
 client/.env
 client/dist
+__pycache__
+env
