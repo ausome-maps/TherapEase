@@ -24,6 +24,8 @@
     "nuxt": "3.0.0"
   },
   "dependencies": {
-    "flowbite": "^1.6.5"
+    "flowbite": "^1.6.5",
+    "v-viewer": "^1.6.4",
+    "viewerjs": "^1.11.4"
   }
 }
