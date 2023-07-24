@@ -6,6 +6,14 @@ TherapEase is a platform that helps in identifying location of special education
 
 The entire platform can be run using `Docker` using `docker compose`. Refer to the `docker-compose.yml` for the extensive list of services.
 
+1. Run docker compose up
+
+   ```bash
+   docker compose up
+   ```
+
+2. Open a browser and go to http://localhost:9001 for the API.
+
 ### Requirements
 
 - Docker
@@ -15,4 +23,4 @@ The entire platform can be run using `Docker` using `docker compose`. Refer to t
 
 - **Gateway**: The gateway service handles the proxying of requests to the internal services like geocoding and search.
 
-- **Geocoding**: The main geocoding service handles the translation of place names into actual latitude and longitude coordinates. This is powered by `Nominatim`.
+- **Geocoding**: The main geocoding service handles the translation of place names into actual latitude and longitude coordinates. This is powered by `Nominatim`. Can be accessed by `http://localhost:9001/geocode?q=<placename>`

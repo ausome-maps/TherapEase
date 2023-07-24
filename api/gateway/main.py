@@ -10,4 +10,4 @@ app.include_router(geocoder.router)
 
 @app.get("/")
 async def root():
-    return {"message": "hello world"}
+    return {"message": "therapease api"}

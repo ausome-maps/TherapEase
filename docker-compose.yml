@@ -4,6 +4,9 @@ services:
   gateway:
     container_name: therapease_gateway
     image: therapease_gateway
+    build:
+      context: ./api/gateway
+      dockerfile: Dockerfile
     command: uvicorn main:app --host 0.0.0.0 --port 80
     ports:
       - "9001:80"
