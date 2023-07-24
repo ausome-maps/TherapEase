@@ -28,7 +28,7 @@
 
     </div>
 
-    <transition name="slide ">
+    <transition name="slide">
       <div v-if="showModal" class="fixed inset-0 flex justify-center overflow-y-auto bg-white transition ease-in-out">
         <div class="slide-enter-active slide-leave-active w-8xl">
           <header class="text-black text-2xl cursor-pointer border h-6 flex items-center px-4 w-full" @click="closeModal">
