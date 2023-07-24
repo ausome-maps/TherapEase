@@ -8,3 +8,4 @@ client/.env
 client/dist
 __pycache__
 env
+.vscode

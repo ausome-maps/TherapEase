@@ -1,14 +1,23 @@
 version: '3.7'
 
 services:
+  gateway:
+    container_name: therapease_gateway
+    image: therapease_gateway
+    command: uvicorn main:app --host 0.0.0.0 --port 80
+    ports:
+      - "9001:80"
+    env_file:
+      - ./.env.sample
+    depends_on:
+      - geocoding
   geocoding:
     container_name: therapease_geocoding
     image: mediagis/nominatim:4.2
-    ports:
-      - "9000:8080"
+    # ports:
+    #   - "9000:8080"
     volumes:
-      - ./django:/usr/src/app/
-      - geocoding_data:/var/lib/postgresql/data/
+      - geocoding_data:/var/lib/postgresql/14/main
     shm_size: '1gb'
     env_file:
       - ./.env.sample
