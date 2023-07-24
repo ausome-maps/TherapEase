@@ -28,7 +28,7 @@
                 </svg>
               </div>
               <div>
-                <a href="tel:+09123456789">Contact: {{ facilityDetails.facilityContactNumber }} </a>
+                <a href="tel:+63{{facilityDetails.facilityContactNumber.replace(/^0+/, '')}}">Contact: {{ facilityDetails.facilityContactNumber }} </a>
               </div>
             </div>
           </li>
@@ -41,7 +41,10 @@
                 </svg>
               </div>
               <div>
-                <a href="tel:+1234567890">Website: {{facilityDetails.facilityWebsite}}</a>
+                <a :href="facilityDetails.facilityWebsite" target="_blank">
+      Website: {{ facilityDetails.facilityWebsite }}
+    </a>
+
               </div>
             </div>
           </li>

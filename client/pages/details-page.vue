@@ -68,7 +68,7 @@ export default {
         facilityName: "League of Legends",
         facilityLocation: "Pasig City",
         facilityEmail: "deinyelm@gmail.com",
-        facilityWebsite: "ausomemaps.com",
+        facilityWebsite: "https://www.ausomemaps.org",
         facilityContactNumber: "09123456789",
         latitudeValue: 12.852673,
         longitudeValue: 121.377034,
