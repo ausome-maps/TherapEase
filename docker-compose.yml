@@ -17,8 +17,6 @@ services:
   geocoding:
     container_name: therapease_geocoding
     image: mediagis/nominatim:4.2
-    # ports:
-    #   - "9000:8080"
     volumes:
       - geocoding_data:/var/lib/postgresql/14/main
     shm_size: '1gb'
