@@ -19,21 +19,21 @@
                     </div>
                 </div>
             </div>
-            <div class="grid grid-cols-4">
+            <div class="grid grid-cols-4 gap-4 my-4">
                 <div class="w-full mb-2 md:mb-0">
-                    <AppDropdown :dropdownItems="dropdownItems" :dropdownButton="dropdownId1" :dropdownMenu="dropdownId1"  />
+                    <AppDropdown class="dropdown" :dropdownItems="dropdownItems" :dropdownButton="dropdownId1" :dropdownMenu="dropdownId1"  />
 
                 </div>
                 <div class="w-full mb-2 md:mb-0">
-                    <AppDropdown :dropdownItems="dropdownItems" :dropdownButton="dropdownId2" :dropdownMenu="dropdownId2"  />
+                    <AppDropdown class="dropdown" :dropdownItems="dropdownItems" :dropdownButton="dropdownId2" :dropdownMenu="dropdownId2"  />
 
                 </div>
                 <div class="w-full mb-2 md:mb-0">
-                    <AppDropdown :dropdownItems="dropdownItems" :dropdownButton="dropdownId3" :dropdownMenu="dropdownId3"  />
+                    <AppDropdown class="dropdown" :dropdownItems="dropdownItems" :dropdownButton="dropdownId3" :dropdownMenu="dropdownId3"  />
 
                 </div>
                 <div class="w-full">
-                    <AppDropdown :dropdownItems="dropdownItems" :dropdownButton="dropdownId4" :dropdownMenu="dropdownId4" />
+                    <AppDropdown class="dropdown" :dropdownItems="dropdownItems" :dropdownButton="dropdownId4" :dropdownMenu="dropdownId4" />
 
                 </div>
             </div>
@@ -54,27 +54,23 @@ export default {
     data() {
         return {
             searchText: '',
-            isPASPAccredited: false,
             dropdownId1: 'dropdown1',
             dropdownId2: 'dropdown2',
             dropdownId3: 'dropdown3',
             dropdownId4: 'dropdown4',
             dropdownItems: [
-            'All',
-            'Basketball',
-            'Volleyball',
-            'Badminton',
-      ],
+  { id: 1, label: 'Dashboardss' },
+  { id: 2, label: 'Settings' },
+  { id: 3, label: 'Earnings' },
+  { id: 4, label: 'Sign out' }
+]
         }
     },
-    methods: {
-        togglePASPAccreditation() {
-            this.isPASPAccredited = !this.isPASPAccredited;
-        }
-    }
+
 }
 </script>
   
 <style scoped>
+
     </style>
   

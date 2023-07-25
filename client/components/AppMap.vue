@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full w-full rounded-xl">
+    <div class="h-full w-full rounded-xl -z-10 relative">
       <l-map ref="map" v-model:zoom="zoom" :center="mapCenter" :use-global-leaflet="false">
         <l-tile-layer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
