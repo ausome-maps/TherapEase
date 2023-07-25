@@ -18,14 +18,23 @@
             </div>
           </template>
           <template v-else>
-            <div class="relative z-[1]">
-              <div class="rounded mx-[20px] justify-center flex">
-                <div class="w-[60%] border shadow-md rounded-3xl">
-                    <AppFilter />
-                </div>
-              </div>
+    <div class="relative z-[1]">
+        <div class="rounded mx-[20px] justify-center flex flex-col"> <!-- Changed from flex to flex-col -->
+            <div class="w-[60%] border shadow-md rounded-3xl mx-auto">
+                <AppFilter />
             </div>
-          </template>
+            <div class="grid grid-cols-2 gap-2 mt-8 h-[100%] min-h-[800px]"> <!-- Added mt-4 for some top margin -->
+                <div class="">
+                    `asd`
+                </div>
+                <div >
+                  <AppMap :latitude="12.852673" :longitude="121.377034"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
           
           <div class="h-[100px]"></div>
         </div>
