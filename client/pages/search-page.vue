@@ -1,11 +1,12 @@
 <template>
-  <div class="relative z-1 w-full flex flex-col justify-center rounded mx-[20px]">
+  <div class="relative z-1 w-full flex flex-col justify-center rounded">
       <div class="relative z-20 max-w-[850px] w-[60%] border shadow-md rounded-3xl mx-auto">
           <AppFilter />
       </div>
       <div class="flex flex-col sm:flex-row mt-8 h-[100%] min-h-[800px] gap-4">
           <div class="w-full lg:max-w-[850px] flex-grow">
               <AppListingHeader />
+              <AppCardList />
           </div>
           <div class="w-full lg:flex-grow mr-8 h-[99vh] z-10">
               <AppMap :latitude="12.852673" :longitude="121.377034" />

@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-4 gap-4">
+    <div class="grid grid-cols-4 gap-4 px-5">
         <div class="items-center flex justify-center">
             Showing {{ filteredFacilities.length }} of {{ facilities.length }} results
         </div>
