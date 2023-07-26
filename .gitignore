@@ -9,3 +9,4 @@ client/dist
 __pycache__
 env
 .vscode
+.mypy_cache

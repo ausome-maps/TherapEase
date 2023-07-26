@@ -3,7 +3,7 @@ version: '3.7'
 services:
   gateway:
     container_name: therapease_gateway
-    image: therapease_gateway
+    # image: therapease_gateway
     build:
       context: ./api/gateway
       dockerfile: Dockerfile
