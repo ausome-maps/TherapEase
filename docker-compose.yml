@@ -9,6 +9,8 @@ services:
     command: npm run dev
     volumes:
       - ./client:/code/app
+    env_file:
+      - ./.env.sample
     ports:
       - "9002:3000"
     depends_on:
