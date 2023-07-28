@@ -1,3 +1,4 @@
+import dependencies
 from fastapi import APIRouter, Request
 from libs.search.full_text import FullTextSearch
 
@@ -17,4 +18,4 @@ async def search_url(request: Request):
     if len(request.query_params) == 0:
         return {"message": "No supplied query for searching."}
     fts = FullTextSearch()
-    return fts.get(request.query_params)
+    return fts.get(request.query_params, dependencies.SEARCH_URL + '/facilities/_search')

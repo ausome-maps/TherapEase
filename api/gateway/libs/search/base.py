@@ -19,7 +19,7 @@ class BaseSearch:
         if token is not None:
             self.headers["Authorization"] = f"Token {token}"
 
-    def get(self, params: dict) -> Response:
+    def get(self, params: dict, url:Optional[str]=None) -> Response:
         """
          Get data from external search endpoint. This is a wrapper around requests. get that handles status codes that aren't 200
          
@@ -27,9 +27,12 @@ class BaseSearch:
          
          @return JSON response or error message if something went wrong
         """
-        resp = requests.get(self.url, params=params, headers=self.headers)
+        url_get = self.url
+        if url is not None: 
+            url_get = url
+        resp = requests.get(url_get, params=params, headers=self.headers)
         # Returns a JSON string with the response.
-        if resp.status_code != 200: return {"detail": f"{self.search_type} query failed.", "status_code": resp.status_code}
+        if resp.status_code != 200: return {"detail": f"{self.search_type} query failed. Due to {resp.json()['error']}", "status_code": resp.status_code}
         data = resp.json()
         return data
 
