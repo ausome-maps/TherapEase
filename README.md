@@ -16,8 +16,8 @@ The entire platform can be run using `Docker` using `docker compose`. Refer to t
 
 ### Requirements
 
-- Docker
-- docker compose
+- [Docker](https://docs.docker.com/desktop/wsl/)
+- [docker compose](https://docs.docker.com/compose/install/)
 
 ## Services
 
