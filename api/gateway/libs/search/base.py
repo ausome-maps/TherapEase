@@ -21,25 +21,28 @@ class BaseSearch:
 
     def get(self, params: dict) -> Response:
         """
-         Make a GET request to the API. This is a convenience method for requests.
+         Get data from external search endpoint. This is a wrapper around requests. get that handles status codes that aren't 200
          
-         @param params - Parameters to be sent with the request. These will be encoded as query parameters in the request
+         @param params - Parameters to be passed to the request
          
-         @return : class : ` Response `
+         @return JSON response or error message if something went wrong
         """
         resp = requests.get(self.url, params=params, headers=self.headers)
+        # Returns a JSON string with the response.
         if resp.status_code != 200: return {"detail": f"{self.search_type} query failed.", "status_code": resp.status_code}
         data = resp.json()
-        print(data)
-        data["status_code"] = 200
         return data
 
     def post(self, data: dict) -> Response:
         """
-         Send a POST request to the API. This is a convenience method for making a POST request to the API and returning the response object
-         
-         @param data - The data to send in the request
-         
-         @return The response object from the API or None if something
+        Post data to external search endpoint. This is a wrapper around requests. post that handles errors and returns a dict with status code and error message
+        
+        @param data - dict to be sent as POST body
+        
+        @return dict with response from API or error message if status
         """
-        return requests.post(self.url, data=data, headers=self.headers)
+        resp = requests.post(self.url, data=data, headers=self.headers)
+        # Returns a JSON string with the response.
+        if resp.status_code >= 400: return {"detail": f"{self.search_type} query failed.", "status_code": resp.status_code}
+        data = resp.json()
+        return data

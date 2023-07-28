@@ -7,7 +7,7 @@ router = APIRouter()
 @router.get("/search")
 async def search_url(request: Request):
     """
-     Search for full text. This is a shortcut for : func : ` FullTextSeaerch. get `
+     Search for full text. This is a shortcut for : func : ` FullTextSearch. get `
      
      @param request - The request to get the URL from.
      
