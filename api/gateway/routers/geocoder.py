@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from fastapi import Request
-from libs.search.nominatim import NominatimSeaerch
+from libs.search.nominatim import NominatimSearch
 
 router = APIRouter()
 
@@ -15,8 +15,7 @@ async def geocode_url(request: Request):
      @return The URL to be used to retrieve the location and its location's latitude and longitude.
     """
     # Return the geocode_url as a JSON string.
-    print('hello')
-    if request is None:
+    if len(request.query_params) == 0:
         return {"message": "No supplied query for geocoding."}
-    ns = NominatimSeaerch()
-    return ns.get(request.query_params).json()
+    ns = NominatimSearch()
+    return ns.get(request.query_params)

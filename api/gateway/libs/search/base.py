@@ -5,7 +5,7 @@ Response =  requests.models.Response
 
 class BaseSearch:
 
-    def __init__(self, url: str, token:Optional[str]=None):
+    def __init__(self, url: str, token:Optional[str]=None, search_type:Optional[str]="search"):
         """
          Initialize the object with the url and token. This is the constructor for the Request
          
@@ -14,6 +14,7 @@ class BaseSearch:
         """
         self.url = url
         self.headers = {"Content-type": "application/json"}
+        self.search_type = search_type
         # Set the Authorization header to the token.
         if token is not None:
             self.headers["Authorization"] = f"Token {token}"
@@ -26,7 +27,12 @@ class BaseSearch:
          
          @return : class : ` Response `
         """
-        return requests.get(self.url, params=params, headers=self.headers)
+        resp = requests.get(self.url, params=params, headers=self.headers)
+        if resp.status_code != 200: return {"detail": f"{self.search_type} query failed.", "status_code": resp.status_code}
+        data = resp.json()
+        print(data)
+        data["status_code"] = 200
+        return data
 
     def post(self, data: dict) -> Response:
         """
