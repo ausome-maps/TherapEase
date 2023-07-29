@@ -9,7 +9,9 @@ The geocoding service of TherapEase uses `Nominatim` as the foundation service.
 
 ## How to Run
 
-This will run the `Nominatim` service using Docker. For a full list of parameters and other documentation refer to the following [link](https://github.com/mediagis/nominatim-docker/tree/master/4.2)
+This will run the `Nominatim` service using Docker. For a full list of parameters and other documentation refer to the following [link].(https://github.com/mediagis/nominatim-docker/tree/master/4.2)
+
+_Initial start will may take a while since the data is being downloaded and stored into the database._
 
 ```bash
   docker run -it \
@@ -25,11 +27,11 @@ This will run the `Nominatim` service using Docker. For a full list of parameter
 
 Example. `http://localhost:9080/?q=manila`
 
-- q=<free-form query>
-- amenity=<name and/or type of POI>
-- street=<housenumber> <streetname>
-- city=<city>
-- county=<county>
-- state=<state>
-- country=<country>
-- postalcode=<postalcode>
+- q=`<free-form query>`
+- amenity=`<name and/or type of POI>`
+- street=`<housenumber> <streetname>`
+- city=`<city>`
+- county=`<county>`
+- state=`<state>`
+- country=`<country>`
+- postalcode=`<postalcode>`
