@@ -14,15 +14,15 @@ services:
     ports:
       - "9002:3000"
     depends_on:
-      - gateway
-  gateway:
-    container_name: therapease_gateway
+      - api
+  api:
+    container_name: therapease_api
     build:
-      context: ./api/gateway
+      context: ./api/app
       dockerfile: Dockerfile
     command: uvicorn main:app --host 0.0.0.0 --port 80 --reload
     volumes:
-      - ./api/gateway:/code
+      - ./api/app:/code
     ports:
       - "9001:80"
     env_file:

@@ -21,7 +21,7 @@ The entire platform can be run using `Docker` using `docker compose`. Refer to t
 
 ## Services
 
-- **Gateway**: The gateway service handles the proxying of requests to the internal services like geocoding and search.
+- **API**: The main API service handles the proxying of requests to the internal services like geocoding and search.
 
 - **Geocoding**: The main geocoding service handles the translation of place names into actual latitude and longitude coordinates. This is powered by `Nominatim`. Can be accessed by `http://localhost:9001/geocode?q=<placename>`
 

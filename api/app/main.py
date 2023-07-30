@@ -9,4 +9,4 @@ app.include_router(search.router)
 
 @app.get("/")
 async def root():
-    return {"detail": "therapease gateway"}
+    return {"detail": "therapease api"}

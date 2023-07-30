@@ -1,6 +1,6 @@
-# TherapEase Gateway
+# TherapEase API
 
-The TherapEase gateway is a proxy for the underlying services of TherapEase.
+The TherapEase API is a proxy for the underlying services of TherapEase.
 
 ## Requirements
 
