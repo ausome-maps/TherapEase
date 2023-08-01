@@ -114,12 +114,12 @@ This data model describes a single feature in Ausome Maps, representing a therap
      }
      ```
 
-   - **city (String)**
-     City where the therapy center is situated ("Marikina City").
+   - **city_province (String)**
+     City or province where the therapy center is situated.
       ```
       "properties": {
                  ...
-                "city": "Marikina City",
+                "city_province": "Marikina City",
                  ...
      }
      ```
