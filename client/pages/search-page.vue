@@ -1,20 +1,31 @@
 <template>
   <div class="relative z-1 w-full flex flex-col justify-center rounded">
-      <div class="relative z-20 max-w-[850px] w-[60%] border shadow-md rounded-3xl mx-auto">
-          <AppFilter />
-      </div>
-      <div class="flex flex-col sm:flex-row mt-8 h-[100%] min-h-[800px] gap-4">
-          <div class="w-full lg:max-w-[850px] flex-grow">
-              <AppListingHeader />
-              <AppCardList />
+
+    <div class="flex flex-col sm:flex-row h-[100%] min-h-[800px] gap-4">
+      <div class="w-full lg:max-w-[850px] flex-grow">
+        <ClientOnly>
+          <div class="relative p-5">
+            <AppSearchAndFilter />
           </div>
-          <div class="w-full lg:flex-grow mr-8 h-[99vh] z-10">
-              <AppMap :latitude="12.852673" :longitude="121.377034" />
-          </div>
+
+
+          <AppListingHeader :view-mode="viewMode" @change-view-mode="handleChangeViewMode" :facilities="facilities"
+            :filteredFacilities="filteredFacilities" />
+
+          <AppCardList v-if="viewMode === 'card'" :facilities="facilities" :filteredFacilities="filteredFacilities" />
+          <AppListView v-else-if="viewMode === 'list'" :facilities="facilities"
+            :filteredFacilities="filteredFacilities" />
+
+        </ClientOnly>
       </div>
+      <div class="w-full lg:flex-grow mr-8 h-[99vw] z-10">
+        <AppMap :latitude="12.852673" :longitude="121.377034" />
+      </div>
+    </div>
   </div>
   <div class="h-[100px]"></div>
 </template>
+
   
   
   
@@ -23,77 +34,123 @@
 export default {
   data() {
     return {
-      carouselImages: [
-        'https://plus.unsplash.com/premium_photo-1689177357836-52c9d90d3d6f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8&auto=format&fit=crop&w=500&q=60',
-        'https://plus.unsplash.com/premium_photo-1689177357836-52c9d90d3d6f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8&auto=format&fit=crop&w=500&q=60',
-        'https://plus.unsplash.com/premium_photo-1681131449465-d5245b9bddfd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YmFubmVyfGVufDB8fDB8fHww&auto=format&fit=crop&w=600&q=60',
-        'https://plus.unsplash.com/premium_photo-1689177357836-52c9d90d3d6f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8&auto=format&fit=crop&w=500&q=60',
-        'https://plus.unsplash.com/premium_photo-1689177357836-52c9d90d3d6f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8&auto=format&fit=crop&w=500&q=60',
-        'https://plus.unsplash.com/premium_photo-1681131449465-d5245b9bddfd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YmFubmVyfGVufDB8fDB8fHww&auto=format&fit=crop&w=600&q=60',
-        'https://plus.unsplash.com/premium_photo-1689177357836-52c9d90d3d6f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8&auto=format&fit=crop&w=500&q=60',
-        'https://plus.unsplash.com/premium_photo-1689177357836-52c9d90d3d6f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8&auto=format&fit=crop&w=500&q=60',
-        'https://plus.unsplash.com/premium_photo-1681131449465-d5245b9bddfd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YmFubmVyfGVufDB8fDB8fHww&auto=format&fit=crop&w=600&q=60',
-      ],
-      facilityDetailsObject: {
-        facilityOwner: "Dein Yelmoc",
-        facilityDateCreated: "2021-05-25",
-        facilityName: "League of Legends",
-        facilityLocation: "Pasig City",
-        facilityEmail: "deinyelm@gmail.com",
-        facilityWebsite: "https://www.ausomemaps.org",
-        facilityContactNumber: "09123456789",
-        latitudeValue: 12.852673,
-        longitudeValue: 121.377034,
-        accreditation: true,
-        facilityServices: [
-          {
-            id: 1,
-            name: 'Service 1',
-            subItems: [
-              { id: 1, name: 'Sub Item 1' },
-              { id: 2, name: 'Sub Item 2' },
-              // Add more sub-items here as needed
-            ],
-          },
-          {
-            id: 2,
-            name: 'Service 2',
-            subItems: [
-              { id: 1, name: 'Sub Item 1' },
-              { id: 2, name: 'Sub Item 2' },
-              // Add more sub-items here as needed
-            ],
-          },
-          // Add more services here as needed
-        ],
-        facilityAmenities: [
-          {
-            id: 1,
-            name: 'Amenity 1',
-            subItems: [
-              { id: 1, name: 'Sub Item 1' },
-              { id: 2, name: 'Sub Item 2' },
-              // Add more sub-items here as needed
-            ],
-          },
-          {
-            id: 2,
-            name: 'Amenity 2',
-            subItems: [
-              { id: 1, name: 'Sub Item 1' },
-              { id: 2, name: 'Sub Item 2' },
-              // Add more sub-items here as needed
-            ],
-          },
-          // Add more amenities here as needed
-        ],
-        facilityAddress: "123 Main Street, Barangay Kapitolyo,Pasig City, Metro Manila,Philippines",
-        listingDescription: "Step into our serene therapy room, a sanctuary designed to foster healing and personal growth. Embrace tranquility as soft hues and soothing aromas envelop you, creating a nurturing atmosphere. Our therapy room provides a safe haven where expert therapists guide you towards self-discovery and emotional well-being. With comfortable furnishings and gentle lighting, it's a space where you can explore your innermost thoughts and feelings, unburden yourself, and embark on a transformative journey towards a happier, healthier you."
-      }
-      ,
-      isMobile: false
-    }
+      filteredFacilities: [{}],
+      viewMode: 'card',
+      facilities: [
+        {
+          "id": 1,
+          "facilityUrl": "https://example.com/facility1",
+          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
+          "facilityName": "Harmony - Accessible Accommodations",
+          "averageRating": 4.5,
+          "facilityRate": 120.99,
+          "facilityLocation": "123 Example St, San Francisco, CA 94105",
+          "services": [{}]
+        }
+        ,
+        {
+          "id": 2,
+          "facilityUrl": "https://example.com/facility2",
+          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
+          "facilityName": "Red Tomato",
+          "averageRating": 4.8,
+          "facilityRate": 60.0,
+          "facilityLocation": "123 Example St, San Francisco, CA 94105",
+          "services": [{}]
+        }
+        ,
+        {
+          "id": 3,
+          "facilityUrl": "https://example.com/facility3",
+          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
+          "facilityName": "AccessTech - Assistive Technology Center",
+          "averageRating": 4.2,
+          "facilityRate": null,
+          "facilityLocation": "123 Example St, San Francisco, CA 94105",
+          "services": [{}]
+        }
+        ,
+        {
+          "id": 4,
+          "facilityUrl": "https://example.com/facility4",
+          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
+          "facilityName": "Aquatic Haven - Swimming Facility",
+          "averageRating": 4.6,
+          "facilityRate": 30.0,
+          "facilityLocation": "123 Example St, San Francisco, CA 94105",
+          "services": [{}]
+        }
+        ,
+        {
+          "id": 5,
+          "facilityUrl": "https://example.com/facility5",
+          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
+          "facilityName": "Paws & Partners - Service Animals Welcome",
+          "averageRating": 4.9,
+          "facilityRate": null,
+          "facilityLocation": "123 Example St, San Francisco, CA 94105",
+          "services": [{}]
+        }
+        ,
+        {
+          "id": 6,
+          "facilityUrl": "https://example.com/facility6",
+          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
+          "facilityName": "SoundSense - Hearing Loop System",
+          "averageRating": 4.4,
+          "facilityRate": 80.0,
+          "facilityLocation": "123 Example St, San Francisco, CA 94105",
+          "services": [{}]
+        }
+        ,
+        {
+          "id": 7,
+          "facilityUrl": "https://example.com/facility7",
+          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
+          "facilityName": "FlexFit - Fitness Center",
+          "averageRating": 4.7,
+          "facilityRate": 50.0,
+          "facilityLocation": "123 Example St, San Francisco, CA 94105",
+          "services": [{}]
+        }
+        ,
+        {
+          "id": 8,
+          "facilityUrl": "https://example.com/facility8",
+          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
+          "facilityName": "AscendElevate",
+          "averageRating": 4.3,
+          "facilityRate": null,
+          "facilityLocation": "123 Example St, San Francisco, CA 94105",
+          "services": [{}]
+        }
+        ,
+        {
+          "id": 9,
+          "facilityUrl": "https://example.com/facility9",
+          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
+          "facilityName": "ParkEase",
+          "averageRating": 4.1,
+          "facilityRate": 10.0,
+          "facilityLocation": "123 Example St, San Francisco, CA 94105",
+          "services": [{}]
+        }
+        ,
+        {
+          "id": 10,
+          "facilityUrl": "https://example.com/facility10",
+          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
+          "facilityName": "BraillePath",
+          "averageRating": 4.5,
+          "facilityRate": null,
+          "facilityLocation": "123 Example St, San Francisco, CA 94105",
+          "services": [{}]
+        }
+      ]
+
+    };
   },
+
   mounted() {
     this.checkIfMobile(); // Initial check
 
@@ -108,8 +165,13 @@ export default {
     checkIfMobile() {
       // Check if the viewport width is less than or equal to 768px (tablet width)
       this.isMobile = window.visualViewport.width <= 768;
+    },
+    handleChangeViewMode(newViewMode) {
+      this.viewMode = newViewMode;
+      console.log(this.viewMode);
     }
   }
+
 }
 </script>
   
