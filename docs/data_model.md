@@ -182,6 +182,16 @@ This data model describes a single feature in Ausome Maps, representing a therap
                  ...
      }
      ```
+     
+   - **alt_ email_address (String)**
+     Alternative email address of the therapy center.
+     ```
+      "properties": {
+                 ...
+                "alt_email_address": "altemailadd@domain.com",
+                 ...
+     }
+     ```
 
    - **website (String)**
      Website URL of the therapy center. Must be a working link to the website.
