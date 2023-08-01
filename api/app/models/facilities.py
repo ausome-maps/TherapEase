@@ -5,8 +5,7 @@ from typing import Dict, List
 from pydantic import BaseModel, Field
 
 
-class Facilities(BaseModel):
-    geometry: Dict
+class FaciltyProperties(BaseModel):
     start: datetime
     end: datetime
     info_src_name: str | None = ""
@@ -25,4 +24,8 @@ class Facilities(BaseModel):
     other_services: Dict | None = {}
     caters_to: List | None = []
     images: List | None = []
+
+class Facilities(BaseModel):
+    geometry: Dict
+    properties: FaciltyProperties
     id: int
