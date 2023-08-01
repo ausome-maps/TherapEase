@@ -1,0 +1,64 @@
+version: '3.7'
+
+services:
+  frontend:
+    container_name: therapease_frontend
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    command: npm run dev
+    volumes:
+      - ./client:/code/app
+    env_file:
+      - ./.env.sample
+    ports:
+      - "9002:3000"
+    depends_on:
+      - api
+  api:
+    container_name: therapease_api
+    build:
+      context: ./api/app
+      dockerfile: Dockerfile
+    command: uvicorn main:app --host 0.0.0.0 --port 80 --reload
+    volumes:
+      - ./api/app:/code
+    ports:
+      - "9001:80"
+    env_file:
+      - ./.env.sample
+    depends_on:
+      - geocoding
+      - search
+  geocoding:
+    container_name: therapease_geocoding
+    image: mediagis/nominatim:4.2
+    volumes:
+      - geocoding_data:/var/lib/postgresql/14/main
+    shm_size: '1gb'
+    env_file:
+      - ./.env.sample
+  search:
+    container_name: therapease_search
+    image: opensearchproject/opensearch:2.9.0
+    environment:
+      - cluster.name=opensearch-cluster
+      - node.name=therapease_search # Name the node that will run in this container
+      - discovery.seed_hosts=therapease_search
+      - bootstrap.memory_lock=true # Disable JVM heap memory swapping
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m" # Set min and max JVM heap sizes to at least 50% of system RAM
+      - DISABLE_SECURITY_PLUGIN=true # this should be removed if SSL is configured
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1 # Set memlock to unlimited (no soft or hard limit)
+        hard: -1
+      nofile:
+        soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
+        hard: 65536
+    volumes: 
+      - search_data:/usr/share/opensearch/data
+
+volumes:
+  geocoding_data:
+  search_data: 
