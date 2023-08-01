@@ -1,55 +1,79 @@
-**Data Model Description**
+# Data Model Description
 
-This entry contains various attributes describing the therapy center's location, contact information, services provided, and more. Below is a detailed description of each attribute:
+This data model describes a single feature in Ausome Maps, representing a therapy center for differently-abled individuals. The feature has both geometric and property information. Below is the breakdown of each part of the data model:
 
-1. **type:** The type of the feature, which is "Point" in this case, indicating that the data represents a geographic point location.
+1. **geometry**
 
-2. **geometry:** Contains the geographical coordinates (longitude, latitude, and altitude) of the therapy center, represented as a "Point" type.
+   - **type (Point)**
+   
+      The type of the feature, which is "Point" in this case, indicating that the data represents a geographic point location.
 
-3. **properties:** This section includes various properties of the therapy center:
+   - **coordinates (LatLng)**
+  
+     Contains the geographical coordinates (longitude, latitude, and altitude) of the therapy center, represented as a "Point" type.
 
-   - **start:** The start date and time of the feature entry (in the format "YYYY-MM-DDTHH:mm:ss.sss+08:00").
+2. **properties**
 
-   - **end:** The end date and time of the feature entry (in the format "YYYY-MM-DDTHH:mm:ss.sss+08:00").
+   This section includes various properties of the therapy center:
 
-   - **info_src_name:** Name of the information source ("Garry Louie Sabado" in this case).
+   - **date_updated (DateTime)**
 
-   - **info_src_designation:** Designation/role of the information source ("Managing Director").
+     The end date and time of the feature entry (in the format "YYYY-MM-DDTHH:mm:ss.sss+08:00").
 
-   - **placename:** Name of the therapy center ("K-Time Early Intervention Therapy Center").
+   - **info_src_name (String)**
 
-   - **address:** Physical address of the therapy center ("20 Pangustura St., Midtown Subd. Ph-3, San Roque, Marikina City, Metro Manila, 1801").
+     Name of the information source. ("Garry Louie Sabado" in this case)
 
-   - **region:** Region where the therapy center is located ("NCR – National Capital Region").
+   - **info_src_designation (String)**
 
-   - **city:** City where the therapy center is situated ("Marikina City").
+     Designation/role of the information source ("Managing Director").
 
-   - **landmarks_desc:** Description of nearby landmarks ("Right beside 20 Studio Hotel").
+   - **placename (String)**
+     Name of the therapy center ("K-Time Early Intervention Therapy Center").
 
-   - **contact_number:** Primary contact number of the therapy center ("09175136863").
+   - **address (String)**
+     Physical address of the therapy center ("20 Pangustura St., Midtown Subd. Ph-3, San Roque, Marikina City, Metro Manila, 1801").
 
-   - **alt_contact_number:** Alternative contact number ("02-8635-6808").
+   - **region (String)**
+     Region where the therapy center is located ("NCR – National Capital Region").
 
-   - **email_address:** Email address of the therapy center ("ktimeeic@gmail.com").
+   - **city (String)**
+     City where the therapy center is situated ("Marikina City").
 
-   - **website:** Website URL of the therapy center ("https://ktimeeic.wixsite.com/kteic").
+   - **landmarks_desc (String)**
+     Description of nearby landmarks ("Right beside 20 Studio Hotel").
 
-   - **facebook:** Indicates if the therapy center has a presence on Facebook ("K-Time Early Intervention Therapy Center").
+   - **contact_number (String)**
+     Primary contact number of the therapy center ("09175136863").
 
-   - **instagram:** Indicates if the therapy center has a presence on Instagram ("ktimeph").
+   - **alt_contact_number (String)**
+     Alternative contact number ("02-8635-6808").
 
-   - **caters_to:** Describes the target populations the therapy center caters to ("Pediatric Population Adolescent Population Adult Population").
+   - **email_address (String)**
+     Email address of the therapy center ("ktimeeic@gmail.com").
 
-   - **Various services offered:** The following attributes indicate the types of services offered by the therapy center, specifying whether they are provided to individuals, groups, or through teletherapy, as well as home service options.
+   - **website (String)**
+     Website URL of the therapy center ("https://ktimeeic.wixsite.com/kteic").
 
-   - **other_services:** Description of other services offered, including "Behavioral Therapy" with different delivery options (Teletherapy, On-Site, Home Service).
+   - **facebook (String)**
+     Indicates if the therapy center has a presence on Facebook ("K-Time Early Intervention Therapy Center").
 
-   - **img_1, img_2, img_3:** Names of image files associated with the feature (possibly showcasing the therapy center or its services).
+   - **instagram (String)**
+     Indicates if the therapy center has a presence on Instagram ("ktimeph").
 
-   - **img_1_url, img_2_url, img_3_url:** URLs to access the respective images online.
+   - **caters_to (String)**
+     Describes the target populations the therapy center caters to ("Pediatric Population Adolescent Population Adult Population").
 
-   - **consent:** Indicates consent for data submission ("OK" in this case).
+   - **Various services offered**
+     The following attributes indicate the types of services offered by the therapy center, specifying whether they are provided to individuals, groups, or through teletherapy, as well as home service options.
 
-   - **_id, _uuid, _submission_time, _status, __version__, _index:** Internal identifiers and metadata associated with the feature entry.
+   - **other_services (String)**
+     Description of other services offered, including "Behavioral Therapy" with different delivery options (Teletherapy, On-Site, Home Service).
+
+   - **img_1, img_2, img_3 (String)**
+     Names of image files associated with the feature (possibly showcasing the therapy center or its services).
+
+   - **img_1_url, img_2_url, img_3_url (String)**
+     URLs to access the respective images online.
 
 This data model description provides a comprehensive overview of the feature entry for the K-Time Early Intervention Therapy Center on Ausome Maps, capturing essential details about the center's location, services, contact information, and related media. It also highlights the different types of therapy options available and the target populations catered to by the therapy center.
