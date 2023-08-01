@@ -4,8 +4,8 @@ from .base import BaseSearch
 
 
 class FullTextSearch(BaseSearch):
-    def __init__(self, index=None):
+    def __init__(self):
         """
-        Initialize search object.
+        Initialize search service.
         """
         super().__init__(dependencies.SEARCH_URL, dependencies.SEARCH_TOKEN, "search")

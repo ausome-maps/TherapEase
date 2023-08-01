@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.10-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 ENV WORKDIR=/usr/src/app
@@ -24,4 +24,4 @@ RUN chown -R $USER:$USER $APP_HOME
 
 USER $USER
 
-ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+ENTRYPOINT ["/code/entrypoint.sh"]
