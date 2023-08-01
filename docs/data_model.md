@@ -184,23 +184,20 @@ This data model describes a single feature in Ausome Maps, representing a therap
      }
      ```
 
-   - **facebook (String)**
-     Indicates if the therapy center has a presence on Facebook. Must be a working facebook page or account url.
+   - **social_media (Object)**
+     Social media accounts available/owned by the therapy center/school.
+
+        *facebook* - Indicates if the therapy center has a presence on Facebook. Must be a working facebook page or account url.
+     
+        *instagram* - Indicates if the therapy center has a presence on Instagram. Must be the Instagram handle of the therapy center or school.
 
      ```
       "properties": {
                  ...
-                "facebook": "https://www.facebook.com/ausomemaps/",
-                 ...
-     }
-     ```
-
-   - **instagram (String)**
-     Indicates if the therapy center has a presence on Instagram. Must be the Instagram handle of the therapy center or school.
-     ```
-      "properties": {
-                 ...
-                "instagram": "ausomemapsph",
+                "social_media": {
+                    "facebook":"https://www.facebook.com/ausomemaps/",
+                    "instagram": "ausomemapsph",
+                    },
                  ...
      }
      ```
@@ -224,32 +221,32 @@ This data model describes a single feature in Ausome Maps, representing a therap
       | Individual           | 1         |
       | Group                | 2         |
       | Individual and Group | 3         |
-  
-      | Services offered                 | Key               |
-      |----------------------------------|-------------------|
-      | Speech-Language Therapy          | sltherapy         |
-      | Speech-Language Pathology        | sltherapy         |
-      | Occupational Therapy             | sltherapy         |
-      | Behavioral Therapy               | sltherapy         |
-      | Physical Therapy                 | sltherapy         |
-      | Life Skills Training             | sltherapy         |
-      | Social Skills Training           | sltherapy         |
-      | Integration                      | sltherapy         |
-      | Integration Program              | sltherapy         |
-      | Job Coaching                     | sltherapy         |
-      | Special Education                | sltherapy         |
-      | SpEd Tutorials                   | sltherapy         |
-      | Parent Coaching                  | sltherapy         |
-      | Education Session for Families   | sltherapy         |
-      | Feeding                          | sltherapy         |
-      | Counseling                       | sltherapy         |
-      | Psychotherapy                    | sltherapy         |
-      | ABA Therapy                      | sltherapy         |
-      | MNRI                             | sltherapy         |
-      | Sensory Integration              | sltherapy         |
-      | Play School                      | sltherapy         |
-      | Dysphagia Management             | sltherapy         |
-      | Orthoses (Splinting)             | sltherapy         |
+
+      | Key                     | Label                           |
+      |-------------------------|---------------------------------|
+      | speechlanguagetherapy   | Speech-Language Therapy         |
+      | speechlanguagepathology | Speech-Language Pathology       |
+      | occupationaltherapy     | Occupational Therapy            |
+      | behavioraltherapy       | Behavioral Therapy              |
+      | physicaltherapy         | Physical Therapy                |
+      | lifeskillstraining      | Life Skills Training            |
+      | socialskillstraining    | Social Skills Training          |
+      | integration             | Integration                     |
+      | integrationprogram      | Integration Program             |
+      | jobcoaching             | Job Coaching                    |
+      | specialeducation        | Special Education               |
+      | spedtutorials           | SpEd Tutorials                  |
+      | parentcoaching          | Parent Coaching                 |
+      | educationsessionforfamilies | Education Session for Families |
+      | feeding                 | Feeding                         |
+      | counseling              | Counseling                      |
+      | psychotherapy           | Psychotherapy                   |
+      | abatherapy              | ABA Therapy                     |
+      | mnri                    | MNRI                            |
+      | sensoryintegration      | Sensory Integration             |
+      | playschool              | Play School                     |
+      | dysphagiamanagement     | Dysphagia Management            |
+      | orthoses                | Orthoses (Splinting)            |
 
      ```
       "properties": {
