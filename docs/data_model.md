@@ -21,8 +21,7 @@ This data model describes a single feature in Ausome Maps, representing a therap
                 "type": "Point",
                 "coordinates": [
                     121.545819,
-                    16.682762,
-                    0
+                    16.682762
                 ]
      ```
 
