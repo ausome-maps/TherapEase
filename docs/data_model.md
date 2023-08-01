@@ -266,6 +266,10 @@ This data model describes a single feature in Ausome Maps, representing a therap
       | playschool              | Play School                     |
       | dysphagiamanagement     | Dysphagia Management            |
       | orthoses                | Orthoses (Splinting)            |
+      | homeschoolfacilitation  | Homeschool Facilitation         |
+      | rehabconsultation  | Rehab Consultation         |
+     
+   
 
      ```
       "properties": {
