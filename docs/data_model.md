@@ -124,7 +124,7 @@ This data model describes a single feature in Ausome Maps, representing a therap
      }
      ```
 
-      - **province (String)**
+   - **province (String)**
      Province where the therapy center is situated.
       ```
       "properties": {
