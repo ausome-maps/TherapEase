@@ -2,7 +2,10 @@
 
 This data model describes a single feature in Ausome Maps, representing a therapy center for differently-abled individuals. The feature has both geometric and property information. Below is the breakdown of each part of the data model:
 
-1. **geometry**
+1. **id**
+   Unique identifier for this entry/feature/row.
+
+2. **geometry**
 
    - **type (Point)**
    
@@ -23,7 +26,7 @@ This data model describes a single feature in Ausome Maps, representing a therap
                 ]
      ```
 
-2. **properties**
+3. **properties**
 
    This section includes various properties of the therapy center:
 
@@ -37,6 +40,9 @@ This data model describes a single feature in Ausome Maps, representing a therap
                  ...
      }
      ```
+
+   - **osmid (String)**
+     ID of the OSM feature that corresponds to this entry. 
 
    - **info_src_name (String)**
 
