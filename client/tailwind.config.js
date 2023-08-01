@@ -8,7 +8,13 @@ module.exports = {
     "./node_modules/flowbite/**/*.js",
   ],
   theme: {
-    extend: {},
+    extend: {
+      // make custom spacing
+      spacing: {
+        '8xl': '96rem',
+      },
+      
+    }
   },
   plugins: [
     require('flowbite')
