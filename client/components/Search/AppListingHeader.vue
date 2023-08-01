@@ -24,7 +24,9 @@
                 <rect x="7" y="13" width="15" height="3" rx="1.5" fill="white" />
             </svg>
         </div>
-            <button class="bg-gray-400 rounded-xl p-2">Hide Map</button>
+        <button @click="$emit(showMap ? 'hide-map' : 'show-map')">
+    {{ showMap ? 'Hide Map' : 'Show Map' }}
+  </button>
         </div>
     </div>
 </template>
@@ -54,6 +56,10 @@ export default {
         },
         viewMode: {
             type: String,
+            required: true
+        },
+        showMap: {
+            type: Boolean,
             required: true
         }
     },

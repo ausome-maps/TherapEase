@@ -1,7 +1,7 @@
 <template>
     <div class="flex justify-center w-full">
         <div
-            class="bg-transparent grid mx-autogrid-cols-1 sm:grid-cols-1 md:grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-2 sm:gap-4 p-4">
+            class="bg-transparent grid mx-autogrid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-2 sm:gap-4 p-4">
             <div v-for="facility in facilities" :key="facility.id"
                 class="transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110">
                 <AppCard :facilityData="facility"
