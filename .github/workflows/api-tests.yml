@@ -1,0 +1,35 @@
+name: Django CI
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    services:
+      opensearch:
+        image: opensearchproject/opensearch:2.9.0
+        ports:
+          - 9200:9200
+        options: >-
+          --cluster.name=opensearch-cluster
+          --node.name=therapease_search # Name the node that will run in this container
+          --discovery.seed_hosts=therapease_search
+          --bootstrap.memory_lock=true # Disable JVM heap memory swapping
+          --"OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m" # Set min and max JVM heap sizes to at least 50% of system RAM
+          --DISABLE_SECURITY_PLUGIN=true # this should be removed if SSL is configured
+          --discovery.type=single-node          
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.11.1
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11.1'
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r api/requirements.txt
+    - name: Run Tests
+      env:
+        SEARCH_URL: http://opensearch:9200
+      run: |
+        cd api/app
+        pytest -s
