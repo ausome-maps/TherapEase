@@ -12,9 +12,9 @@
     </div>
     <!-- Insert a thick h line-->
     <div class="border-t border-gray-300 my-4 mr-4"></div>
-    
-    <AppFeatures :services="filteredServices" />
+    <AppFeatures :services="filteredServices" :other_services="facilityDetails.other_services" label="Services" />
   </div>
+  
 </template>
 
 <style>
@@ -48,7 +48,7 @@
       }
       console.log(services);
       return services;
-    }
+    },
   }
 
 }

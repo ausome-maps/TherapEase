@@ -3,42 +3,31 @@
     <div class="grid gap-4">
       <!-- Column for Services -->
       <div class="">
-  <h2 class="text-2xl mb-2 text-red-400 font-semibold">Services</h2>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-    <ul v-for="(service, index) in services" :key="service.id" :class="{ 'col-span-2': index % 2 === 0 }">
-      <li>
-        <details>
-          <summary class="cursor-pointer font-bold">{{ service.label }}</summary>
-          <li v-for="(value, key) in service.mode" :key="key">
-            <span v-if="value !== 0">
-              <span class="list-item-bullet ml-4">&#8226;</span>
-              {{ key }}
-            </span>
-          </li>
-        </details>
-      </li>
-    </ul>
-  </div>
-</div>
-
-
-
-      <!-- Column for Amenities -->
-      <!-- <div class="">
-          <h2 class="text-2xl mb-2 text-red-400 font-semibold">Facilities</h2>
-          <ul>
-            <li v-for="amenity in facilityDetails.facilityAmenities" :key="amenity.id">
+        <h2 class="text-2xl mb-2 text-red-400 font-semibold">{{ label }}</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <ul v-for="(service, index) in services" :key="service.id" :class="{ 'col-span-2': index % 2 === 0 }">
+            <li>
               <details>
-                <summary class="cursor-pointer ">{{ amenity.name }}</summary>
-                <ul>
-                  <li v-for="subItem in amenity.subItems" :key="subItem.id">
-                    <span class="list-item-bullet">&#8226;</span> {{ subItem.name }}
-                  </li>
-                </ul>
-              </details>
+                <summary class="cursor-pointer font-bold">{{ service.label }}</summary>
+            <li v-for="(value, key) in service.mode" :key="key">
+              <span v-if="value !== 0">
+                <span class="list-item-bullet ml-4">&#8226;</span>
+                {{ key }}
+              </span>
+            </li>
+            </details>
             </li>
           </ul>
-        </div> -->
+        </div>
+      </div>
+      <div class="border-t border-gray-300 my-4 mr-4"></div>
+      <div class="">
+        <h2 class="text-2xl mb-2 text-red-400 font-semibold">Other Services</h2>
+        <ul class="gap-2">
+          <li class="cursor-default font-bold " v-for="(service, index) in other_services.split(',')" :key="index">{{ service.trim() }}</li>
+        </ul>
+      </div>
+      <div class="border-t border-gray-300 my-4 mr-4"></div>
     </div>
   </div>
 </template>
@@ -49,6 +38,14 @@ export default {
   props: {
     services: {
       type: Object,
+      required: true
+    },
+    label: {
+      type: String,
+      required: true
+    },
+    other_services: {
+      type: String,
       required: true
     }
   }
