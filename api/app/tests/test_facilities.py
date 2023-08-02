@@ -24,85 +24,266 @@ def _delete_index():
 
 def test_facilities_endpoint():
     data = {
-            "id": 250510750, 
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [
-                    121.545819,
-                    16.682762
-                ]
-            },
-            "properties": {
-                "start": "2023-07-05T21:47:19.651+08:00",
-                "end": "2023-07-05T22:10:27.501+08:00",
-                "info_src_name": "Kristel Joyce O. Cunanan",
-                "info_src_designation": "CSP-PASP-Clinic Manager and Speech-Language Pathologist",
-                "placename": "Blausome Therapy Center",
-                "address": "23 Burgos St., Purok 6, Victory Sur, Santiago City, Isabela",
-                "region": "Region II Cagayan Valley",
-                "province": "Isabela",
-                "city": "Santiago City",
-                "contact_number": "09152747225",
-                "alt_contact_number": "09056925329",
-                "email_address": "blausometherapycenter@gmail.com",
-                "social_media": {
-                    "facebook": "Yes, Blausome Therapy Center",
-                    "instagram": "Yes, @bl.ausome"
+                "id": 2505150,
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        121.033888,
+                        14.564758
+                    ]
                 },
-                "caters_to": [
-                    "Pediatric Population",
-                    "Adolescent Population",
-                    "Adult Population"
-                ],
-                "various_services": {
-                    "Special Education-On-site": "Group Individual",
-                    "Speech Language Pathology-Teletherapy": "Individual Group",
-                    "Speech Language Pathology-On-site": "Group Individual",
-                    "Dysphagia-On-site": "Individual",
-                    "Parent Coaching-Teletherapy": "Individual Group",
-                    "Parent Coaching-On-site": "Group Individual",
-                    "Life Skills-On-site": "Group Individual",
-                    "Speech Language Therapy-On-site": "Group Individual",
-                    "Feeding-On-site": "Individual",
-                    "Play School-On-site": "Group",
-                    "Educational Session for Families-Teletherapy": "Individual",
-                    "Educational Session for Families-On-site": "Group",
-                    "SPED Tutorials-Teletherapy": "Individual Group",
-                    "Counseling-Teletherapy": "Individual",
-                    "Counseling-On-site": "Individual",
-                    "Social Skills Training-Teletherapy": "Individual",
-                    "Social Skills Training-On-site": "Group Individual",
-                    "Sensory Integration-On-site": "Group Individual",
-                    "Job Coaching-Teletherapy": "Individual Group",
-                    "Job Coaching-On-site": "Group Individual",
-                    "Integration Program-Teletherapy": "Individual Group",
-                    "Integration Program-On-site": "Group Individual",
-                    "Occupational Therapy-On-site": "Group Individual"
-                },
-                "images": [
-                    {
-                        "img_1": "IMG_3582-22_10_4.jpg",
-                        "img_1_url": "https://kc.kobotoolbox.org/media/original?media_file=chamthesleeptalker%2Fattachments%2F447322184eae4590a1aeac4545f79929%2F89b10ba5-e5eb-402b-a5d3-ab7afaf294ef%2FIMG_3582-22_10_4.jpg"
+                "properties": {
+                    "osmid": "",
+                    "accreditation": {
+                        "paot": 1,
+                        "pasp": 1
                     },
-                    {
-                        "img_2": "IMG_3583-22_10_11.jpg",
-                        "img_2_url": "https://kc.kobotoolbox.org/media/original?media_file=chamthesleeptalker%2Fattachments%2F447322184eae4590a1aeac4545f79929%2F89b10ba5-e5eb-402b-a5d3-ab7afaf294ef%2FIMG_3583-22_10_11.jpg"
+                    "date_updated": "2023-07-19T22:43:32.508+08:00",
+                    "info_src_name": "Pilar Balboa",
+                    "info_src_designation": "",
+                    "placename": "Play Explorers Therapy Center",
+                    "desc_long": "",
+                    "desc_short": "",
+                    "address": "2396 Leon Guinto St, Malate, Manila",
+                    "region": "NCR \u2013 National Capital Region",
+                    "city": "Manila City",
+                    "province": "",
+                    "landmarks_desc": "Our Lady of Fatima Parish",
+                    "contact_number_mobile": "0917 838 9939",
+                    "contact_number_landline": "",
+                    "alt_contact_numbers": "",
+                    "email_address": "playexplorerstherapycenter@gmail.com",
+                    "alt_email_address": "",
+                    "website": "",
+                    "social_media": {
+                        "facebook": "",
+                        "instagram": ""
                     },
-                    {
-                        "img_3": "IMG_3584-22_10_18.jpg",
-                        "img_3_url": "https://kc.kobotoolbox.org/media/original?media_file=chamthesleeptalker%2Fattachments%2F447322184eae4590a1aeac4545f79929%2F89b10ba5-e5eb-402b-a5d3-ab7afaf294ef%2FIMG_3584-22_10_18.jpg"
+                    "caters_to": [
+                        "Pediatric"
+                    ],
+                    "other_services": "Dance Classes, Physical Therapy for Pediatrics",
+                    "images": [
+                        {
+                            "img_name": "download (3)-22_38_28.jpg",
+                            "img_url": ""
+                        },
+                        {
+                            "img_name": "download (4)-22_38_49.jpg",
+                            "img_url": ""
+                        }
+                    ],
+                    "services_offered": {
+                        "speechlanguagetherapy": {
+                            "label": "Speech-Language Therapy",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 1,
+                                "home_service": 0
+                            }
+                        },
+                        "speechlanguagepathology": {
+                            "label": "Speech-Language Pathology",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 1,
+                                "home_service": 0
+                            }
+                        },
+                        "occupationaltherapy": {
+                            "label": "Occupational Therapy",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 1,
+                                "home_service": 0
+                            }
+                        },
+                        "behavioraltherapy": {
+                            "label": "Behavioral Therapy",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 0,
+                                "home_service": 0
+                            }
+                        },
+                        "physicaltherapy": {
+                            "label": "Physical Therapy",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 0,
+                                "home_service": 0
+                            }
+                        },
+                        "lifeskillstraining": {
+                            "label": "Life Skills Training",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 2,
+                                "home_service": 0
+                            }
+                        },
+                        "socialskillstraining": {
+                            "label": "Social Skills Training",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 2,
+                                "home_service": 0
+                            }
+                        },
+                        "integration": {
+                            "label": "Integration",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 0,
+                                "home_service": 0
+                            }
+                        },
+                        "integrationprogram": {
+                            "label": "Integration Program",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 2,
+                                "home_service": 0
+                            }
+                        },
+                        "jobcoaching": {
+                            "label": "Job Coaching",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 2,
+                                "home_service": 0
+                            }
+                        },
+                        "specialeducation": {
+                            "label": "Special Education",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 2,
+                                "home_service": 0
+                            }
+                        },
+                        "spedtutorials": {
+                            "label": "SpEd Tutorials",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 2,
+                                "home_service": 0
+                            }
+                        },
+                        "parentcoaching": {
+                            "label": "Parent Coaching",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 2,
+                                "home_service": 0
+                            }
+                        },
+                        "educationsessionforfamilies": {
+                            "label": "Education Session for Families",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 2,
+                                "home_service": 0
+                            }
+                        },
+                        "feeding": {
+                            "label": "Feeding",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 2,
+                                "home_service": 0
+                            }
+                        },
+                        "counseling": {
+                            "label": "Counseling",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 2,
+                                "home_service": 0
+                            }
+                        },
+                        "psychotherapy": {
+                            "label": "Psychotherapy",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 1,
+                                "home_service": 0
+                            }
+                        },
+                        "abatherapy": {
+                            "label": "ABA Therapy",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 0,
+                                "home_service": 0
+                            }
+                        },
+                        "mnri": {
+                            "label": "MNRI",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 1,
+                                "home_service": 0
+                            }
+                        },
+                        "sensoryintegration": {
+                            "label": "Sensory Integration",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 1,
+                                "home_service": 0
+                            }
+                        },
+                        "playschool": {
+                            "label": "Play School",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 2,
+                                "home_service": 0
+                            }
+                        },
+                        "dysphagiamanagement": {
+                            "label": "Dysphagia Management",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 0,
+                                "home_service": 0
+                            }
+                        },
+                        "orthoses": {
+                            "label": "Orthoses (Splinting)",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 1,
+                                "home_service": 0
+                            }
+                        },
+                        "homeschoolfacilitation": {
+                            "label": "Homeschool Facilitation",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 0,
+                                "home_service": 0
+                            }
+                        },
+                        "rehabconsultation": {
+                            "label": "Rehab Consultation",
+                            "mode": {
+                                "teletherapy": 0,
+                                "onsite": 0,
+                                "home_service": 0
+                            }
+                        }
                     }
-                ]
+                }
             }
-
-        }
 
     _create_index()
     fts = FullTextSearch()
     resp_post = fts.put(json.dumps(data),  dependencies.SEARCH_URL + f'/facilities_test/_doc/{data["id"]}')
     time.sleep(5)
-    resp_get = fts.get({'q': 'santiago'}, dependencies.SEARCH_URL + f'/facilities_test/_search' )
+    resp_get = fts.get({'q': 'manila'}, dependencies.SEARCH_URL + f'/facilities_test/_search' )
+    print(resp_get)
     assert resp_post["_id"] == str(data["id"])
     _delete_index()
     print(resp_get['hits']['hits'])
