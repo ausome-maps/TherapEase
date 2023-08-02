@@ -20,16 +20,29 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
-    command: uvicorn main:app --host 0.0.0.0 --port 9001 --reload
+    command: uvicorn main:app --host 0.0.0.0 --port 5000 --reload
     volumes:
-      - ./api:/usr/src
-    ports:
-      - "9001:9001"
+      - ./api/app:/code
+    expose:
+      - 5000
     env_file:
       - ./.env.sample
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.fastapi.rule=Host(`subdomain.example.com`)" # need to be configured in DNS registrar
+      - "traefik.http.routers.fastapi.tls=true"
+      - "traefik.http.routers.fastapi.tls.certresolver=letsencrypt"
     depends_on:
       - geocoding
       - search
+  traefik:
+    image: traefik:v2.2
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "$PWD/infrastructure/traefik/traefik.prod.toml:/etc/traefik/traefik.toml"
   geocoding:
     container_name: therapease_geocoding
     image: mediagis/nominatim:4.2

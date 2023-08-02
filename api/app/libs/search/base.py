@@ -1,3 +1,4 @@
+import json
 from typing import Optional
 import requests
 
@@ -36,16 +37,21 @@ class BaseSearch:
         data = resp.json()
         return data
 
-    def post(self, data: dict) -> Response:
+    def put(self, data: dict, url:Optional[str]=None) -> Response:
         """
-        Post data to external search endpoint. This is a wrapper around requests. post that handles errors and returns a dict with status code and error message
+        Put data to external search endpoint. This is a wrapper around requests. post that handles errors and returns a dict with status code and error message
         
         @param data - dict to be sent as POST body
         
         @return dict with response from API or error message if status
         """
-        resp = requests.post(self.url, data=data, headers=self.headers)
+
+        url_put = self.url
+        if url is not None: 
+            url_put = url
+        data = json.loads(data)
+        resp = requests.put(url_put, json=data, headers=self.headers)
         # Returns a JSON string with the response.
-        if resp.status_code >= 400: return {"detail": f"{self.search_type} query failed.", "status_code": resp.status_code}
+        if resp.status_code >= 400: return {"detail": f"{self.search_type} query failed. Error: {resp.json()}", "status_code": resp.status_code}
         data = resp.json()
         return data
