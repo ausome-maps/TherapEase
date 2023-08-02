@@ -24,6 +24,7 @@ class FaciltyProperties(BaseModel):
     other_services: Dict | None = {}
     caters_to: List | None = []
     images: List | None = []
+    osm_id: str | None = ""
 
 class Facilities(BaseModel):
     geometry: Dict
