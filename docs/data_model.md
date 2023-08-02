@@ -41,7 +41,27 @@ This data model describes a single feature in Ausome Maps, representing a therap
      ```
 
    - **osmid (String)**
-     ID of the OSM feature that corresponds to this entry. 
+     ID of the OSM feature that corresponds to this entry.
+     ```
+      "properties": {
+                 ...
+                "osmid": "id from OpenStreetMap",
+                 ...
+     }
+     ```
+
+   - **accreditation (Object)**
+     Indication if the therapy center is listed in the accredited/registered center under PAOT or PASP.
+     ```
+      "properties": {
+                 ...
+                "accreditation": {
+                     "paot":1,
+                     "pasp":0
+                 },
+                 ...
+     }
+     ```
 
    - **info_src_name (String)**
 
