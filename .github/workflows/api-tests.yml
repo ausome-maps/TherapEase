@@ -2,7 +2,7 @@ name: Therapease CI
 on: push
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-22.04
     services:
       opensearch:
@@ -29,3 +29,17 @@ jobs:
       run: |
         cd api/app
         pytest -s
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.11.1
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11.1'
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: api/  # Set the build context to the root of the repository
+        push: true  # Push the built image to the registry
+        tags: ghcr.io/ausome-maps/therapease-api:latest
