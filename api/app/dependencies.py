@@ -5,3 +5,4 @@ GEOCODING_TOKEN = os.environ.get("GEOCODING_TOKEN", None)
 
 SEARCH_URL = os.environ.get("SEARCH_URL", "http://localhost:8999")
 SEARCH_TOKEN = os.environ.get("SEARCH_TOKEN", None)
+REDIS_URL = os.environ.get("REDIS_URL", "http://localhost:5380")

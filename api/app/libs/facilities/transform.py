@@ -11,9 +11,12 @@ def transform_es_result_to_geojson(es_queries):
         "name": "Ausome Maps - Therapy Centers",
         "features": []
     }
-    # Add features to geojson.
-    for es_query in es_queries:
-        data = es_query["_source"].copy()
-        data["id"] = es_query["_id"]
-        geojson["features"].append(data)
+    try:
+        # Add features to geojson.
+        for es_query in es_queries["hits"]["hits"]:
+            data = es_query["_source"].copy()
+            data["id"] = es_query["_id"]
+            geojson["features"].append(data)
+    except:
+        pass
     return geojson

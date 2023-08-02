@@ -30,6 +30,10 @@ services:
     depends_on:
       - geocoding
       - search
+      - cache
+  cache:
+    container_name: therapease_cache
+    image: redis:6.0.20-alpine3.18
   geocoding:
     container_name: therapease_geocoding
     image: mediagis/nominatim:4.2
