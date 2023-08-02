@@ -98,7 +98,7 @@ export default {
 }
 </script>
   
-<style>
+<style scoped>
 svg {
   margin: auto;
   width: 18px;

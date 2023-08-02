@@ -1,0 +1,255 @@
+{
+    "type": "FeatureCollection",
+    "name": "Ausome Maps - Therapy Centers",
+    "features": [
+        {
+            "id": "TR001",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    13.0192,
+                    121.4052
+                ]
+            },
+            "properties": {
+                "date_updated": "2023-08-02",
+                "osmid": "6019007",
+                "info_src_name": "Ausome Maps - Therapy Centers",
+                "info_src_designation": "Official data",
+                "placename": "The Therapy Room",
+                "desc_long": "The Therapy Room provides a wide array of therapy services to cater to various age groups. Our team consists of experienced and accredited therapists.",
+                "desc_short": "Accredited therapy center catering to all age groups.",
+                "address": "Bansud Oriental Mindoro near NIA Road",
+                "region": "MIMAROPA",
+                "city": "Bansud",
+                "accreditation": true,
+                "province": "Oriental Mindoro",
+                "landmarks_desc": "Near National Irrigation Administration (NIA) Road",
+                "contact_number_mobile": "+63 999 888 7777",
+                "contact_number_landline": "+63 43 555 6666",
+                "alt_contact_numbers": "+63 43 555 7777",
+                "email_address": "therapyroom@mail.com",
+                "website": "www.therapyroom.com",
+                "social_media": {
+                    "facebook": "www.facebook.com/TherapyRoom",
+                    "instagram": "www.instagram.com/TherapyRoom"
+                },
+                "caters_to": [
+                    "Pediatric",
+                    "Adolescent",
+                    "Adult"
+                ],
+                "services_offered": {
+                    "speechlanguagetherapy": {
+                        "label": "Speech-Language Therapy",
+                        "mode": {
+                            "teletherapy": 1,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "speechlanguagepathology": {
+                        "label": "Speech-Language Pathology",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "occupationaltherapy": {
+                        "label": "Occupational Therapy",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "behavioraltherapy": {
+                        "label": "Behavioral Therapy",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "physicaltherapy": {
+                        "label": "Physical Therapy",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "lifeskillstraining": {
+                        "label": "Life Skills Training",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "socialskillstraining": {
+                        "label": "Social Skills Training",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "integration": {
+                        "label": "Integration",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "integrationprogram": {
+                        "label": "Integration Program",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "jobcoaching": {
+                        "label": "Job Coaching",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "specialeducation": {
+                        "label": "Special Education",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "spedtutorials": {
+                        "label": "SpEd Tutorials",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "parentcoaching": {
+                        "label": "Parent Coaching",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "educationsessionforfamilies": {
+                        "label": "Education Session for Families",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "feeding": {
+                        "label": "Feeding",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "counseling": {
+                        "label": "Counseling",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "psychotherapy": {
+                        "label": "Psychotherapy",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "abatherapy": {
+                        "label": "ABA Therapy",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "mnri": {
+                        "label": "MNRI",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "sensoryintegration": {
+                        "label": "Sensory Integration",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "playschool": {
+                        "label": "Play School",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "dysphagiamanagement": {
+                        "label": "Dysphagia Management",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    },
+                    "orthoses": {
+                        "label": "Orthoses (Splinting)",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    }
+                },
+                "other_services": {
+                    "other_service_1": {
+                        "label": "Other Service 1",
+                        "mode": {
+                            "teletherapy": 0,
+                            "onsite": 0,
+                            "home_service": 0
+                        }
+                    }
+                },
+                "images": [
+                    {
+                        "img_name": "imgname1.jpg",
+                        "img_url": "https://container/imgname1.jpg"
+                    },
+                    {
+                        "img_name": "imgname2.jpg",
+                        "img_url": "https://container/imgname2.jpg"
+                    },
+                    {
+                        "img_name": "imgname3.jpg",
+                        "img_url": "https://container/imgname3.jpg"
+                    }
+                ]
+            }
+        }
+    ]
+}

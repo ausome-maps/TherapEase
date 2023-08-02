@@ -7,7 +7,7 @@
             <AppGalleryMobile :images="carouselImages" />
           </div>
           <div class="mx-auto pl-8 pt-4">
-            <AppDetails :facilityDetails="facilityDetailsObject" />
+            <AppDetails :facilityDetails="data" />
           </div>
           <div class="sidebar mx-auto mb-[50px] pt-4 w-[90%]">
             <AppContacts :facilityDetails="facilityDetailsObject" />
@@ -24,7 +24,7 @@
             </div>
             <div class="flex">
               <div class="min-w-[60%] pl-4 pt-4">
-                <AppDetails :facilityDetails="facilityDetailsObject" />
+                <AppDetails :facilityDetails="data" />
               </div>
               <div class="min-w-[34%] p-4 mr-2">
                 <AppContacts :facilityDetails="facilityDetailsObject" />
@@ -47,10 +47,11 @@
 
 
 <script>
-
+import data from '../components/facility-data.json'
 export default {
   data() {
     return {
+      data: data.features[0].properties,
       carouselImages: [
         'https://plus.unsplash.com/premium_photo-1689177357836-52c9d90d3d6f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8&auto=format&fit=crop&w=500&q=60',
         'https://plus.unsplash.com/premium_photo-1689177357836-52c9d90d3d6f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8&auto=format&fit=crop&w=500&q=60',
@@ -124,7 +125,7 @@ export default {
   },
   mounted() {
     this.checkIfMobile(); // Initial check
-
+    // console.log(data.features[0].properties);
     // Watch for changes in the window width
     window.addEventListener('resize', this.checkIfMobile);
   },
