@@ -27,7 +27,7 @@
                 <AppDetails :facilityDetails="data" />
               </div>
               <div class="min-w-[34%] p-4 mr-2">
-                <AppContacts :facilityDetails="facilityDetailsObject" />
+                <AppContacts :facilityDetails="data" />
                 <AppShareSubmit />
               </div>
             </div>

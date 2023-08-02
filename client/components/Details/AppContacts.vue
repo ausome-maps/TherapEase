@@ -10,17 +10,15 @@
           <div class="flex">
             <div class="mr-2">
               <span class="icon">
-                <svg viewBox="0 -54 500 500">
-                  <path
-                    d="M0,50a40,49 0 01 40-49h420a40,49 0 01 40,49c0,22-28,55-46,70l-171,118.5c-27,15.5-39,15.5-66,0l-171-118.5c-28-15-46-48-46-70z" />
-
-                  <path
-                    d="M0,127.5v221.5a45,45 0 00 45,45h415a45,45 0 00 40-45v-221.5c-8,8.5-16,15.5-26,22.5l-162,113c-47,31-77,31-124,0l-162-113c-10-6-18-14-26-22.5z" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M3.0132 9.15129C3 9.69022 3 10.3021 3 11V13C3 15.8284 3 17.2426 3.87868 18.1213C4.75736 19 6.17157 19 9 19H15C17.8284 19 19.2426 19 20.1213 18.1213C21 17.2426 21 15.8284 21 13V11C21 10.3021 21 9.69022 20.9868 9.15129L12.9713 13.6044C12.3672 13.9399 11.6328 13.9399 11.0287 13.6044L3.0132 9.15129ZM3.24297 7.02971C3.32584 7.05052 3.4074 7.08237 3.48564 7.12584L12 11.856L20.5144 7.12584C20.5926 7.08237 20.6742 7.05052 20.757 7.02971C20.6271 6.55619 20.4276 6.18491 20.1213 5.87868C19.2426 5 17.8284 5 15 5H9C6.17157 5 4.75736 5 3.87868 5.87868C3.57245 6.18491 3.37294 6.55619 3.24297 7.02971Z"
+                    fill="#D48180" />
                 </svg>
               </span>
             </div>
             <div>
-              <a href="mailto:example@example.com">Email: {{ facilityDetails.facilityEmail }}</a>
+              <a href="mailto:example@example.com">Email: {{ facilityDetails.email_address }}</a>
             </div>
           </div>
         </li>
@@ -28,29 +26,31 @@
           <div class="flex">
             <div class="mr-2">
               <span class="icon">
-                <svg viewBox="0 0 500 500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path
-                    d="M128,21q40,75,53,91.5q10,15.5-2,27.5c-10,13-38,32-45,40c-10,9-12,15-3,32q54,105,158,156c18,10,20,5,32-5c8-8,20-27,35-41c10-11,20-12,32-3q14,11,88,51c9,5,11,8,9,27q-7,40-22,51q-67,53-133,29c-180-55-286-195-315-336q-4-62,36-105q10-13,30-17c35-11,42-6,47,2z" />
+                    d="M6.67962 3.32038L7.29289 2.70711C7.68342 2.31658 8.31658 2.31658 8.70711 2.70711L11.2929 5.29289C11.6834 5.68342 11.6834 6.31658 11.2929 6.70711L9.50048 8.49952C9.2016 8.7984 9.1275 9.255 9.31653 9.63307C10.4093 11.8186 12.1814 13.5907 14.3669 14.6835C14.745 14.8725 15.2016 14.7984 15.5005 14.4995L17.2929 12.7071C17.6834 12.3166 18.3166 12.3166 18.7071 12.7071L21.2929 15.2929C21.6834 15.6834 21.6834 16.3166 21.2929 16.7071L20.6796 17.3204C18.5683 19.4317 15.2257 19.6693 12.837 17.8777L11.6286 16.9714C9.88504 15.6638 8.33622 14.115 7.02857 12.3714L6.12226 11.163C4.33072 8.7743 4.56827 5.43173 6.67962 3.32038Z"
+                    fill="#D48180" />
                 </svg>
               </span>
             </div>
             <div>
               <a href="tel:+63{{facilityDetails.facilityContactNumber.replace(/^0+/, '')}}">Contact: {{
-                facilityDetails.facilityContactNumber }} </a>
+                facilityDetails.contact_number_mobile }} </a>
             </div>
           </div>
         </li>
         <li class="px-8">
           <div class="flex">
             <div class="mr-2">
-              <svg class="svg-icon" viewBox="0 0 24 24">
-                <path
-                  d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-2.29-2.333A17.9 17.9 0 0 1 8.027 13H4.062a8.008 8.008 0 0 0 5.648 6.667zM10.03 13c.151 2.439.848 4.73 1.97 6.752A15.905 15.905 0 0 0 13.97 13h-3.94zm9.908 0h-3.965a17.9 17.9 0 0 1-1.683 6.667A8.008 8.008 0 0 0 19.938 13zM4.062 11h3.965A17.9 17.9 0 0 1 9.71 4.333 8.008 8.008 0 0 0 4.062 11zm5.969 0h3.938A15.905 15.905 0 0 0 12 4.248 15.905 15.905 0 0 0 10.03 11zm4.259-6.667A17.9 17.9 0 0 1 15.973 11h3.965a8.008 8.008 0 0 0-5.648-6.667z" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="8" stroke="#D48180" stroke-width="2" />
+                <ellipse cx="12" cy="12" rx="3" ry="8" stroke="#D48180" stroke-width="2" />
+                <path d="M4 12H20" stroke="#D48180" stroke-width="2" stroke-linecap="round" />
               </svg>
             </div>
             <div>
               <a :href="facilityDetails.facilityWebsite" target="_blank">
-                Website: {{ facilityDetails.facilityWebsite }}
+                Website: {{ facilityDetails.website }}
               </a>
 
             </div>
@@ -60,16 +60,15 @@
           <div class="flex">
             <div class="mr-2">
               <span class="icon">
-                <svg viewBox="-83.5 0 500 500">
-                  <g fill-rule="evenodd">
-                    <path
-                      d="M166.5,482 C 245,396 328,273 333,181 A166.5,166.5 0 0 0 0,181 C 5,273 88,396 166.5,482 Z M 226,178 A59.5,59.5 0 0 1 107,178 A59.5,59.5 0 0 1 226,178 Z" />
-                  </g>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M12.398 19.804C13.881 19.0348 19 16.0163 19 11C19 7.13401 15.866 4 12 4C8.13401 4 5 7.13401 5 11C5 16.0163 10.119 19.0348 11.602 19.804C11.8548 19.9351 12.1452 19.9351 12.398 19.804ZM12 14C13.6569 14 15 12.6569 15 11C15 9.34315 13.6569 8 12 8C10.3431 8 9 9.34315 9 11C9 12.6569 10.3431 14 12 14Z"
+                    fill="#D48180" />
                 </svg>
               </span>
             </div>Address:
             <div class="text-left pl-2">
-              <span>{{ facilityDetails.facilityAddress }}</span>
+              <span>{{ facilityDetails.address }}</span>
             </div>
           </div>
         </li>
@@ -80,8 +79,8 @@
         CREATED by
       </div>
       <div class="text-left px-8">
-        <span class="font-bold">{{ facilityDetails.facilityOwner }} </span> on <span class="font-bold">{{
-          facilityDetails.facilityDateCreated }}</span>
+        <span class="font-bold">{{ facilityDetails.info_src_name }} </span> on <span class="font-bold">{{
+          getDateFromTimestamp(facilityDetails.date_updated) }}</span>
       </div>
     </div>
   </div>
@@ -94,17 +93,15 @@ export default {
       type: Object,
       required: true
     }
-  }
+  },
+  methods: {
+    getDateFromTimestamp: function(timestamp) {
+      const date = new Date(timestamp);
+      return date.toISOString().split('T')[0];
+    }
+  },
 }
 </script>
   
-<style scoped>
-svg {
-  margin: auto;
-  width: 18px;
-  height: 20px;
-  fill: rgb(248 113 113);
-}
-
-/* Add your custom styles here if needed */</style>
+<style scoped>/* Add your custom styles here if needed */</style>
   
