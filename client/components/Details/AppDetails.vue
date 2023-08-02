@@ -13,7 +13,7 @@
     <!-- Insert a thick h line-->
     <div class="border-t border-gray-300 my-4 mr-4"></div>
     
-    <AppFeatures :services="facilityDetails.services_offered" />
+    <AppFeatures :services="filteredServices" />
   </div>
 </template>
 
@@ -37,9 +37,19 @@
             required: true
         }
     },
-    mounted() {
-        console.log(this.facilityDetails.accreditation)
+    computed: {
+    filteredServices() {
+      let services = {...this.facilityDetails.services_offered};
+      for (let service in services) {
+        let modes = services[service].mode;
+        if (Object.values(modes).every(mode => mode === 0)) {
+          delete services[service];
+        }
+      }
+      console.log(services);
+      return services;
     }
+  }
 
 }
   </script>

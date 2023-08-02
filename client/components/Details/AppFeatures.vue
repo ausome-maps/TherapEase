@@ -8,10 +8,10 @@
     <ul v-for="(service, index) in services" :key="service.id" :class="{ 'col-span-2': index % 2 === 0 }">
       <li>
         <details>
-          <summary class="cursor-pointer ">{{ service.label }}</summary>
+          <summary class="cursor-pointer font-bold">{{ service.label }}</summary>
           <li v-for="(value, key) in service.mode" :key="key">
-            <span v-if="value === 1">
-              <span class="list-item-bullet">&#8226;</span>
+            <span v-if="value !== 0">
+              <span class="list-item-bullet ml-4">&#8226;</span>
               {{ key }}
             </span>
           </li>

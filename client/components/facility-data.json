@@ -19,24 +19,24 @@
                 },
                 "date_updated": "2023-07-19T22:43:32.508+08:00",
                 "info_src_name": "Pilar Balboa",
-                "info_src_designation": "",
+                "info_src_designation": "Center Manager",
                 "placename": "Play Explorers Therapy Center",
-                "desc_long": "",
-                "desc_short": "",
+                "desc_long": "Play Explorers Therapy Center provides an interactive and fun environment where children can explore and learn at their own pace. Our experienced therapists are dedicated to helping every child reach their full potential.",
+                "desc_short": "An interactive therapy center for children's growth and learning.",
                 "address": "2396 Leon Guinto St, Malate, Manila",
-                "region": "NCR \u2013 National Capital Region",
+                "region": "NCR – National Capital Region",
                 "city": "Manila City",
-                "province": "",
+                "province": "Metro Manila",
                 "landmarks_desc": "Our Lady of Fatima Parish",
                 "contact_number_mobile": "0917 838 9939",
-                "contact_number_landline": "",
-                "alt_contact_numbers": "",
+                "contact_number_landline": "(02) 8547 1234",
+                "alt_contact_numbers": "0918 123 4567",
                 "email_address": "playexplorerstherapycenter@gmail.com",
-                "alt_email_address": "",
-                "website": "",
+                "alt_email_address": "info@playexplorerstherapycenter.ph",
+                "website": "www.playexplorerstherapycenter.ph",
                 "social_media": {
-                    "facebook": "",
-                    "instagram": ""
+                    "facebook": "www.facebook.com/playexplorerstherapycenter",
+                    "instagram": "www.instagram.com/playexplorerstherapycenter"
                 },
                 "caters_to": [
                     "Pediatric"
@@ -56,7 +56,7 @@
                     "speechlanguagetherapy": {
                         "label": "Speech-Language Therapy",
                         "mode": {
-                            "teletherapy": 0,
+                            "teletherapy": 1,
                             "onsite": 1,
                             "home_service": 0
                         }
