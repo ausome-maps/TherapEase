@@ -3,6 +3,8 @@ from fastapi import APIRouter, Request
 from models.facilities import Facilities
 from libs.search.full_text import FullTextSearch
 from libs.facilities.transform import transform_es_result_to_geojson
+from fastapi_cache.decorator import cache
+from fastapi_cache.coder import JsonCoder
 
 router = APIRouter()
 
@@ -21,6 +23,7 @@ async def facilities_store_url(facilities: Facilities):
     return resp
 
 @router.get('/facilities')
+@cache(namespace="facilities", expire=60, coder=JsonCoder)
 async def facilities_fetch_url(request: Request):
     """
      Fetch facilities from FullText Search. This is a wrapper around the full text search API which does not require a query parameter
@@ -34,5 +37,5 @@ async def facilities_fetch_url(request: Request):
         return {"message": "No supplied query for searching."}
     fts = FullTextSearch()
     resp = fts.get(request.query_params, dependencies.SEARCH_URL + '/facilities/_search')
-    return transform_es_result_to_geojson(resp["hits"]["hits"])
+    return transform_es_result_to_geojson(resp)
     
