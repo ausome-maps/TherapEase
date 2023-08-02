@@ -101,7 +101,7 @@ def test_facilities_endpoint():
     _create_index()
     fts = FullTextSearch()
     resp_post = fts.put(json.dumps(data),  dependencies.SEARCH_URL + f'/facilities_test/_doc/{data["id"]}')
-    time.sleep(1)
+    time.sleep(5)
     resp_get = fts.get({'q': 'santiago'}, dependencies.SEARCH_URL + f'/facilities_test/_search' )
     assert resp_post["_id"] == str(data["id"])
     _delete_index()
