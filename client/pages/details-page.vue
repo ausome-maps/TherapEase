@@ -35,8 +35,8 @@
         </template>
         <div class="w-[100%] relative z-[0]">
           <!-- Use a higher z-index value, for example, z-[2] -->
-          <AppDetailsMap :latitude="facilityDetailsObject.latitudeValue"
-            :longitude="facilityDetailsObject.longitudeValue" />
+          <AppDetailsMap :latitude="geometry.coordinates[0]"
+            :longitude="geometry.coordinates[1]" />
         </div>
         <div class="h-[100px]"></div>
       </div>
@@ -52,6 +52,7 @@ export default {
   data() {
     return {
       data: data.features[0].properties,
+      geometry: data.features[0].geometry,
       carouselImages: [
         'https://plus.unsplash.com/premium_photo-1689177357836-52c9d90d3d6f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8&auto=format&fit=crop&w=500&q=60',
         'https://plus.unsplash.com/premium_photo-1689177357836-52c9d90d3d6f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8&auto=format&fit=crop&w=500&q=60',
