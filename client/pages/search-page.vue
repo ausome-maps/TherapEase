@@ -3,7 +3,7 @@
     <div :class="{ 'justify-center': !showMap }" class="flex flex-col sm:flex-row h-[100%] min-h-[800px] gap-4">
       <div class="w-full lg:max-w-[850px] flex-grow">
         <ClientOnly>
-          <div class="px-5 pb-4 sticky top-0 z-10 bg-white">
+          <div class="px-5 pb-4 sticky top-0 z-50 bg-white">
             <AppSearchAndFilter />
             <AppListingHeader :show-map="showMap" @hide-map="showMap = false" @show-map="showMap = true"
             :view-mode="viewMode" @change-view-mode="handleChangeViewMode" :facilities="data"

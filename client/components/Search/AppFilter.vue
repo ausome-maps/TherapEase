@@ -6,7 +6,8 @@ onMounted(() => {
     const $modalElement = document.querySelector('#modal');
     const $closeButton = document.querySelector('#closeButton');
     const modalOptions = {
-        backdropClasses: 'bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40'
+        backdrop: 'dynamic',
+        backdropClasses: 'absolute inset-0 z-10'
     }
     if ($modalElement) {
         const modal = new Modal($modalElement, modalOptions);
@@ -56,7 +57,7 @@ export default {
             class="fixed top-0 left-0 right-0 z-50 hidden w-full p-2 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full ">
             <div class="relative w-full h-full max-w-3xl md:h-auto">
                 <!-- Modal content -->
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <div class="relative bg-white rounded-lg shadow-sm border-black border ">
                     <!-- Modal header -->
                     <div class="flex justify-center items-start p-4 border-b rounded-t dark:border-gray-600">
                         <h3 class="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">
