@@ -6,7 +6,7 @@
         <!-- Render carousel items based on the images prop -->
         <div v-for="(image, index) in images" :key="index" :id="'carousel-item-' + (index + 1)" class="hidden">
           <span class="absolute text-2xl font-semibold text-white -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 sm:text-3xl dark:text-gray-800">Slide {{ index + 1 }}</span>
-          <img :src="image" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
+          <img :src="image.img_url" :alt="image.img_name" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
         </div>
       </div>
 

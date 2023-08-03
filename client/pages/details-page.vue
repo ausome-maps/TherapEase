@@ -4,13 +4,13 @@
       <div class="w-[1440px]">
         <template v-if="isMobile">
           <div class="rounded-xl mx-[20px]">
-            <AppGalleryMobile :images="carouselImages" />
+            <AppGalleryMobile :images="properties.images" />
           </div>
           <div class="mx-auto pl-8 pt-4">
-            <AppDetails :facilityDetails="data" />
+            <AppDetails :facilityDetails="properties" />
           </div>
           <div class="sidebar mx-auto mb-[50px] pt-4 w-[90%]">
-            <AppContacts :facilityDetails="facilityDetailsObject" />
+            <AppContacts :facilityDetails="properties" />
             <AppShareSubmit />
           </div>
           <div class="pb-[100px]">
@@ -20,14 +20,14 @@
         <template v-else>
           <div class="relative z-[1]">
             <div class="rounded-xl mx-[20px]">
-              <AppGallery :images="carouselImages" />
+              <AppGallery :images="properties.images" />
             </div>
             <div class="flex">
               <div class="min-w-[60%] pl-4 pt-4">
-                <AppDetails :facilityDetails="data" />
+                <AppDetails :facilityDetails="properties" />
               </div>
               <div class="min-w-[34%] p-4 mr-2">
-                <AppContacts :facilityDetails="data" />
+                <AppContacts :facilityDetails="properties" />
                 <AppShareSubmit />
               </div>
             </div>
@@ -51,7 +51,7 @@ import data from '../components/facility-data.json'
 export default {
   data() {
     return {
-      data: data.features[0].properties,
+      properties: data.features[0].properties,
       geometry: data.features[0].geometry,
       carouselImages: [
         'https://plus.unsplash.com/premium_photo-1689177357836-52c9d90d3d6f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8&auto=format&fit=crop&w=500&q=60',
@@ -137,7 +137,7 @@ export default {
   methods: {
     checkIfMobile() {
       // Check if the viewport width is less than or equal to 768px (tablet width)
-      this.isMobile = window.visualViewport.width <= 768;
+      this.isMobile = window.visualViewport.width <= 769;
     }
   }
 }

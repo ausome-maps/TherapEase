@@ -1,12 +1,12 @@
 <template>
-  <div class="flex h-[fit-content] pb-[25px] w-[100%] border shadow-lg rounded-3xl">
+  <div class="flex h-[fit-content] justify-center pb-[25px] w-[100%] border shadow-lg rounded-3xl">
     <!-- Sidebar -->
     <div class="">
       <div class="pt-4 pb-2 px-8">
         <h1 class="text-2xl text-left font-light">Contact Details</h1>
       </div>
       <ul>
-        <li class="px-8">
+        <li class="px-4">
           <div class="flex">
             <div class="mr-2">
               <span class="icon">
@@ -17,12 +17,13 @@
                 </svg>
               </span>
             </div>
-            <div>
-              <a href="mailto:example@example.com">Email: {{ facilityDetails.email_address }}</a>
-            </div>
+            <div class="truncate">
+  <a href="mailto:example@example.com">Email: {{ facilityDetails.email_address }}</a>
+</div>
+
           </div>
         </li>
-        <li class="px-8">
+        <li class="px-4">
           <div class="flex">
             <div class="mr-2">
               <span class="icon">
@@ -39,7 +40,7 @@
             </div>
           </div>
         </li>
-        <li class="px-8">
+        <li class="px-4">
           <div class="flex">
             <div class="mr-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -56,7 +57,7 @@
             </div>
           </div>
         </li>
-        <li class="px-8">
+        <li class="px-4">
           <div class="flex">
             <div class="mr-2">
               <span class="icon">
