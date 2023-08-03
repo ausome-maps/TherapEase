@@ -1,4 +1,4 @@
-name: Therapease CI
+name: Therapease API CI
 on: push
 
 jobs:

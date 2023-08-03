@@ -11,23 +11,26 @@ npm v9.5.0
 
 ## Getting started
 
-Make sure that you have Node.js installed on your project. Run the following command to install all dependencies:
+1. Make sure that you have Node.js installed on your project. Run the following command to install all dependencies:
+    ```
+    npm install
+    ```
 
-```
-npm install
-```
+2. Run this command to compile and bundle the source code:
+    ```
+    npm run dev
+    ```
 
-Run this command to compile and bundle the source code:
-
-```
-npm run dev
-```
-
-Run this command to build the project:
-
-```
-npm run build
-```
+3. Run this command to build the project:
+    ```
+    npm run build
+    ```
+    This will produce a folder `.output`.
+4. Run this command to run the built app.
+    ```
+    node .output/server/index.mjs
+    ```
+    You can use Nginx to reverse proxy to this service.
 
 ## Flowbite Components
 
