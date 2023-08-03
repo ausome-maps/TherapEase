@@ -9,7 +9,7 @@
           <AppListingHeader :show-map="showMap" @hide-map="showMap = false" @show-map="showMap = true"
             :view-mode="viewMode" @change-view-mode="handleChangeViewMode" :facilities="facilities"
             :filteredFacilities="filteredFacilities" />
-          <AppCardList v-if="viewMode === 'card'" :facilities="facilities" :filteredFacilities="filteredFacilities" />
+          <AppCardList v-if="viewMode === 'card'" :facilities="data" :filteredFacilities="filteredFacilities" />
           <AppListView v-else-if="viewMode === 'list'" :facilities="facilities"
             :filteredFacilities="filteredFacilities" />
         </ClientOnly>
@@ -26,11 +26,12 @@
   
   
 <script>
-
+import data from '../components/facility-data.json'
 export default {
   
   data() {
     return {
+      data: data.features,
       filteredFacilities: [{}],
       viewMode: 'card',
       showMap: true,
@@ -151,7 +152,6 @@ export default {
 
   mounted() {
     this.checkIfMobile(); // Initial check
-
     // Watch for changes in the window width
     window.addEventListener('resize', this.checkIfMobile);
   },

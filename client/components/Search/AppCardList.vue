@@ -3,7 +3,7 @@
         <div
             class="bg-transparent grid mx-autogrid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-2 sm:gap-4 p-4">
             <div v-for="facility in facilities" :key="facility.id"
-                class="transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110">
+                class="transition duration-500 ease-in-out p-2 transform hover:-translate-y-1 hover:scale-110">
                 <AppCard :facilityData="facility"
                     class="relative max-h-[300px] rounded-lg hover:shadow-xl transition-shadow duration-300 ease-in-out" />
             </div>
@@ -35,6 +35,9 @@ export default {
             type: Array,
             required: true
         }
+    },
+    mounted() {
+        // console.log(this.facilities);
     }
 
 };

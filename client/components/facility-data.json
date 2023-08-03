@@ -19,24 +19,24 @@
                 },
                 "date_updated": "2023-07-19T22:43:32.508+08:00",
                 "info_src_name": "Pilar Balboa",
-                "info_src_designation": "Center Manager",
+                "info_src_designation": "",
                 "placename": "Play Explorers Therapy Center",
-                "desc_long": "Play Explorers Therapy Center provides an interactive and fun environment where children can explore and learn at their own pace. Our experienced therapists are dedicated to helping every child reach their full potential.",
-                "desc_short": "An interactive therapy center for children's growth and learning.",
+                "desc_long": "",
+                "desc_short": "",
                 "address": "2396 Leon Guinto St, Malate, Manila",
-                "region": "NCR – National Capital Region",
+                "region": "NCR \u2013 National Capital Region",
                 "city": "Manila City",
-                "province": "Metro Manila",
+                "province": "",
                 "landmarks_desc": "Our Lady of Fatima Parish",
                 "contact_number_mobile": "0917 838 9939",
-                "contact_number_landline": "(02) 8547 1234",
-                "alt_contact_numbers": "0918 123 4567",
+                "contact_number_landline": "",
+                "alt_contact_numbers": "",
                 "email_address": "playexplorerstherapycenter@gmail.com",
-                "alt_email_address": "info@playexplorerstherapycenter.ph",
-                "website": "www.playexplorerstherapycenter.ph",
+                "alt_email_address": "",
+                "website": "",
                 "social_media": {
-                    "facebook": "www.facebook.com/playexplorerstherapycenter",
-                    "instagram": "www.instagram.com/playexplorerstherapycenter"
+                    "facebook": "",
+                    "instagram": ""
                 },
                 "caters_to": [
                     "Pediatric"
@@ -44,24 +44,23 @@
                 "other_services": "Dance Classes, Physical Therapy for Pediatrics",
                 "images": [
                     {
-                        "img_name": "download (3)-22_38_28.jpg",
-                        "img_url": "https://plus.unsplash.com/premium_photo-1689177357836-52c9d90d3d6f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8&auto=format&fit=crop&w=500&q=60"
+                        "img_name": "IMG_3582-22_10_4.jpg",
+                        "img_url": "https://kc.kobotoolbox.org/media/original?media_file=chamthesleeptalker%2Fattachments%2F447322184eae4590a1aeac4545f79929%2F89b10ba5-e5eb-402b-a5d3-ab7afaf294ef%2FIMG_3582-22_10_4.jpg"
                     },
                     {
-                        "img_name": "download (4)-22_38_49.jpg",
-                        "img_url": "https://plus.unsplash.com/premium_photo-1689177357836-52c9d90d3d6f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8&auto=format&fit=crop&w=500&q=60"
+                        "img_name": "IMG_3583-22_10_11.jpg",
+                        "img_url": "https://kc.kobotoolbox.org/media/original?media_file=chamthesleeptalker%2Fattachments%2F447322184eae4590a1aeac4545f79929%2F89b10ba5-e5eb-402b-a5d3-ab7afaf294ef%2FIMG_3583-22_10_11.jpg"
                     },
                     {
-                        "img_name": "download (5)-22_38_49.jpg",
-                        "img_url": "https://plus.unsplash.com/premium_photo-1689177357836-52c9d90d3d6f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8&auto=format&fit=crop&w=500&q=60"
+                        "img_name": "IMG_3584-22_10_18.jpg",
+                        "img_url": "https://kc.kobotoolbox.org/media/original?media_file=chamthesleeptalker%2Fattachments%2F447322184eae4590a1aeac4545f79929%2F89b10ba5-e5eb-402b-a5d3-ab7afaf294ef%2FIMG_3584-22_10_18.jpg"
                     }
-                    
                 ],
                 "services_offered": {
                     "speechlanguagetherapy": {
                         "label": "Speech-Language Therapy",
                         "mode": {
-                            "teletherapy": 1,
+                            "teletherapy": 0,
                             "onsite": 1,
                             "home_service": 0
                         }
@@ -110,8 +109,8 @@
                         "label": "Social Skills Training",
                         "mode": {
                             "teletherapy": 0,
-                            "onsite": 0,
-                            "home_service": 3
+                            "onsite": 2,
+                            "home_service": 0
                         }
                     },
                     "integration": {
@@ -819,10 +818,10 @@
                     "Adolescent"
                 ],
                 "other_services": "",
-                "image": [
+                "images": [
                     {
                         "img_name": "SI Rm-7_54_43.jpg",
-                        "img_url": "https://kc.kobotoolbox.org/media/original?media_file=chamthesleeptalker%2Fattachments%2F447322184eae4590a1aeac4545f79929%2F20dd293c-3047-4894-bdb8-d1ca7c099c84%2FSI_Rm-7_54_43.jpg"
+                        "img_url": "https://kc.kobotoolbox.org/media/original?media_file=chamthesleeptalker%2Fattachments%2F447322184eae4590a1aeac4545f79929%2F20dd293c-3047-4894-bdb8-d1ca7c099c84%2FOT_Rm-7_54_50.JPG"
                     },
                     {
                         "img_name": "OT Rm-7_54_50.JPG",
@@ -837,7 +836,6 @@
                 "desc_short": "",
                 "province": "",
                 "contact_number_landline": "",
-                "images": [],
                 "services_offered": {
                     "speechlanguagetherapy": {
                         "label": "Speech-Language Therapy",
