@@ -3,26 +3,18 @@ version: '3.7'
 services:
   frontend:
     container_name: therapease_frontend
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    command: npm run dev
-    volumes:
-      - ./client:/code/app
+    image: ghcr.io/ausome-maps/therapease-ui:latest
+    command: node server/index.mjs
     env_file:
       - ./.env.sample
     ports:
-      - "9002:3000"
+      - "9002:9002"
     depends_on:
       - api
   api:
     container_name: therapease_api
-    build:
-      context: ./api
-      dockerfile: Dockerfile
+    image: ghcr.io/ausome-maps/therapease-api:latest
     command: uvicorn main:app --host 0.0.0.0 --port 5000 --reload
-    volumes:
-      - ./api/app:/code
     expose:
       - 5000
     env_file:
