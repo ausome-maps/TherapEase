@@ -55,9 +55,5 @@ export default {
       console.log('Image loaded successfully.');
     },
   },
-
-  mounted() {
-    console.log(this.imageSource) // print the computed image source
-  }
 };
 </script>
