@@ -25,7 +25,35 @@ export default {
     data() {
         return {
             isPASPChecked: false,
-            isPAOTChecked: false
+            isPAOTChecked: false,
+            services: [
+    {"key": "speechlanguagetherapy", "label": "Speech-Language Therapy"},
+    {"key": "speechlanguagepathology", "label": "Speech-Language Pathology"},
+    {"key": "occupationaltherapy", "label": "Occupational Therapy"},
+    {"key": "behavioraltherapy", "label": "Behavioral Therapy"},
+    {"key": "physicaltherapy", "label": "Physical Therapy"},
+    {"key": "lifeskillstraining", "label": "Life Skills Training"},
+    {"key": "socialskillstraining", "label": "Social Skills Training"},
+    {"key": "integration", "label": "Integration"},
+    {"key": "integrationprogram", "label": "Integration Program"},
+    {"key": "jobcoaching", "label": "Job Coaching"},
+    {"key": "specialeducation", "label": "Special Education"},
+    {"key": "spedtutorials", "label": "SpEd Tutorials"},
+    {"key": "parentcoaching", "label": "Parent Coaching"},
+    {"key": "educationsessionforfamilies", "label": "Education Session for Families"},
+    {"key": "feeding", "label": "Feeding"},
+    {"key": "counseling", "label": "Counseling"},
+    {"key": "psychotherapy", "label": "Psychotherapy"},
+    {"key": "abatherapy", "label": "ABA Therapy"},
+    {"key": "mnri", "label": "MNRI"},
+    {"key": "sensoryintegration", "label": "Sensory Integration"},
+    {"key": "playschool", "label": "Play School"},
+    {"key": "dysphagiamanagement", "label": "Dysphagia Management"},
+    {"key": "orthoses", "label": "Orthoses (Splinting)"},
+    {"key": "homeschoolfacilitation", "label": "Homeschool Facilitation"},
+    {"key": "rehabconsultation", "label": "Rehab Consultation"}
+]
+
         }
     },
     // rest of your component's options...
@@ -204,18 +232,9 @@ export default {
                             <h2 class="font-bold">Interventions</h2>
                         </div>
                         <div class="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-2">
-                            <!-- Individual Button -->
-                            <AppCheckbox label="Speech-Language Therapy" id_="SLT"/>
-                            <AppCheckbox label="Physical Therapy" id_="PT" />
-                            <AppCheckbox label="ABA Therapy" id_="ABA"/>
-                            <AppCheckbox label="Speech-Language Therapy" id_="SLT" />
-                            <AppCheckbox label="Speech-Language Therapy" id_="SLT"  />
-                            <AppCheckbox label="Speech-Language Therapy" id_="SLT"  />
-                            <AppCheckbox label="Speech-Language Therapy" id_="SLT"  />
-                            <AppCheckbox label="Speech-Language Therapy" id_="SLT"  />
+    <AppCheckbox v-for="service in services" :key="service.key" :label="service.label" :id_="service.key" class="min-h-[35px]" />
+</div>
 
-
-                        </div>
                     </div>
 
 

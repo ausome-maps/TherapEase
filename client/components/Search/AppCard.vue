@@ -3,10 +3,10 @@
     <a :href="facilityData.properties.url">
       <div v-if="loading">
         <!-- Skeleton -->
-        <div class="animate-pulse bg-gray-200 h-[220px] rounded-[20px]"></div>
+        <div class="animate-pulse bg-gray-200 h-[220px] rounded-[15px]"></div>
       </div>
       <img v-else 
-    class="object-cover mx-auto rounded-[20px] h-[220px] w-full sm:w-auto" 
+    class="object-cover mx-auto rounded-[15px] h-[220px] w-full sm:w-auto" 
     :src="imageSource"
     :alt="facilityData.properties.placename"
     @load="handleImageLoad"
@@ -41,7 +41,7 @@ export default {
     imageSource() {
   let image = this.facilityData.properties.images.find(img => img.img_url && img.img_url.trim() !== "");
   return image ? image.img_url : this.image_placeholder;
-}
+},
 
 
   },
