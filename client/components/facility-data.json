@@ -110,8 +110,8 @@
                         "label": "Social Skills Training",
                         "mode": {
                             "teletherapy": 0,
-                            "onsite": 2,
-                            "home_service": 0
+                            "onsite": 0,
+                            "home_service": 3
                         }
                     },
                     "integration": {

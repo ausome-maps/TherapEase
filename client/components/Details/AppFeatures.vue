@@ -3,23 +3,24 @@
     <div class="grid gap-4">
       <!-- Column for Services -->
       <div class="">
-        <h2 class="text-2xl mb-2 text-red-400 font-semibold">{{ label }}</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <ul v-for="(service, index) in services" :key="service.id" :class="{ 'col-span-2': index % 2 === 0 }">
-            <li>
-              <details>
-                <summary class="cursor-pointer font-bold">{{ service.label }}</summary>
-            <li v-for="(value, key) in service.mode" :key="key">
-              <span v-if="value !== 0">
-                <span class="list-item-bullet ml-4">&#8226;</span>
-                {{ key }}
-              </span>
-            </li>
-            </details>
-            </li>
-          </ul>
-        </div>
-      </div>
+  <h2 class="text-2xl mb-2 text-red-400 font-semibold">{{ label }}</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+    <ul v-for="(service, index) in services" :key="service.id" :class="{ 'col-span-2': index % 2 === 0 }">
+      <li>
+        <details>
+          <summary class="cursor-pointer font-bold">{{ service.label }}</summary>
+          <li v-for="(value, key) in service.mode" :key="key">
+            <span v-if="value !== 0">
+              <span class="list-item-bullet ml-4">&#8226;</span>
+              {{ key }}: {{ getSessionType(value) }}
+            </span>
+          </li>
+        </details>
+      </li>
+    </ul>
+  </div>
+</div>
+
       <div class="border-t border-gray-300 my-4 mr-4"></div>
       <div class="">
         <h2 class="text-2xl mb-2 text-red-400 font-semibold">Other Services</h2>
@@ -48,7 +49,19 @@ export default {
       type: String,
       required: true
     }
+  },
+  methods: {
+  getSessionType(value) {
+    switch(value) {
+      case 0: return "No Offering";
+      case 1: return "Individual";
+      case 2: return "Group";
+      case 3: return "Individual and Group";
+      default: return "";
+    }
   }
+}
+
 }
 </script>
   

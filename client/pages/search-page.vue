@@ -28,6 +28,7 @@
 <script>
 
 export default {
+  
   data() {
     return {
       filteredFacilities: [{}],
