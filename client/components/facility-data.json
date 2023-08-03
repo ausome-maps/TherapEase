@@ -61,7 +61,7 @@
                         "label": "Speech-Language Therapy",
                         "mode": {
                             "teletherapy": 0,
-                            "onsite": 1,
+                            "onsite": 0,
                             "home_service": 0
                         }
                     },

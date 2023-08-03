@@ -1,7 +1,7 @@
 <template>
   <div class="relative z-1 w-full flex flex-col justify-center rounded">
     <div :class="{ 'justify-center': !showMap }" class="flex flex-col sm:flex-row h-[100%] min-h-[800px] gap-4">
-      <div class="w-full lg:max-w-[850px] flex-grow">
+      <div class="w-full lg:max-w-[850px] xl:max-w-[1100px] flex-grow">
         <ClientOnly>
           <div class="px-5 pb-4 sticky top-0 z-50 bg-white">
             <AppSearchAndFilter />

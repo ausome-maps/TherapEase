@@ -1,6 +1,6 @@
 <template>
     <div class="tile flex overflow-ellipsis w-full py-2 overflow-hidden">
-        <div class="w-[250px] relative">
+        <div class="w-[250px] h-[200px] relative">
             <a :href="facilityData.properties.url">
                 <img class="tile-image object-cover rounded-[15px] h-full sm:min-w-[150px] md:min-w-[165px] lg:min-w-[230px] xl:min-w-[250px]"
                     :src="imageSource" :alt="facilityData.properties.placename" style="width:260px;" />

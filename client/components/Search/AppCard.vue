@@ -6,7 +6,7 @@
         <div class="animate-pulse bg-gray-200 h-[220px] rounded-[15px]"></div>
       </div>
       <img v-else 
-    class="object-cover mx-auto rounded-[15px] h-[220px] w-full sm:w-auto" 
+    class="object-cover mx-auto rounded-[15px] h-[220px] min-w-full sm:w-auto" 
     :src="imageSource"
     :alt="facilityData.properties.placename"
     @load="handleImageLoad"
