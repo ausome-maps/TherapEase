@@ -3,3 +3,4 @@ env/
 client/.nuxt
 client/.vite
 __pycache__/
+.git

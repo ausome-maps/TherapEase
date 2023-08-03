@@ -1,0 +1,27 @@
+FROM node:16.20.1-slim as build
+
+ENV WORKDIR=/app
+ENV APP_HOME=/app
+ENV USER=node
+
+USER $USER
+
+# set work dir as app
+WORKDIR $APP_HOME
+# copy the nuxt project content with proper permission for the user nuxtuser
+COPY --chown=$USER:$USER . $APP_HOME
+RUN npm install && npm run build
+
+FROM node:16.20.1-slim
+ENV WORKDIR=/app
+ENV APP_HOME=/app
+ENV USER=node
+
+USER $USER
+
+# set work dir as app
+WORKDIR $APP_HOME
+COPY --chown=$USER:$USER --from=build $APP_HOME/.output ./
+EXPOSE 9002
+ENV HOST=0.0.0.0 PORT=9002 NODE_ENV=production
+CMD ["node","/app/server/index.mjs"]
