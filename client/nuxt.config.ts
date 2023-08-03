@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
     runtimeConfig: {
         public: {
-            apiURL: ""
+            apiURL: process.env.NUXT_API_URL || "http://localhost:9001" // this can be accessed by this.$config.public.apiURL.
         }
     },
     
