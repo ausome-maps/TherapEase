@@ -45,7 +45,7 @@ services:
     container_name: therapease_cache
     image: redis:6.0.20-alpine3.18
   traefik:
-    image: traefik:v2.2
+    image: traefik:v2.10.4
     ports:
       - "9002:9002"
       - "9001:9001"
