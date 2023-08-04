@@ -25,18 +25,18 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
-    command: uvicorn main:app --host 0.0.0.0 --port 5000 --reload
+    command: uvicorn main:app --host 0.0.0.0 --port 9001 --reload
     expose:
-      - 5000
+      - 9001
     volumes:
       - ./api:/usr/src
     env_file:
       - ./.env.sample
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.fastapi.rule=Host(`fastapi.localhost`)" # need to be configured in DNS registrar
-      # - "traefik.http.routers.fastapi.tls=true"
-      # - "traefik.http.routers.fastapi.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.api.rule=Host(`api.localhost`)" # need to be configured in DNS registrar
+      # - "traefik.http.routers.api.tls=true"
+      # - "traefik.http.routers.api.tls.certresolver=letsencrypt"
     depends_on:
       - geocoding
       - search
@@ -47,8 +47,8 @@ services:
   traefik:
     image: traefik:v2.2
     ports:
-      - "8009:9002"
-      - "8008:5000"
+      - "9002:9002"
+      - "9001:9001"
       - "8081:8080" # traefik dashboard
       # - "443:443"
     volumes:
