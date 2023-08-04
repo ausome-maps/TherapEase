@@ -32,3 +32,7 @@ The entire platform can be run using `Docker` using `docker compose`. Refer to t
 ## Development
 
 Development information can be found under the `docs` directory.
+
+## Utils
+
+The `utils` directory contains a variety of scripts that are used to work with the application.
