@@ -110,8 +110,7 @@ DEFAULT_ACCREDITATION = {"paot": 0, "pasp": 0}
 
 
 class FaciltyProperties(BaseModel):
-    start: Optional[datetime] = Field(default_factory=datetime.now)
-    end: Optional[datetime] = Field(default_factory=datetime.now)
+    osm_id: str | None = ""
     info_src_name: str | None = ""
     info_src_designation: str | None = ""
     placename: str | None = ""
@@ -128,7 +127,6 @@ class FaciltyProperties(BaseModel):
     other_services: str | None = ""
     caters_to: List | None = []
     images: List | None = []
-    osm_id: str | None = ""
     accreditation: Dict | None = DEFAULT_ACCREDITATION
 
 
