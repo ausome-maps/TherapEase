@@ -27,7 +27,6 @@ async def facilities_store_url(facilities: Facilities):
 
 
 @router.get("/facilities")
-@cache(namespace="facilities", expire=60, coder=JsonCoder)
 async def facilities_fetch_url(request: Request):
     """
     Fetch facilities from FullText Search. This is a wrapper around the full text search API which does not require a query parameter

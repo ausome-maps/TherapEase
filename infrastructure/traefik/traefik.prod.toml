@@ -1,9 +1,17 @@
 [entryPoints]
-  [entryPoints.web]
-    address = ":80"
-  [entryPoints.web.http]
-    [entryPoints.web.http.redirections]
-      [entryPoints.web.http.redirections.entryPoint]
+  [entryPoints.api]
+    address = ":9001"
+  [entryPoints.api.http]
+    [entryPoints.api.http.redirections]
+      [entryPoints.api.http.redirections.entryPoint]
+        to = "websecure"
+        scheme = "https"
+
+  [entryPoints.ui]
+    address = ":9002"
+  [entryPoints.ui.http]
+    [entryPoints.api.http.redirections]
+      [entryPoints.api.http.redirections.entryPoint]
         to = "websecure"
         scheme = "https"
 
@@ -17,7 +25,7 @@
     exposedByDefault = false
 
 [certificatesResolvers.letsencrypt.acme]
-  email = "your-email@example.com"
+  email = "info@ausomemaps.org"
   storage= "acme.json"
   [certificatesResolvers.letsencrypt.acme.httpChallenge]
     entryPoint = "web"

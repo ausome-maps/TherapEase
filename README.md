@@ -6,15 +6,21 @@ TherapEase is a platform that helps in identifying location of special education
 
 The entire platform can be run using `Docker` using `docker compose`. Refer to the `docker-compose.yml` for the extensive list of services.
 
-1. Run docker compose up
+1. Make `entrypoints.sh` executable.
+
+   ```bash
+   chmod +x api/app/entrypoint.sh
+   ```
+
+2. Run docker compose up
 
    ```bash
    docker compose up
    ```
 
-2. The API service can be accessed through a browser with the following URL http://localhost:9001. _You may refer to http://localhost:9001/docs for the list of available APIs._
+3. The API service can be accessed through a browser with the following URL http://localhost:9001. _You may refer to http://localhost:9001/docs for the list of available APIs._
 
-3. The UI or client service can be accessed through a browser with the following URL http://localhost:9002.
+4. The UI or client service can be accessed through a browser with the following URL http://localhost:9002.
 
 ### Requirements
 
