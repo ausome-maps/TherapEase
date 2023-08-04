@@ -17,8 +17,10 @@ app.include_router(facilities.router)
 async def root():
     return {"detail": "therapease api"}
 
+
 @app.on_event("startup")
 async def startup():
-    print(dependencies.REDIS_URL)
-    redis = aioredis.from_url(dependencies.REDIS_URL, encoding="utf8", decode_responses=True)
+    redis = aioredis.from_url(
+        dependencies.REDIS_URL, encoding="utf8", decode_responses=True
+    )
     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
