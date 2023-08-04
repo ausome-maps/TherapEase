@@ -12,7 +12,6 @@ client = TestClient(app)
 def _create_index():
     url = dependencies.SEARCH_URL + "/facilities_test"
     r = requests.put(url, headers={"content-type": "application/json"})
-    print(r.text)
     return r.status_code, url
 
 
@@ -168,8 +167,6 @@ def test_facilities_endpoint():
     resp_get = fts.get(
         {"q": "manila"}, dependencies.SEARCH_URL + f"/facilities_test/_search"
     )
-    print(resp_get)
     assert resp_post["_id"] == str(data["id"])
     _delete_index()
-    print(resp_get["hits"]["hits"])
     assert resp_get["hits"]["hits"][0]["_id"] == str(data["id"])
