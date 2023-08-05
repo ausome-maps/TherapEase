@@ -6,7 +6,8 @@ onMounted(() => {
     const $modalElement = document.querySelector('#modal');
     const $closeButton = document.querySelector('#closeButton');
     const modalOptions = {
-        backdropClasses: 'bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40'
+        backdrop: 'dynamic',
+        backdropClasses: 'absolute inset-0 z-10'
     }
     if ($modalElement) {
         const modal = new Modal($modalElement, modalOptions);
@@ -24,7 +25,35 @@ export default {
     data() {
         return {
             isPASPChecked: false,
-            isPAOTChecked: false
+            isPAOTChecked: false,
+            services: [
+    {"key": "speechlanguagetherapy", "label": "Speech-Language Therapy"},
+    {"key": "speechlanguagepathology", "label": "Speech-Language Pathology"},
+    {"key": "occupationaltherapy", "label": "Occupational Therapy"},
+    {"key": "behavioraltherapy", "label": "Behavioral Therapy"},
+    {"key": "physicaltherapy", "label": "Physical Therapy"},
+    {"key": "lifeskillstraining", "label": "Life Skills Training"},
+    {"key": "socialskillstraining", "label": "Social Skills Training"},
+    {"key": "integration", "label": "Integration"},
+    {"key": "integrationprogram", "label": "Integration Program"},
+    {"key": "jobcoaching", "label": "Job Coaching"},
+    {"key": "specialeducation", "label": "Special Education"},
+    {"key": "spedtutorials", "label": "SpEd Tutorials"},
+    {"key": "parentcoaching", "label": "Parent Coaching"},
+    {"key": "educationsessionforfamilies", "label": "Education Session for Families"},
+    {"key": "feeding", "label": "Feeding"},
+    {"key": "counseling", "label": "Counseling"},
+    {"key": "psychotherapy", "label": "Psychotherapy"},
+    {"key": "abatherapy", "label": "ABA Therapy"},
+    {"key": "mnri", "label": "MNRI"},
+    {"key": "sensoryintegration", "label": "Sensory Integration"},
+    {"key": "playschool", "label": "Play School"},
+    {"key": "dysphagiamanagement", "label": "Dysphagia Management"},
+    {"key": "orthoses", "label": "Orthoses (Splinting)"},
+    {"key": "homeschoolfacilitation", "label": "Homeschool Facilitation"},
+    {"key": "rehabconsultation", "label": "Rehab Consultation"}
+]
+
         }
     },
     // rest of your component's options...
@@ -56,7 +85,7 @@ export default {
             class="fixed top-0 left-0 right-0 z-50 hidden w-full p-2 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full ">
             <div class="relative w-full h-full max-w-3xl md:h-auto">
                 <!-- Modal content -->
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <div class="relative bg-white rounded-lg shadow-sm border-black border ">
                     <!-- Modal header -->
                     <div class="flex justify-center items-start p-4 border-b rounded-t dark:border-gray-600">
                         <h3 class="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">
@@ -203,18 +232,9 @@ export default {
                             <h2 class="font-bold">Interventions</h2>
                         </div>
                         <div class="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-2">
-                            <!-- Individual Button -->
-                            <AppCheckbox label="Speech-Language Therapy" id_="SLT"/>
-                            <AppCheckbox label="Physical Therapy" id_="PT" />
-                            <AppCheckbox label="ABA Therapy" id_="ABA"/>
-                            <AppCheckbox label="Speech-Language Therapy" id_="SLT" />
-                            <AppCheckbox label="Speech-Language Therapy" id_="SLT"  />
-                            <AppCheckbox label="Speech-Language Therapy" id_="SLT"  />
-                            <AppCheckbox label="Speech-Language Therapy" id_="SLT"  />
-                            <AppCheckbox label="Speech-Language Therapy" id_="SLT"  />
+    <AppCheckbox v-for="service in services" :key="service.key" :label="service.label" :id_="service.key" class="min-h-[35px]" />
+</div>
 
-
-                        </div>
                     </div>
 
 

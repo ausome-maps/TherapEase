@@ -1,0 +1,23 @@
+# traefik.dev.toml
+
+# listen on port 80
+[entryPoints]
+  [entryPoints.api]
+    address = ":9001" # the port exposed by the container
+  [entryPoints.client]
+    address = ":9002" # the port exposed by the container
+
+# Traefik dashboard over http
+[api]
+insecure = true
+
+
+[log]
+level = "DEBUG"
+
+[accessLog]
+
+# containers are not discovered automatically
+[providers]
+  [providers.docker]
+    exposedByDefault = false

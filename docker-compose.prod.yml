@@ -5,33 +5,38 @@ services:
     container_name: therapease_frontend
     build:
       context: ./client
-      dockerfile: Dockerfile
-    command: npm run dev
-    volumes:
-      - ./client:/code/app
+      dockerfile: Dockerfile.prod
+    image: ghcr.io/ausome-maps/therapease-ui:latest
+    command: node server/index.mjs
     env_file:
       - ./.env.sample
-    ports:
-      - "9002:3000"
+    expose:
+      - 9002
     depends_on:
       - api
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.client.rule=Host(`ui.localhost`)" # need to be configured in DNS registrar
+    #   - "traefik.http.routers.client.tls=true"
+    #   - "traefik.http.routers.client.tls.certresolver=letsencrypt"
   api:
     container_name: therapease_api
+    image: ghcr.io/ausome-maps/therapease-api:latest
     build:
       context: ./api
       dockerfile: Dockerfile
-    command: uvicorn main:app --host 0.0.0.0 --port 5000 --reload
-    volumes:
-      - ./api/app:/code
+    command: uvicorn main:app --host 0.0.0.0 --port 9001 --reload
     expose:
-      - 5000
+      - 9001
+    volumes:
+      - ./api:/usr/src
     env_file:
       - ./.env.sample
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.fastapi.rule=Host(`subdomain.example.com`)" # need to be configured in DNS registrar
-      - "traefik.http.routers.fastapi.tls=true"
-      - "traefik.http.routers.fastapi.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.api.rule=Host(`api.localhost`)" # need to be configured in DNS registrar
+      # - "traefik.http.routers.api.tls=true"
+      # - "traefik.http.routers.api.tls.certresolver=letsencrypt"
     depends_on:
       - geocoding
       - search
@@ -40,13 +45,15 @@ services:
     container_name: therapease_cache
     image: redis:6.0.20-alpine3.18
   traefik:
-    image: traefik:v2.2
+    image: traefik:v2.10.4
     ports:
-      - "80:80"
-      - "443:443"
+      - "9002:9002"
+      - "9001:9001"
+      - "8081:8080" # traefik dashboard
+      # - "443:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "$PWD/infrastructure/traefik/traefik.prod.toml:/etc/traefik/traefik.toml"
+      - "$PWD/infrastructure/traefik/traefik.dev.toml:/etc/traefik/traefik.toml"
   geocoding:
     container_name: therapease_geocoding
     image: mediagis/nominatim:4.2

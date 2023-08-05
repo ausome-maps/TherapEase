@@ -1,6 +1,5 @@
 # TherapEase (based on Tailwind CSS + Nuxt.js + Flowbite Starter (Vite))
 
-
 This repository is based on the [Tailwind CSS + Nuxt.js](https://flowbite.com/docs/getting-started/nuxt-js/) guide on the Flowbite website.
 
 ## Node and NPM versions
@@ -11,23 +10,33 @@ npm v9.5.0
 
 ## Getting started
 
-Make sure that you have Node.js installed on your project. Run the following command to install all dependencies:
+1. Make sure that you have Node.js installed on your project. Run the following command to install all dependencies:
 
-```
-npm install
-```
+   ```
+   npm install
+   ```
 
-Run this command to compile and bundle the source code:
+2. Create `.env` file and define the following:
+   ```
+   NUXT_API_URL=http://api-env-url
+   ```
+3. Run this command to compile and bundle the source code:
+   ```
+   npm run dev
+   ```
 
-```
-npm run dev
-```
+### Getting Started - Deployment
 
-Run this command to build the project:
-
-```
-npm run build
-```
+1. Run this command to build the project:
+   ```
+   npm run build
+   ```
+   This will produce a folder `.output`.
+2. Run this command to run the built app.
+   ```
+   node .output/server/index.mjs
+   ```
+   You can use Nginx to reverse proxy to this service.
 
 ## Flowbite Components
 
@@ -37,42 +46,97 @@ Let's use the [Modal component](https://flowbite.com/docs/components/modal/) as 
 
 ```html
 <template>
-    <div>
-        <div class="flex justify-center p-4">
-            <button id="button" data-modal-toggle="modal" data-modal-target="modal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Show modal</button>
-        </div>
-
-        <div id="modal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
-            <div class="relative w-full h-full max-w-2xl md:h-auto">
-                <!-- Modal content -->
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                    <!-- Modal header -->
-                    <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-600">
-                        <h3 class="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">
-                            Terms of Service
-                        </h3>
-                        <button id="closeButton" data-modal-hide="modal" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
-                        </button>
-                    </div>
-                    <!-- Modal body -->
-                    <div class="p-6 space-y-6">
-                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                            With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
-                        </p>
-                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                            The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant to ensure a common set of data rights in the European Union. It requires organizations to notify users as soon as possible of high-risk data breaches that could personally affect them.
-                        </p>
-                    </div>
-                    <!-- Modal footer -->
-                    <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                        <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I accept</button>
-                        <button type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600">Decline</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div>
+    <div class="flex justify-center p-4">
+      <button
+        id="button"
+        data-modal-toggle="modal"
+        data-modal-target="modal"
+        type="button"
+        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      >
+        Show modal
+      </button>
     </div>
+
+    <div
+      id="modal"
+      tabindex="-1"
+      aria-hidden="true"
+      class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full"
+    >
+      <div class="relative w-full h-full max-w-2xl md:h-auto">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+          <!-- Modal header -->
+          <div
+            class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-600"
+          >
+            <h3
+              class="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white"
+            >
+              Terms of Service
+            </h3>
+            <button
+              id="closeButton"
+              data-modal-hide="modal"
+              type="button"
+              class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+            </button>
+          </div>
+          <!-- Modal body -->
+          <div class="p-6 space-y-6">
+            <p
+              class="text-base leading-relaxed text-gray-500 dark:text-gray-400"
+            >
+              With less than a month to go before the European Union enacts new
+              consumer privacy laws for its citizens, companies around the world
+              are updating their terms of service agreements to comply.
+            </p>
+            <p
+              class="text-base leading-relaxed text-gray-500 dark:text-gray-400"
+            >
+              The European Union’s General Data Protection Regulation (G.D.P.R.)
+              goes into effect on May 25 and is meant to ensure a common set of
+              data rights in the European Union. It requires organizations to
+              notify users as soon as possible of high-risk data breaches that
+              could personally affect them.
+            </p>
+          </div>
+          <!-- Modal footer -->
+          <div
+            class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600"
+          >
+            <button
+              type="button"
+              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              I accept
+            </button>
+            <button
+              type="button"
+              class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600"
+            >
+              Decline
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 ```
 
@@ -103,18 +167,18 @@ Here's a full list of available functions to use to initialise the components:
 ```javascript
 <script setup>
 import { onMounted } from 'vue'
-import { 
-    initAccordions, 
-    initCarousels, 
-    initCollapses, 
-    initDials, 
-    initDismisses, 
-    initDrawers, 
-    initDropdowns, 
-    initDropdowns, 
-    initModals, 
-    initPopovers, 
-    initTabs, 
+import {
+    initAccordions,
+    initCarousels,
+    initCollapses,
+    initDials,
+    initDismisses,
+    initDrawers,
+    initDropdowns,
+    initDropdowns,
+    initModals,
+    initPopovers,
+    initTabs,
     initTooltips } from 'flowbite'
 
 // initialize components based on data attribute selectors
@@ -206,8 +270,8 @@ Flowbite also supports TypeScript as of v1.6.0 and it allows use to use type dec
 You can import these types or interfaces like this:
 
 ```javascript
-import { Modal } from 'flowbite'
-import type { ModalOptions, ModalInterface } from 'flowbite'
+import { Modal } from "flowbite";
+import type { ModalOptions, ModalInterface } from "flowbite";
 
 // other code
 ```
@@ -224,8 +288,8 @@ All of the Flowbite components also support type declaration for the options obj
 
 ```javascript
 const modalOptions: ModalOptions = {
-    placement: 'top-right'
-}
+  placement: "top-right",
+};
 
 const modal: ModalInterface = new Modal($modalElement, modalOptions);
 ```
@@ -235,19 +299,18 @@ Using types can be very benefitial because it makes sure that you only use the a
 Here's the full code using types with TypeScript:
 
 ```javascript
-import { Modal } from 'flowbite'
-import type { ModalOptions, ModalInterface } from 'flowbite'
+import { Modal } from "flowbite";
+import type { ModalOptions, ModalInterface } from "flowbite";
 
-const $buttonElement: HTMLElement = document.querySelector('#button');
-const $modalElement: HTMLElement = document.querySelector('#modal');
+const $buttonElement: HTMLElement = document.querySelector("#button");
+const $modalElement: HTMLElement = document.querySelector("#modal");
 
 const modalOptions: ModalOptions = {
-    placement: 'top-right'
-}
+  placement: "top-right",
+};
 
 const modal: ModalInterface = new Modal($modalElement, modalOptions);
-$buttonElement.addEventListener('click', () => modal.toggle());
+$buttonElement.addEventListener("click", () => modal.toggle());
 
 modal.show();
 ```
-

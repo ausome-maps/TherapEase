@@ -1,5 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+    runtimeConfig: {
+        public: {
+            apiURL: process.env.NUXT_API_URL || "http://localhost:9001" // this can be accessed by this.$config.public.apiURL.
+        }
+    },
+    
     modules: [
         '@nuxtjs/tailwindcss'
     ],
