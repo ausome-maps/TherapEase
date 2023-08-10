@@ -2,38 +2,36 @@
 export default defineNuxtConfig({
     runtimeConfig: {
         public: {
-            apiURL: process.env.NUXT_API_URL || "http://localhost:9001" // this can be accessed by this.$config.public.apiURL.
+          apiURL: process.env.NUXT_API_URL || "http://localhost:9001",
+          geocode: "http://localhost:9001/geocode"
         }
-    },
-    
-    modules: [
+      },
+      routeRules: {
+        '/geocode': {
+          proxy: { to: "http://localhost:9001/geocode" }
+        }
+      },
+      modules: [
         '@nuxtjs/tailwindcss'
-    ],
-    tailwindcss: {
+      ],
+      tailwindcss: {
         cssPath: '~/assets/css/input.css'
-    },
-    vite: {
+      },
+      vite: {
         server: {
-            watch:{
-                usePolling:true
-            },
-            hmr: {
-                 clientPort: 24600,
-                 port: 24600
-            }
-        }  
-    },
-    components: [
+          watch: {
+            usePolling: true
+          },
+          hmr: {
+            clientPort: 24600,
+            port: 24600
+          }
+        }
+      },
+      components: [
         {
-          path: '~/components', // will get any components nested in let's say /components/test too
-          pathPrefix: false,
-        },
+          path: '~/components',
+          pathPrefix: false
+        }
       ]
-    
-    
-    // vue: {  
-    //     compilerOptions: {
-    //         isCustomElement: (tag: string) => tag.startsWith('App'),
-    //     },
-    //   }
 })
