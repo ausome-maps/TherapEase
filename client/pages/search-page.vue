@@ -6,11 +6,11 @@
           <div class="px-5 pb-4 sticky top-0 z-50 bg-white">
             <AppSearchAndFilter @update-search="handleSearch" />
             <AppListingHeader :show-map="showMap" @hide-map="showMap = false" @show-map="showMap = true"
-              :view-mode="viewMode" @change-view-mode="handleChangeViewMode" :facilities="data"
-              :filteredFacilities="filteredFacilities" />
+              :view-mode="viewMode" @change-view-mode="handleChangeViewMode" :facilitiesLength="totalResults"
+              :filteredFacilitiesLength="currentPageResults" />
           </div>
-          <AppCardList v-if="viewMode === 'card'" :facilities="data" :filteredFacilities="filteredFacilities" />
-          <AppListView v-else-if="viewMode === 'list'" :facilities="data" :filteredFacilities="filteredFacilities" />
+          <AppCardList v-if="viewMode === 'card'" :facilities="data" :filteredFacilities="data" />
+          <AppListView v-else-if="viewMode === 'list'" :facilities="data" :filteredFacilities="data" />
         </ClientOnly>
       </div>
       <div v-if="showMap" class="w-full lg:flex-grow mr-8 h-[99vh] sticky top-5 z-10">
@@ -23,26 +23,48 @@
 
 <script>
 import data from '../components/facility-data.json'
+import { nextTick } from 'vue';
+
 export default {
   data() {
     return {
-      searchQuery: '',
+      searchQuery: '*', // default search query
       data: data.features,
       filteredFacilities: [{}],
       viewMode: 'card',
       showMap: true,
       isMobile: false,
-      data2: null
+      filteredData: [],
+      error: null,
+      isFetching: false,
+      paginationSize: 20,
+      totalResults: 0,
+      currentPageResults: 0
     };
   },
-  mounted() {
+  
+  
+  async mounted() {
     this.checkIfMobile(); // Initial check
     // Watch for changes in the window width
     window.addEventListener('resize', this.checkIfMobile);
+    // Load data based on the search query in the route or default to '*'
+    await nextTick();
+    await this.handleSearch();
+    console.log("INITIAL MOUNTED", this.filteredData);
+    this.searchQuery = this.$route.query.search || '*';
+   
   },
+  
   beforeUnmount() {
     // Clean up the event listener before the component is unmounted
     window.removeEventListener('resize', this.checkIfMobile);
+  },
+  watch: {
+    searchQuery(newQuery) {
+      // Update the URL's query parameter when searchQuery changes
+      this.$router.push({ query: { search: newQuery } });
+    }
   },
   methods: {
     checkIfMobile() {
@@ -53,12 +75,33 @@ export default {
       this.viewMode = newViewMode;
       console.log(this.viewMode);
     },
-    handleSearch(query) {
+    async handleSearch(query = this.searchQuery) {
+      // Use provided query or fallback to current searchQuery
       this.searchQuery = query;
-      console.log(this.searchQuery);
-      this.fetchGeocodeData();
+      try {
+        await this.fetchSearch();
+        console.log("INITIAL MOUNTED", this.filteredData.hits.hits);
+        this.data = this.filteredData.hits;
+        // Total number of results
+        this.totalResults = this.data.total.value;
+
+        // Number of results currently displayed on the page
+        this.currentPageResults = Math.min(this.paginationSize, this.data.hits.length);
+      } catch (error) {
+        console.log("No results found");
+        this.totalResults = 0;
+        this.currentPageResults = 0;
+      }
+    },
+
+    
+    async fetchSearch() {
+      const { data, error, isFetching } = await useFetch(`${this.$config.search}?q=${this.searchQuery}&size=20`);
+      console.log(data)
+      this.filteredData = data;
+      this.error = error;
+      this.isFetching = isFetching;
     }
   },
 }
 </script>
-  

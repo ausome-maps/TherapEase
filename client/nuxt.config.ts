@@ -1,9 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+    
     runtimeConfig: {
         public: {
           apiURL: process.env.NUXT_API_URL || "http://localhost:9001",
-          geocode: "http://localhost:9001/geocode"
+          geocode: "http://localhost:9001/geocode",
+          search: "http://localhost:9001/search",
+          baseURL: "http://localhost:9002/search-page"
         }
       },
       routeRules: {
