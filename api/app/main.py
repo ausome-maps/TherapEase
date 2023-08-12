@@ -1,6 +1,6 @@
 import dependencies
 from fastapi import FastAPI
-from routers import geocoder, search, facilities, auth
+from routers import geocoder, search, facilities, auth, users
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from fastapi.middleware.cors import CORSMiddleware
@@ -22,6 +22,7 @@ app.include_router(geocoder.router)
 app.include_router(search.router)
 app.include_router(facilities.router)
 app.include_router(auth.router)
+app.include_router(users.router)
 
 
 @app.get("/")

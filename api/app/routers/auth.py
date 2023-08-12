@@ -1,14 +1,29 @@
-from fastapi import APIRouter, Request, Response, Security
+from fastapi import APIRouter, Request, Response, Security, HTTPException, status
 from fastapi_jwt import JwtAuthorizationCredentials
 from dependencies import access_security, refresh_security
 from datetime import timedelta
+from libs.users.crud import retrieve_user
+from libs.encrypt import verify_password
+from models.users import LoginUserSchema, UserResponse
 
 router = APIRouter()
 
 
-@router.post("/auth")
-def auth():
-    subject = {"username": "username", "role": "user"}
+@router.post("/login")
+def auth(payload: LoginUserSchema):
+    user = retrieve_user(payload)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Incorrect Email or Password",
+        )
+
+    if not verify_password(payload.password, user["password"]):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Incorrect Email or Password",
+        )
+    subject = {"email": user["email"], "role": "user"}
     return {
         "access_token": access_security.create_access_token(subject=subject),
         "refresh_token": access_security.create_refresh_token(subject=subject),

@@ -13,3 +13,20 @@ SECRET_KEY = os.environ.get("FAST_API_SECRET_KEY", "mysecretkey123011")
 
 access_security = JwtAccessBearer(secret_key=SECRET_KEY, auto_error=True)
 refresh_security = JwtRefreshBearer(secret_key=SECRET_KEY, auto_error=True)
+
+
+MONGO_INITDB_ROOT_USERNAME = os.environ.get(
+    "MONGO_INITDB_ROOT_USERNAME", "therapease_mongo_user"
+)
+MONGO_INITDB_ROOT_PASSWORD = os.environ.get(
+    "MONGO_INITDB_ROOT_PASSWORD", "therapease_mongo_password"
+)
+MONGO_INITDB_DATABASE = os.environ.get("MONGO_INITDB_DATABASE", "therapease_db")
+MONGO_HOST = os.environ.get("MONGO_HOST", "localhost:6000")
+
+# DATABASE_URL = f"mongodb://{MONGO_INITDB_ROOT_USERNAME}:{MONGO_INITDB_ROOT_PASSWORD}@{MONGO_HOST}/{MONGO_INITDB_DATABASE}?authSource=admin"
+DATABASE_URL = f"mongodb://{MONGO_HOST}/{MONGO_INITDB_DATABASE}?authSource=admin"
+
+ACCESS_TOKEN_EXPIRES_IN = 15
+REFRESH_TOKEN_EXPIRES_IN = 60
+JWT_ALGORITHM = "RS256"
