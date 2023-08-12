@@ -7,3 +7,5 @@ pytest==7.4.0
 httpx==0.24.1
 fastapi-cache2==0.2.1
 redis==4.6.0
+pymongo==4.4.1
+fastapi-jwt==0.1.12

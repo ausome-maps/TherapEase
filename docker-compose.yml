@@ -34,6 +34,11 @@ services:
   cache:
     container_name: therapease_cache
     image: redis:6.0.20-alpine3.18
+  mongo:
+    container_name: therapease_mongo
+    image: mongo:6.0.8-jammy
+    env_file:
+      - ./.env.sample
   geocoding:
     container_name: therapease_geocoding
     image: mediagis/nominatim:4.2

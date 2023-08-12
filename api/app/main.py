@@ -1,13 +1,14 @@
 import dependencies
 from fastapi import FastAPI
-from routers import geocoder, search, facilities
+from routers import geocoder, search, facilities, auth
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from fastapi.middleware.cors import CORSMiddleware
 
+
 from redis import asyncio as aioredis
 
-origins = ['*']
+origins = ["*"]
 
 app = FastAPI()
 app.add_middleware(
@@ -20,6 +21,7 @@ app.add_middleware(
 app.include_router(geocoder.router)
 app.include_router(search.router)
 app.include_router(facilities.router)
+app.include_router(auth.router)
 
 
 @app.get("/")
