@@ -41,10 +41,7 @@ services:
       - '27017:27017'
     env_file:
       - ./.env.sample
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    command: mongod --auth
     volumes:
       - mongo_data:/data/db
   geocoding:
