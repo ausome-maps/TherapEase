@@ -1,10 +1,9 @@
-import dependencies
+from typing import Annotated
 from fastapi import APIRouter, Request
 from models.facilities import Facilities
 from libs.search.full_text import FullTextSearch
 from libs.facilities.transform import transform_es_result_to_geojson
-from fastapi_cache.decorator import cache
-from fastapi_cache.coder import JsonCoder
+import dependencies
 
 router = APIRouter()
 

@@ -1,35 +1,25 @@
-from datetime import datetime
-from pydantic import BaseModel, EmailStr, constr
 
+from beanie import PydanticObjectId
+from typing import Optional
 
-class UserBaseSchema(BaseModel):
+from fastapi_users import schemas
+
+from beanie import Document
+from fastapi_users.db import BeanieBaseUser, BeanieUserDatabase
+
+class User(BeanieBaseUser, Document):
     name: str
-    email: str
-    role: str | None = None
-    disabled: bool | None = None
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
 
-    class Config:
-        orm_mode = True
+async def get_user_db():
+    yield BeanieUserDatabase(User)
+
+class UserRead(schemas.BaseUser[PydanticObjectId]):
+    name: str
 
 
-class CreateUserSchema(UserBaseSchema):
-    password: constr(min_length=8)
-    passwordConfirm: str
-    disabled: bool = False
+class UserCreate(schemas.BaseUserCreate):
+    name: str
 
 
-class LoginUserSchema(BaseModel):
-    email: EmailStr
-    password: constr(min_length=8)
-
-
-class UserResponseSchema(UserBaseSchema):
-    id: str
-    pass
-
-
-class UserResponse(BaseModel):
-    status: str
-    user: UserResponseSchema
+class UserUpdate(schemas.BaseUserUpdate):
+    name: Optional[str]

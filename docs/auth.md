@@ -17,7 +17,7 @@ The following is how you can work with the auth service.
 3. Registering/Creating a user
 
    ```bash
-   curl -X POST -H "Content-type: application/json" http://localhost:9001/register -d '{"name":"sample name", "email": "sample3@sample.com", "password": "mypassword1234", "passwordConfirm": "mypassword1234"}'
+   curl -X POST -H "Content-type: application/json" http://localhost:9001/auth/register -d '{"name":"sample name", "email": "sample@sample.com", "password": "mypassword1234", "passwordConfirm": "mypassword1234"}'
    ```
 
 4. User Login

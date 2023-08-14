@@ -7,8 +7,10 @@ pytest==7.4.0
 httpx==0.24.1
 fastapi-cache2==0.2.1
 redis==4.6.0
-pymongo==4.4.1
-fastapi-jwt==0.1.12
 passlib==1.7.4
 bcrypt==4.0.1
 email-validator==2.0.0.post2
+beanie==1.21.0
+fastapi-users==12.1.1
+fastapi-users-db-beanie==3.0.0
+motor==3.2.0

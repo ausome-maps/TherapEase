@@ -1,17 +1,17 @@
-from pymongo import mongo_client
-import pymongo
 import dependencies
+import motor.motor_asyncio
+# from beanie import Document
+# from fastapi_users.db import BeanieBaseUser, BeanieUserDatabase
 
-client = mongo_client.MongoClient(
-    dependencies.DATABASE_URL, serverSelectionTimeoutMS=5000
+client = motor.motor_asyncio.AsyncIOMotorClient(
+    dependencies.DATABASE_URL, uuidRepresentation="standard"
 )
 
-try:
-    conn = client.server_info()
-    print(f'Connected to MongoDB {conn.get("version")}')
-except Exception:
-    print("Unable to connect to the MongoDB server.")
-
 db = client[dependencies.MONGO_INITDB_DATABASE]
-User = db.users
-User.create_index([("email", pymongo.ASCENDING)], unique=True)
+
+# class User(BeanieBaseUser, Document):
+#     name: str
+
+
+# async def get_user_db():
+#     yield BeanieUserDatabase(User)
