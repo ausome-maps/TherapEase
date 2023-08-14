@@ -69,16 +69,17 @@ export default {
     }
   },
   beforeRouteUpdate(to, from, next) {
-  if (to.query.id !== from.query.id) {
-    this.handleSearch();
-  }
-  next();
-},
+    if (to.query.id !== from.query.id) {
+      this.handleSearch();
+    }
+    next();
+  },
 
   async mounted() {
     this.checkIfMobile(); // Initial check
     // Watch for changes in the window width
     window.addEventListener('resize', this.checkIfMobile);
+    await this.$nextTick();
     await this.handleSearch();
   },
 
@@ -95,16 +96,18 @@ export default {
     async handleSearch() {
       await this.fetchSearch();
       try {
-        console.log("HATDOG", this.filteredData.hits.hits[0]._source.properties);
-        this.properties = this.filteredData.hits.hits[0]._source.properties;
+        console.log("HATDOG", this.filteredData);
+        this.properties = this.filteredData.features[0].properties;
+        this.coordinates = this.filteredData.features[0].geometry.coordinates;
       } catch (error) {
         console.log("Error on HandleSearch");
       }
     },
     async fetchSearch() {
-      const { data, error, isFetching } = await useFetch(`${this.$config.search}?q=${this.id}`);
+      const { data, error, isFetching } = await useFetch(`${this.$config.facilities}?q=${this.id}`, {
+        method: "GET"
+      });
       this.filteredData = data;
-      console.log("Filtered:", data)
       this.error = error;
       this.isFetching = isFetching;
     },
