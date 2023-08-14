@@ -2,7 +2,9 @@ from typing import Optional, Union, Dict, Any
 from passlib.context import CryptContext
 from beanie import PydanticObjectId
 from fastapi import Depends, Request
-from fastapi_users import BaseUserManager, UUIDIDMixin, InvalidPasswordException
+from fastapi_users.db import BeanieUserDatabase, ObjectIDIDMixin
+
+from fastapi_users import BaseUserManager, InvalidPasswordException
 from fastapi_users.password import PasswordHelper
 
 from models.users import User, UserCreate, get_user_db
@@ -13,7 +15,7 @@ SECRET = dependencies.SECRET_KEY
 context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 password_helper = PasswordHelper(context)
 
-class UserManager(UUIDIDMixin, BaseUserManager[User, PydanticObjectId]):
+class UserManager(ObjectIDIDMixin, BaseUserManager[User, PydanticObjectId]):
     reset_password_token_secret = SECRET
     verification_token_secret = SECRET
 
@@ -61,5 +63,5 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, PydanticObjectId]):
     async def on_after_delete(self, user: User, request: Optional[Request] = None):
         print(f"User {user.id} is successfully deleted")
 
-async def get_user_manager(user_db=Depends(get_user_db)):
+async def get_user_manager(user_db: BeanieUserDatabase = Depends(get_user_db)):
     yield UserManager(user_db, password_helper)

@@ -23,7 +23,12 @@ The following is how you can work with the auth service.
 4. User Login
 
    ```bash
-   curl -X POST -H "Content-type: application/json" http://localhost:9001/login -d '{"email":"sample3@sample.com", "password": "mypassword1234"}'
+      curl -v \
+      -H "Content-Type: multipart/form-data" \
+      -X POST \
+      -F "username=sample@sample.com" \
+      -F "password=mypassword1234" \
+      http://localhost:9001/auth/jwt/login
    ```
 
 5. Retrieve User Profile

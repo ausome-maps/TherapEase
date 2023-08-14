@@ -1,8 +1,9 @@
-from typing import Annotated
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Depends
 from models.facilities import Facilities
 from libs.search.full_text import FullTextSearch
 from libs.facilities.transform import transform_es_result_to_geojson
+from libs.auth import current_active_user
+from models.users import User
 import dependencies
 
 router = APIRouter()
@@ -25,7 +26,7 @@ async def facilities_store_url(facilities: Facilities):
     return resp
 
 
-@router.get("/facilities")
+@router.get("/facilities", dependencies=[Depends(current_active_user)])
 async def facilities_fetch_url(request: Request):
     """
     Fetch facilities from FullText Search. This is a wrapper around the full text search API which does not require a query parameter
@@ -42,3 +43,8 @@ async def facilities_fetch_url(request: Request):
         request.query_params, dependencies.SEARCH_URL + "/facilities/_search"
     )
     return transform_es_result_to_geojson(resp)
+
+
+@router.get("/authenticated-route")
+async def authenticated_route(user: User = Depends(current_active_user)):
+    return {"message": f"Hello {user.email}!"}
