@@ -3,12 +3,8 @@ from bson.objectid import ObjectId
 
 # from app import oauth2
 from database import User
-from libs import encrypt
+from libs import auth
 from serializers.user_serializers import userEntity, userResponseEntity
-import dependencies
-
-ACCESS_TOKEN_EXPIRES_IN = dependencies.ACCESS_TOKEN_EXPIRES_IN
-REFRESH_TOKEN_EXPIRES_IN = dependencies.REFRESH_TOKEN_EXPIRES_IN
 
 
 def create_user(payload):
@@ -19,10 +15,10 @@ def create_user(payload):
     if payload.password != payload.passwordConfirm:
         return False, "Password do not match"
     #  Hash the password
-    payload.password = encrypt.hash_password(payload.password)
+    payload.password = auth.get_hash_password(payload.password)
     del payload.passwordConfirm
     payload.role = "user"
-    payload.verified = True
+    payload.disabled = False
     payload.email = payload.email.lower()
     payload.created_at = datetime.utcnow()
     payload.updated_at = payload.created_at
@@ -31,8 +27,8 @@ def create_user(payload):
     return True, new_user
 
 
-def retrieve_user(payload):
-    db_user = User.find_one({"email": payload.email.lower()})
+def retrieve_user(email: str):
+    db_user = User.find_one({"email": email.lower()})
     if not db_user:
         return False
     user = userEntity(db_user)
