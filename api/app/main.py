@@ -1,6 +1,5 @@
-import uuid
 import dependencies
-from beanie import init_beanie
+from beanie import init_beanie, PydanticObjectId
 from fastapi import FastAPI
 from fastapi_users import FastAPIUsers
 from routers import geocoder, search, facilities
@@ -17,7 +16,7 @@ from redis import asyncio as aioredis
 
 origins = ["*"]
 
-fastapi_users = FastAPIUsers[User, uuid.UUID](
+fastapi_users = FastAPIUsers[User, PydanticObjectId](
     get_user_manager,
     [auth_backend],
 )
@@ -78,7 +77,7 @@ async def startup():
     )
     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
     await init_beanie(
-        database=db,  
+        database=db,
         document_models=[
             User,
         ],

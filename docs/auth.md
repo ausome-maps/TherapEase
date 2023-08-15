@@ -34,5 +34,5 @@ The following is how you can work with the auth service.
 5. Retrieve User Profile
 
    ```bash
-   curl -X GET -H "Content-type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzYW1wbGUzQHNhbXBsZS5jb20iLCJleHAiOjE2OTE5NzY0MzJ9.MOKotUTIWrpqSIAMwaDIvl6LJmsKFJckZ8pXIlnphO0" http://localhost:9001/users/protected
+   curl -X GET -H "Content-type: application/json" -H "Authorization: Bearer {Bearer-Token}" http://localhost:9001/users/me
    ```
