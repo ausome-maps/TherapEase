@@ -50,9 +50,7 @@ class BaseSearch:
         url_get = self.url
         if url is not None:
             url_get = url
-        print(query)
         resp = requests.get(url_get, json=query, headers=self.headers)
-        print("boom")
         # Returns a JSON string with the response.
         if resp.status_code != 200:
             return {
@@ -60,7 +58,6 @@ class BaseSearch:
                 "status_code": resp.status_code,
             }
         data = resp.json()
-        print(data)
         return data
 
     def put(self, data: dict, url: Optional[str] = None) -> Response:
