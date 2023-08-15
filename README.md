@@ -18,7 +18,7 @@ The entire platform can be run using `Docker` using `docker compose`. Refer to t
    docker compose up
    ```
 
-3. The API service can be accessed through a browser with the following URL http://localhost:9001. _You may refer to http://localhost:9001/docs for the list of available APIs._
+3. The API service can be accessed through a browser with the following URL http://localhost:9001. _You may refer to http://localhost:9001/docs for the list of available APIs. This will also create a user having the following credentials `email: root@admin.com and password: rootpassword1234._
 
 4. The UI or client service can be accessed through a browser with the following URL http://localhost:9002.
 
@@ -40,7 +40,6 @@ The entire platform can be run using `Docker` using `docker compose`. Refer to t
 Development information can be found under the `docs` directory.
 
 ### Running Tests
-
 
 ## Utils
 
