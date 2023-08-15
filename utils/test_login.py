@@ -2,7 +2,7 @@ import requests
 
 urls = "http://localhost:9001"
 
-data = {"username": "sample@sample.com", "password": "mypassword1234"}
+data = {"username": "root@admin.com", "password": "rootpassword1234"}
 
 r = requests.post(urls + "/auth/jwt/login", data=data)
 access_token = r.json()["access_token"]
