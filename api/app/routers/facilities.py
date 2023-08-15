@@ -1,4 +1,5 @@
 import dependencies
+import json
 from fastapi import APIRouter, Request
 from models.facilities import Facilities
 from libs.search.full_text import FullTextSearch
@@ -42,4 +43,20 @@ async def facilities_fetch_url(request: Request):
     resp = fts.get(
         request.query_params, dependencies.SEARCH_URL + "/facilities/_search"
     )
+    return transform_es_result_to_geojson(resp)
+
+
+@router.post("/facilities")
+async def facilities_fetch_url(request: Request):
+    """
+    Fetch facilities from FullText Search. This is a wrapper around the full text search API which does not require a query parameter
+
+    @param request - The request to be processed
+
+    @return A GeoJSON representation of the
+    """
+    # Returns a message if no query parameters are supplied.
+    fts = FullTextSearch()
+    data_query = await request.json()
+    resp = fts.post(data_query, dependencies.SEARCH_URL + "/facilities/_search")
     return transform_es_result_to_geojson(resp)
