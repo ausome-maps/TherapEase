@@ -15,4 +15,5 @@ There are 2 ways in implementing a query:
    ```
    curl -X POST http://localhost:9001/facilities -d '{"query": {"bool": {"filter": { "match":  { "properties.city": "Manila" }}}}}'
    ```
-   Since the metadata is stored under `properties` you will need to do the filter `properties.<filterName>`
+   Since the metadata is stored under `properties` you will need to do the filter `properties.<filterName>`.
+   In the query above, the search will only check the `city` property if there are other mentions of the search query for other fields, this will not be considered.
