@@ -8,4 +8,6 @@ echo "Opensearch started"
 
 curl -X PUT $SEARCH_URL/facilities
 
+python create_user.py
+
 exec "$@"

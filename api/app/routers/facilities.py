@@ -1,15 +1,16 @@
+from typing import List
 from fastapi import APIRouter, Request, Depends
 from models.facilities import Facilities
 from libs.search.full_text import FullTextSearch
 from libs.facilities.transform import transform_es_result_to_geojson
 from libs.auth import current_active_user
-from models.users import User
+from models.users import UserRead, User
 import dependencies
 
 router = APIRouter()
 
 
-@router.put("/facilities")
+@router.put("/facilities", dependencies=[Depends(current_active_user)])
 async def facilities_store_url(facilities: Facilities):
     """
     Stores facilities in FullTextSearch. This is a low - level function to be used by clients that want to store a set of facilities in a full text search.
@@ -26,14 +27,14 @@ async def facilities_store_url(facilities: Facilities):
     return resp
 
 
-@router.get("/facilities", dependencies=[Depends(current_active_user)])
+@router.get("/facilities")
 async def facilities_fetch_url(request: Request):
     """
-    Fetch facilities from FullText Search. This is a wrapper around the full text search API which does not require a query parameter
+    Fetches facilities by query. This is a view that uses FullTextSearch to perform a search and returns a GeoJSON object.
 
-    @param request - The request to be processed
+    @param request - The request for this endpoint. Required. The URL that we need to make a request to.
 
-    @return A GeoJSON representation of the
+    @return A GeoJSON object containing the query results of the facilities.
     """
     # Returns a message if no query parameters are supplied.
     if len(request.query_params) == 0:
@@ -45,6 +46,9 @@ async def facilities_fetch_url(request: Request):
     return transform_es_result_to_geojson(resp)
 
 
-@router.get("/authenticated-route")
-async def authenticated_route(user: User = Depends(current_active_user)):
-    return {"message": f"Hello {user.email}!"}
+@router.get("/facilities-users", response_model=List[User])
+async def list_users():
+    # u = await User.find_one({"email": "admin@sample.com"})
+    # await u.set({User.is_verified: True})
+    u = await User.find_all().to_list()
+    return u
