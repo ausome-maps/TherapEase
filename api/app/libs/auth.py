@@ -9,10 +9,6 @@ from fastapi_users import FastAPIUsers
 from libs.users.user_manager import get_user_manager
 from models.users import User
 
-bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
-
-SECRET = dependencies.SECRET_KEY
-
 
 def get_jwt_strategy() -> JWTStrategy:
     """
@@ -21,12 +17,15 @@ def get_jwt_strategy() -> JWTStrategy:
 
     @return A JWTStrategy with secret and lifetime_seconds set to 3600 seconds ( default ). Example :. from twisted. python import
     """
-    return JWTStrategy(secret=SECRET, lifetime_seconds=3600)
+    return JWTStrategy(
+        secret=dependencies.SECRET_KEY,
+        lifetime_seconds=dependencies.ACCESS_TOKEN_EXPIRES_IN,
+    )
 
 
 auth_backend = AuthenticationBackend(
     name="jwt",
-    transport=bearer_transport,
+    transport=BearerTransport(tokenUrl="auth/jwt/login"),
     get_strategy=get_jwt_strategy,
 )
 
