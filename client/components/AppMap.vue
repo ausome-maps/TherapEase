@@ -1,12 +1,16 @@
 <template>
   <div class="h-full w-full rounded-xl -z-10 relative">
+    <div class="info-card" :style="{ left: cardPosition.x, top: cardPosition.y }" v-if="showCard">
+  {{ cardContent }}
+</div>
+
+
+
     <l-map ref="map" v-model:zoom="zoom" :center="mapCenter" :use-global-leaflet="false">
-      <l-tile-layer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        layer-type="base"
-        name="OpenStreetMap"
-      ></l-tile-layer>
-      <l-marker v-for="coord in coordinates" :key="coord.toString()" :lat-lng="coord"></l-marker>
+      <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base"
+        name="OpenStreetMap"></l-tile-layer>
+      <l-marker v-for="([lat, lng, name, id]) in coordinates" :key="`${lat},${lng}`" :lat-lng="[lat, lng]"
+        @mouseover="showInfoCard($event, name)" @mouseout="hideInfoCard" @click="navigateToDetails(id)"></l-marker>
     </l-map>
   </div>
 </template>
@@ -16,46 +20,89 @@ import "leaflet/dist/leaflet.css";
 import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
 
 export default {
-components: {
-  LMap,
-  LTileLayer,
-  LMarker,
-},
-props: {
-  coordinates: {
-    type: Array,
-    required: true,
-    default: () => []
+  components: {
+    LMap,
+    LTileLayer,
+    LMarker,
   },
-  latitude: {
-    type: Number,
-    required: true,
+  props: {
+    coordinates: {
+      type: Array,
+      required: true,
+      default: () => []
+    },
+    latitude: {
+      type: Number,
+      required: true,
+    },
+    longitude: {
+      type: Number,
+      required: true,
+    },
+    id: {
+      type: String,
+      required: false,
+    }
   },
-  longitude: {
-    type: Number,
-    required: true,
+  data() {
+    return {
+      zoom: 12,
+      showCard: false,
+      cardContent: '',
+      cardPosition: { x: '50px', y: '20px' },
+    };
   },
-},
-data() {
-  return {
-    zoom: 12,
-  };
-},
-computed: {
-  mapCenter() {
-    return [this.latitude, this.longitude];
+  methods: {
+    showInfoCard(event, content) {
+    this.cardContent = content;
+    this.$nextTick(() => {
+        this.showCard = true;
+        
+        const mapContainer = this.$refs.map.$el;
+        const point = this.$refs.map.latLngToContainerPoint(event.latlng);
+        
+        // get the height of the info card
+        const cardHeight = this.$el.querySelector('.info-card').offsetHeight;
+        
+        // Adjust the y position to offset by the card height plus a little extra
+        this.cardPosition.x = `${point.x}px`;
+        this.cardPosition.y = `${point.y - cardHeight - 10}px`; // The 10px is a small padding
+    });
+}
+
+,
+    hideInfoCard() {
+      this.showCard = false;
+    },
+    navigateToDetails(id) {
+      this.$router.push(`/details-page?id=${id}`);
+    },
+  }
+  ,
+  computed: {
+    mapCenter() {
+      return [this.latitude, this.longitude];
+    },
   },
-},
-created() {
-  console.log("Latitude:", this.latitude);
-  console.log("Longitude:", this.longitude);
-  console.log("Coordinates:", this.coordinates);
-},
 };
 </script>
 
 <style scoped>
 .leaflet-container {
   border-radius: 15px;
+}
+
+.info-card {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px;
+  background-color: #D48180;
+  color: white;
+  font-weight: bold;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
 }
 </style>

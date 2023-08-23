@@ -108,12 +108,13 @@ export default {
     },
 
     async getMapCoordinates() {
-      console.log(this.data.hits)
       if (this.data && Array.isArray(this.data.hits)) {
         return this.data.hits.map(facility => {
           const name = facility._source.properties.placename
           const coords = facility._source.geometry.coordinates;
-          return [coords[1], coords[0]]; // returns [latitude, longitude]
+          const id = facility._id;
+          console.log(id)
+          return [coords[1], coords[0], name, id.toString()]; // returns [latitude, longitude]
         });
       }
       return [];
@@ -136,6 +137,7 @@ export default {
         this.coordinates = [];  // Reset the coordinates if there's an error
       }
     },
+
     async fetchSearch() {
   const startIndex = (this.currentPage - 1) * this.paginationSize;
 
@@ -166,8 +168,38 @@ export default {
     this.error = error.message;
     this.isFetching = false;
   }
-},
+}
+    // async fetchSearch() {
+    //   const startIndex = (this.currentPage - 1) * this.paginationSize;
+    //   const url = this.$config.search;
 
+    //   try {
+    //     const response = await fetch("http://localhost:9001/facilities", {
+    //       body: '{"query": {"bool": {"filter": { "match":  { "properties.city": "Manila" }}}}}',
+    //       headers: {
+    //         "Content-Type": "application/json"
+    //       },
+    //       method: "POST"
+    //     });
+
+    //     // Check if the response is successful
+    //     if (!response.ok) {
+    //       throw new Error('Network response was not ok');
+    //     }
+
+    //     const data = await response.json();
+    //     console.log(data.features[0].properties);
+    //     this.isFetching = false;
+    //     this.error = null;
+    //   } catch (error) {
+    //     console.log("no response")
+    //     this.filteredData = null;
+    //     this.error = error.message;
+    //     this.isFetching = false;
+    //   }
+    // }
+    //
+    ,
     goToPage(pageNumber) {
       this.currentPage = pageNumber;
       this.handleSearch();
