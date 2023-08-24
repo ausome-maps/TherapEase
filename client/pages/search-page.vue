@@ -173,7 +173,7 @@ export default {
       try {
         const response = await fetch("http://localhost:9001/facilities", {
           // body: '{"query": {"bool": {"filter": { "match": { "properties.accreditation.paot": "0" }}}}, "from": "0", "size": "10"}',
-          body: '{"query": {"bool": {"filter": { "match": { "properties.accreditation.paot": "1" }}}}, "from": "0", "size": "20"}',
+          body: `{"query": {"bool": {"filter": { "match": { "properties.accreditation.paot": "1" }}}}, "from": "${startIndex}", "size": "20"}`,
           headers: {
             "Content-Type": "application/json"
           },
