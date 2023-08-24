@@ -1,13 +1,13 @@
 <template>
     <div class="tile flex overflow-ellipsis w-full py-2 overflow-hidden">
         <div class="w-[250px] h-[200px] relative">
-            <NuxtLink :to="`/details-page?id=${facilityData._id}`">
+            <NuxtLink :to="`/details-page?id=${facilityData.id}`">
                 <img class="tile-image object-cover rounded-[15px] h-full sm:min-w-[150px] md:min-w-[165px] lg:min-w-[230px] xl:min-w-[250px]"
-                    :src="imageSource" :alt="facilityData._source.properties.placename" style="width:260px;" />
+                    :src="imageSource" :alt="facilityData.properties.placename" style="width:260px;" />
             </NuxtLink>
         </div>
         <div class="ml-5 flex flex-col justify-center w-full overflow-hidden">
-            <NuxtLink :to="`/details-page?id=${facilityData._id}`" class="overflow-hidden">
+            <NuxtLink :to="`/details-page?id=${facilityData.id}`" class="overflow-hidden">
                 <div class="flex">
                     <div class="icons">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%"
@@ -23,10 +23,10 @@
                         </svg>
                     </div>
                     <h2 class="overflow-hidden overflow-ellipsis tracking-tight text-gray-900 w-full">
-                        {{ facilityData._source.properties.address }}</h2>
+                        {{ facilityData.properties.address }}</h2>
                 </div>
                 <h3 class="overflow-hidden overflow-ellipsis font-semibold tracking-tight text-gray-900 w-full">
-                    {{ facilityData._source.properties.placename }}</h3>
+                    {{ facilityData.properties.placename }}</h3>
                 <div class="flex mt-1 gap-1">
                     <div class="icons">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%"
@@ -95,11 +95,11 @@
                                                 </div>
                                                 <h2
                                                     class="overflow-hidden overflow-ellipsis tracking-tight text-gray-900 w-full">
-                                                    {{ facilityData._source.properties.address }}</h2>
+                                                    {{ facilityData.properties.address }}</h2>
                                             </div>
                                             <h3
                                                 class="overflow-hidden overflow-ellipsis font-semibold tracking-tight text-gray-900 w-full">
-                                                {{ facilityData._source.properties.placename }}</h3>
+                                                {{ facilityData.properties.placename }}</h3>
                                         </div>
                                     </div>
                                 </header>
@@ -181,13 +181,13 @@ export default {
 },
   computed: {
     imageSource() {
-  let image = this.facilityData._source.properties.images.find(img => img.img_url && img.img_url.trim() !== "");
+  let image = this.facilityData.properties.images.find(img => img.img_url && img.img_url.trim() !== "");
   return image ? image.img_url : this.image_placeholder;
 },servicesWithNonZeroModeLength() {
       // Filter services with at least one mode not equal to 0 and calculate the length
-      return Object.keys(this.facilityData._source.properties.services_offered).filter(
+      return Object.keys(this.facilityData.properties.services_offered).filter(
         serviceKey =>
-          Object.values(this.facilityData._source.properties.services_offered[serviceKey].mode).some(modeValue => modeValue !== 0)
+          Object.values(this.facilityData.properties.services_offered[serviceKey].mode).some(modeValue => modeValue !== 0)
       ).length;
     }},
 mounted() {

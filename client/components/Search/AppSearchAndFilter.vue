@@ -1,15 +1,21 @@
 <template>
     <div class="flex justify-between items-center ">
-         <input 
+      <div class="relative flex items-center w-3/4">
+        <!-- Input Field -->
+        <input 
             type="text" 
             placeholder="Search..."
             v-model="searchInput"
-            class="shadow appearance-none border rounded-3xl py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2 w-3/4" />
-         <button 
+            @keyup.enter="emitSearchQuery"
+            class="shadow appearance-none border rounded-3xl py-2 px-3 pr-20 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-full" />
+
+        <!-- Search Button -->
+        <button 
             @click="emitSearchQuery"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            class="absolute inset-y-0 right-0 px-4 py-2 bg-red-400 hover:bg-white hover:text-red-400 border-l text-white font-bold rounded-r-3xl">
             Search
-         </button>
+        </button>
+    </div>
          <AppFilter />
     </div>
 </template>

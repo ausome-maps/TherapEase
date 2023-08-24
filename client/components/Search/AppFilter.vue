@@ -13,9 +13,6 @@ onMounted(() => {
         const modal = new Modal($modalElement, modalOptions);
         $buttonElement.addEventListener('click', () => modal.toggle());
         $closeButton.addEventListener('click', () => modal.hide());
-
-        // programatically show
-        // modal.show();
     }
 })
 </script>
@@ -26,38 +23,154 @@ export default {
         return {
             isPASPChecked: false,
             isPAOTChecked: false,
+            teletherapyChecked: false,
+            onsiteChecked: false,
+            homeserviceChecked: false,
+            individualChecked: false,
+            groupChecked: false,
+
+            serviceCheckboxes: {
+                speechlanguagetherapy: false,
+                speechlanguagepathology: false,
+                occupationaltherapy: false,
+                behavioraltherapy: false,
+                physicaltherapy: false,
+                lifeskillstraining: false,
+                socialskillstraining: false,
+                integration: false,
+                integrationprogram: false,
+                jobcoaching: false,
+                specialeducation: false,
+                spedtutorials: false,
+                parentcoaching: false,
+                educationsessionforfamilies: false,
+                feeding: false,
+                counseling: false,
+                psychotherapy: false,
+                abatherapy: false,
+                mnri: false,
+                sensoryintegration: false,
+                playschool: false,
+                dysphagiamanagement: false,
+                orthoses: false,
+                homeschoolfacilitation: false,
+                rehabconsultation: false
+            },
             services: [
-    {"key": "speechlanguagetherapy", "label": "Speech-Language Therapy"},
-    {"key": "speechlanguagepathology", "label": "Speech-Language Pathology"},
-    {"key": "occupationaltherapy", "label": "Occupational Therapy"},
-    {"key": "behavioraltherapy", "label": "Behavioral Therapy"},
-    {"key": "physicaltherapy", "label": "Physical Therapy"},
-    {"key": "lifeskillstraining", "label": "Life Skills Training"},
-    {"key": "socialskillstraining", "label": "Social Skills Training"},
-    {"key": "integration", "label": "Integration"},
-    {"key": "integrationprogram", "label": "Integration Program"},
-    {"key": "jobcoaching", "label": "Job Coaching"},
-    {"key": "specialeducation", "label": "Special Education"},
-    {"key": "spedtutorials", "label": "SpEd Tutorials"},
-    {"key": "parentcoaching", "label": "Parent Coaching"},
-    {"key": "educationsessionforfamilies", "label": "Education Session for Families"},
-    {"key": "feeding", "label": "Feeding"},
-    {"key": "counseling", "label": "Counseling"},
-    {"key": "psychotherapy", "label": "Psychotherapy"},
-    {"key": "abatherapy", "label": "ABA Therapy"},
-    {"key": "mnri", "label": "MNRI"},
-    {"key": "sensoryintegration", "label": "Sensory Integration"},
-    {"key": "playschool", "label": "Play School"},
-    {"key": "dysphagiamanagement", "label": "Dysphagia Management"},
-    {"key": "orthoses", "label": "Orthoses (Splinting)"},
-    {"key": "homeschoolfacilitation", "label": "Homeschool Facilitation"},
-    {"key": "rehabconsultation", "label": "Rehab Consultation"}
-]
+                { "key": "speechlanguagetherapy", "label": "Speech-Language Therapy" },
+                { "key": "speechlanguagepathology", "label": "Speech-Language Pathology" },
+                { "key": "occupationaltherapy", "label": "Occupational Therapy" },
+                { "key": "behavioraltherapy", "label": "Behavioral Therapy" },
+                { "key": "physicaltherapy", "label": "Physical Therapy" },
+                { "key": "lifeskillstraining", "label": "Life Skills Training" },
+                { "key": "socialskillstraining", "label": "Social Skills Training" },
+                { "key": "integration", "label": "Integration" },
+                { "key": "integrationprogram", "label": "Integration Program" },
+                { "key": "jobcoaching", "label": "Job Coaching" },
+                { "key": "specialeducation", "label": "Special Education" },
+                { "key": "spedtutorials", "label": "SpEd Tutorials" },
+                { "key": "parentcoaching", "label": "Parent Coaching" },
+                { "key": "educationsessionforfamilies", "label": "Education Session for Families" },
+                { "key": "feeding", "label": "Feeding" },
+                { "key": "counseling", "label": "Counseling" },
+                { "key": "psychotherapy", "label": "Psychotherapy" },
+                { "key": "abatherapy", "label": "ABA Therapy" },
+                { "key": "mnri", "label": "MNRI" },
+                { "key": "sensoryintegration", "label": "Sensory Integration" },
+                { "key": "playschool", "label": "Play School" },
+                { "key": "dysphagiamanagement", "label": "Dysphagia Management" },
+                { "key": "orthoses", "label": "Orthoses (Splinting)" },
+                { "key": "homeschoolfacilitation", "label": "Homeschool Facilitation" },
+                { "key": "rehabconsultation", "label": "Rehab Consultation" }
+            ]
 
         }
     },
-    // rest of your component's options...
+
+    methods: {
+        buildQuery() {
+      const queryClauses = [];
+      
+      // Iterate over standard checkboxes
+      for (let checkbox in this) {
+        if (typeof this[checkbox] === "boolean" && this[checkbox]) {
+          queryClauses.push({ term: { [checkbox]: true } });
+        }
+      }
+      
+      // Iterate over serviceCheckboxes
+      for (let service in this.serviceCheckboxes) {
+        if (this.serviceCheckboxes[service]) {
+          queryClauses.push({ term: { [service]: true } });
+        }
+      }
+      
+      // Combine all clauses with a logical OR (should)
+      return {
+        query: {
+          bool: {
+            match: queryClauses
+          }
+        }
+      };
+    },
+    generateQuery() {
+  const queryBody = this.buildQuery();
+  const queryBodyString = JSON.stringify(queryBody);
+  console.log(queryBodyString);
+  // Now you can send 'queryBodyString' to your OpenSearch backend or do whatever you need with it
 }
+
+  },
+        showValues(){
+            console.log(isPAOTChecked);
+        },
+    constructQuery(filters) {
+        let filterList = [];
+
+        // Add services to the filter
+        for (let service in filters) {
+            if (filters[service] && service !== 'isPASPChecked' && service !== 'isPAOTChecked') {
+                filterList.push({
+                    match: {
+                        ['properties.services.' + service]: '1'
+                    }
+                });
+            }
+        }
+
+        // Add PASP and PAOT to the filter if they're checked
+        if (filters.isPASPChecked) {
+            filterList.push({
+                match: {
+                    'properties.accreditation.pasp': '1'
+                }
+            });
+        }
+
+        if (filters.isPAOTChecked) {
+            filterList.push({
+                match: {
+                    'properties.accreditation.paot': '1'
+                }
+            });
+        }
+
+        // Construct the final query
+        let query = {
+            query: {
+                bool: {
+                    filter: filterList
+                }
+            },
+            from: '0',
+            size: '10'
+        };
+
+        return JSON.stringify(query);
+    }
+}
+
 </script>
 
 <style scoped>
@@ -105,11 +218,12 @@ export default {
                         <h2 class="font-bold">Accreditation</h2>
                         <div class="flex justify-between border-b pb-6">
                             <div>
-                                <AppCheckbox label="Philippine Association of Speech Pathologists" id_="PASP" />
+                                <AppCheckbox label="Philippine Association of Speech Pathologists" id_="PASP" v-model="isPASPChecked"/>
+
                             </div>
 
                             <div>
-                                <AppCheckbox label="Philippine Academy of Occupational Therapist" id_="PAOT"/>
+                                <AppCheckbox label="Philippine Academy of Occupational Therapist" id_="PAOT" v-model="isPAOTChecked"/>
                             </div>
                         </div>
                         <div>
@@ -118,67 +232,67 @@ export default {
                         <div class="flex space-x-2 sm:space-x-4 md:space-x-6 lg:space-x-6 pb-6 border-b">
                             <!-- Teletherapy Button -->
                             <ul>
-                                <input type="checkbox" id="teletherapy-option" value="" class="hidden peer" required="">
-                            <label for="teletherapy-option"
-                                class="active:shadow-sm flex flex-col items-center justify-center w-[165px] h-[85px] sm:p-2 sm:px-8 border shadow-md rounded-md peer-checked:border-black hover:text-gray-600  peer-checked:text-gray-600 ">
-                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                    width="43" height="43" viewBox="0 0 43 43" fill="none">
-                                    <path d="M43 0H0V43H43V0Z" fill="url(#teletherapy_button)" />
-                                    <defs>
-                                        <pattern id="teletherapy_button" patternContentUnits="objectBoundingBox" width="1"
-                                            height="1">
-                                            <use xlink:href="#image0_578_1190" transform="scale(0.01)" />
-                                        </pattern>
-                                        <image id="image0_578_1190" width="100" height="100"
-                                            xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAADJUlEQVR4nO2czW9NQRiHH6JF2gjCRtmIHdbWPiqa0AUWdrZ2VtYkPjYSqcTHRiKKf8HOR1LBQipSRG2ECisLWiQNPTK3o5jOvYk5p2feOL8nmaS97Z2e+3vOO3NOOmdACCGEEEIIIYQQQgghhBBC/GIrcB54BkwBhRqdMpjyWQ0BW6o8jZYCl4AfEkDqSeiyuwh0VyHjjkRQ1Whwu6yUy5JB1UPzhTJzRjhMPQB2Aj1lLDeEHmAX8DDI8DuwOaXDoYiM0mNgA+mOSDmX0tHzoBNXGSKN/iDLsZROPgedaJhKpzfI0mX7z4STUcgB4KMmfcKcJoCBhDxLC/kgGbS7knqbQ4ju1OmYgYRg6yTJLqTpFBJiCwkxhoQYQ0KMISHGkBBjSIgxJMQYEmIMCTFGo4WcBJZhi0YLeQLcApZjh8YLKYB7/r9xFpAQZkMYAVbktiEh/HVGPgZWS0jeOaQI2iiwJqMUDVnMD+EFsE5CbFRI4dtLYH0GKaoQ2kt5DWyUEBsVUvj2BthU4zGpQugs5BNwH1glIfkqZBBYCyyhflQhzIZwDbjqv76SQYSE8LtC3DOPi/wzfO77aWCDhNR/2TsKHAteG/HHcVZC6heyLfLaoT+W+q/MIKXRc0i7J5Xe+2M5Sv1ISIQjwGFdZdmokNyoQowhIcaQEGNIiDEkxBgSYgxzQtSQkMLwiVB7hUwY+NCF0ZZl44AB/4dzf/jCWHOZ7FkIIV+DDrT5THWbz3xJ6WQs6MRtxiXS2B1k+TSlk9NBJ24TLm1glrZv5aMgy1MJ/bQWm01HpPQbWnFumV5fGaEMl2lfpzfu01ZLmNpn652Bg1Fj7gpt3lZ+amTLwC3uay1OlgRMZOBW73M9ePFbxrVNTaIvcq/nFv1xMGLqRu6jbQA3I7nvdz/oAl5Ffng89xH/x5yI5D3uXbRwi5RnIr90F9iu+47K7kt2+CeHw5xd9nvDN5wxMKkVDW3RO/fFXkqsUtRYkAxmvAy3YLwtg348kwQWNIPx2DDVji6/lfiwvzaelCDKCpj0WQ77q6m5CVwIIYQQQgghhBBCCCGEEIIG8RNipb2RS8yLQwAAAABJRU5ErkJggg==" />
-                                    </defs>
-                                </svg>
-                                <span class="mt-2">Teletherapy</span>
-                            </label>
-                        </ul>
-                        <ul>
+                                <input type="checkbox" v-model="teletherapyChecked" id="teletherapy-option" value="" class="hidden peer" required="">
+                                <label for="teletherapy-option"
+                                    class="active:shadow-sm flex flex-col items-center justify-center w-[165px] h-[85px] sm:p-2 sm:px-8 border shadow-md rounded-md peer-checked:border-black hover:text-gray-600  peer-checked:text-gray-600 ">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="43" height="43" viewBox="0 0 43 43" fill="none">
+                                        <path d="M43 0H0V43H43V0Z" fill="url(#teletherapy_button)" />
+                                        <defs>
+                                            <pattern id="teletherapy_button" patternContentUnits="objectBoundingBox"
+                                                width="1" height="1">
+                                                <use xlink:href="#image0_578_1190" transform="scale(0.01)" />
+                                            </pattern>
+                                            <image id="image0_578_1190" width="100" height="100"
+                                                xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAADJUlEQVR4nO2czW9NQRiHH6JF2gjCRtmIHdbWPiqa0AUWdrZ2VtYkPjYSqcTHRiKKf8HOR1LBQipSRG2ECisLWiQNPTK3o5jOvYk5p2feOL8nmaS97Z2e+3vOO3NOOmdACCGEEEIIIYQQQgghhBBC/GIrcB54BkwBhRqdMpjyWQ0BW6o8jZYCl4AfEkDqSeiyuwh0VyHjjkRQ1Whwu6yUy5JB1UPzhTJzRjhMPQB2Aj1lLDeEHmAX8DDI8DuwOaXDoYiM0mNgA+mOSDmX0tHzoBNXGSKN/iDLsZROPgedaJhKpzfI0mX7z4STUcgB4KMmfcKcJoCBhDxLC/kgGbS7knqbQ4ju1OmYgYRg6yTJLqTpFBJiCwkxhoQYQ0KMISHGkBBjSIgxJMQYEmIMCTFGo4WcBJZhi0YLeQLcApZjh8YLKYB7/r9xFpAQZkMYAVbktiEh/HVGPgZWS0jeOaQI2iiwJqMUDVnMD+EFsE5CbFRI4dtLYH0GKaoQ2kt5DWyUEBsVUvj2BthU4zGpQugs5BNwH1glIfkqZBBYCyyhflQhzIZwDbjqv76SQYSE8LtC3DOPi/wzfO77aWCDhNR/2TsKHAteG/HHcVZC6heyLfLaoT+W+q/MIKXRc0i7J5Xe+2M5Sv1ISIQjwGFdZdmokNyoQowhIcaQEGNIiDEkxBgSYgxzQtSQkMLwiVB7hUwY+NCF0ZZl44AB/4dzf/jCWHOZ7FkIIV+DDrT5THWbz3xJ6WQs6MRtxiXS2B1k+TSlk9NBJ24TLm1glrZv5aMgy1MJ/bQWm01HpPQbWnFumV5fGaEMl2lfpzfu01ZLmNpn652Bg1Fj7gpt3lZ+amTLwC3uay1OlgRMZOBW73M9ePFbxrVNTaIvcq/nFv1xMGLqRu6jbQA3I7nvdz/oAl5Ffng89xH/x5yI5D3uXbRwi5RnIr90F9iu+47K7kt2+CeHw5xd9nvDN5wxMKkVDW3RO/fFXkqsUtRYkAxmvAy3YLwtg348kwQWNIPx2DDVji6/lfiwvzaelCDKCpj0WQ77q6m5CVwIIYQQQgghhBBCCCGEEIIG8RNipb2RS8yLQwAAAABJRU5ErkJggg==" />
+                                        </defs>
+                                    </svg>
+                                    <span class="mt-2">Teletherapy</span>
+                                </label>
+                            </ul>
+                            <ul>
 
-                            <!-- Onsite Button -->
-                            <input type="checkbox" id="onsite-option" value="" class="hidden peer" required="">
-                            <label for="onsite-option"
-                                class="active:shadow-sm flex flex-col items-center justify-center w-[165px] h-[85px] sm:p-2 sm:px-8 border shadow-md rounded-md peer-checked:border-black hover:text-gray-600  peer-checked:text-gray-600 ">
-                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                    width="34" height="34" viewBox="0 0 34 34" fill="none">
-                                    <path d="M34 0H0V34H34V0Z" fill="url(#onsite_button)" />
-                                    <defs>
-                                        <pattern id="onsite_button" patternContentUnits="objectBoundingBox" width="1"
-                                            height="1">
-                                            <use xlink:href="#image0_578_1194" transform="scale(0.01)" />
-                                        </pattern>
-                                        <image id="image0_578_1194" width="100" height="100"
-                                            xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAADYklEQVR4nO2b/4sNURjGX+NLdn3Za5GNiIiIiIhsRP5lERERERERERGRa5dr9+661947urVpe7rOnJk975lzOs+n5qc79zk772feOWfmzooQQgghhBBCSPzkNW69ug8+RCgkMCgkMCgkcCGaZJxDKCQ62CGBQSGRCinar2mRs5w5pM7Fh/bcajzQqvs1KYRCcnYIO0SdWCb13PM1Pfg5xAUZhVBIVdghBfCSVbIguedlb9X92ks+azsYzzmuDjSnEAoZBjtkEXaII1Jb9jZEZNPi1vAwXmlSE2ILhRRAIQpk7JD0Lll5KvchLsgohEIQdsgS2CEJXrJcwTmkAApRIGOHFMNLlkJd8MzzvfUjug/JfdyHrKhZSG75dyYjZFgAhUi9QgZnG4VIOB2yAAErRZc+jDe4bBaR1CqrCwGrRZc+hZjpQIHWKAvpwXiDs7+IpDpkHgLWii49CjEzBwUasTS/pcK/FVSds7KUlr2zELDOciAKURIyAwHrlYX8gf1WWfyNSXVICwI2Wg5EIUpCfkLAmOjSrbDMTmqVNQ0BgxfBNOlSiJkpKNC4spBOhfuepDqkWTA3uKZDIWa+QYG2Kk7qIT/uz0N56+QrBGxTXmXlFGLmCxRogkKk1g75DAHblYX02SFmPkGBdogufctnZ66IbpX1EQJ2it+nvSPK40Un5AME7BJdFijEzHso0G7PQkaVx4uuQ95BwB7PDxdHKx6Yq/uL4FZZbyFgr7KQbsXfX8p+Hq2QNxCwz3IgClES8hoC9isL6VT8Qazs59F2yCsIOCC6/LYU4oplF8j3eC8h4KD4FbJBebzohLyAgEOiyzyFmHkOBTqsLGTO8jf8ZDvkGQQcEV3alkKSndSfQsBR8Stk7D/7JSvkCQQcE11mKcTMYyjQcWUhMxRi5hEU6IRnIQ3l8aKb1B9CwEnR5ReFmHkABTqlLKTl+cW86DrkPgScFl1aFGLmHhTojGVhbZeBRe8SjyufeS6+1/Qw3j/uQsBZZSE/KMTMHSjQpGchmy2/l0yH3IaAc8pCpinEzC0o0HllIVMVX+5OpkNuQsAFy+9RiJKQGxBwUVnId8u37ZPtkOsQcElZSJNCzFwbYpWbOKtBaa5SgGiegKW5QiESlJDLFCJBCSGEEEIIIYQQUeAviEHyq6Ws1NIAAAAASUVORK5CYII=" />
-                                    </defs>
-                                </svg>
-                                <span class="mt-2">Onsite</span>
-                            </label>
-                        </ul>
-                        <ul>
+                                <!-- Onsite Button -->
+                                <input type="checkbox" v-model="onsiteChecked" id="onsite-option" value="" class="hidden peer" required="">
+                                <label for="onsite-option"
+                                    class="active:shadow-sm flex flex-col items-center justify-center w-[165px] h-[85px] sm:p-2 sm:px-8 border shadow-md rounded-md peer-checked:border-black hover:text-gray-600  peer-checked:text-gray-600 ">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="34" height="34" viewBox="0 0 34 34" fill="none">
+                                        <path d="M34 0H0V34H34V0Z" fill="url(#onsite_button)" />
+                                        <defs>
+                                            <pattern id="onsite_button" patternContentUnits="objectBoundingBox" width="1"
+                                                height="1">
+                                                <use xlink:href="#image0_578_1194" transform="scale(0.01)" />
+                                            </pattern>
+                                            <image id="image0_578_1194" width="100" height="100"
+                                                xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAADYklEQVR4nO2b/4sNURjGX+NLdn3Za5GNiIiIiIhsRP5lERERERERERGRa5dr9+661947urVpe7rOnJk975lzOs+n5qc79zk772feOWfmzooQQgghhBBCSPzkNW69ug8+RCgkMCgkMCgkcCGaZJxDKCQ62CGBQSGRCinar2mRs5w5pM7Fh/bcajzQqvs1KYRCcnYIO0SdWCb13PM1Pfg5xAUZhVBIVdghBfCSVbIguedlb9X92ks+azsYzzmuDjSnEAoZBjtkEXaII1Jb9jZEZNPi1vAwXmlSE2ILhRRAIQpk7JD0Lll5KvchLsgohEIQdsgS2CEJXrJcwTmkAApRIGOHFMNLlkJd8MzzvfUjug/JfdyHrKhZSG75dyYjZFgAhUi9QgZnG4VIOB2yAAErRZc+jDe4bBaR1CqrCwGrRZc+hZjpQIHWKAvpwXiDs7+IpDpkHgLWii49CjEzBwUasTS/pcK/FVSds7KUlr2zELDOciAKURIyAwHrlYX8gf1WWfyNSXVICwI2Wg5EIUpCfkLAmOjSrbDMTmqVNQ0BgxfBNOlSiJkpKNC4spBOhfuepDqkWTA3uKZDIWa+QYG2Kk7qIT/uz0N56+QrBGxTXmXlFGLmCxRogkKk1g75DAHblYX02SFmPkGBdogufctnZ66IbpX1EQJ2it+nvSPK40Un5AME7BJdFijEzHso0G7PQkaVx4uuQ95BwB7PDxdHKx6Yq/uL4FZZbyFgr7KQbsXfX8p+Hq2QNxCwz3IgClES8hoC9isL6VT8Qazs59F2yCsIOCC6/LYU4oplF8j3eC8h4KD4FbJBebzohLyAgEOiyzyFmHkOBTqsLGTO8jf8ZDvkGQQcEV3alkKSndSfQsBR8Stk7D/7JSvkCQQcE11mKcTMYyjQcWUhMxRi5hEU6IRnIQ3l8aKb1B9CwEnR5ReFmHkABTqlLKTl+cW86DrkPgScFl1aFGLmHhTojGVhbZeBRe8SjyufeS6+1/Qw3j/uQsBZZSE/KMTMHSjQpGchmy2/l0yH3IaAc8pCpinEzC0o0HllIVMVX+5OpkNuQsAFy+9RiJKQGxBwUVnId8u37ZPtkOsQcElZSJNCzFwbYpWbOKtBaa5SgGiegKW5QiESlJDLFCJBCSGEEEIIIYQQUeAviEHyq6Ws1NIAAAAASUVORK5CYII=" />
+                                        </defs>
+                                    </svg>
+                                    <span class="mt-2">Onsite</span>
+                                </label>
+                            </ul>
+                            <ul>
 
-                        
-                            <!-- Home Service Button -->
-                            <input type="checkbox" id="homeservice-option" value="" class="hidden peer" required="">
-                            <label for="homeservice-option"
-                                class="active:shadow-sm flex flex-col items-center justify-center w-[165px] h-[85px] sm:p-2 sm:px-8 border shadow-md rounded-md peer-checked:border-black hover:text-gray-600  peer-checked:text-gray-600 ">
-                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                    width="41" height="41" viewBox="0 0 41 41" fill="none">
-                                    <path d="M41 0H0V41H41V0Z" fill="url(#homeservice_button)" />
-                                    <defs>
-                                        <pattern id="homeservice_button" patternContentUnits="objectBoundingBox" width="1"
-                                            height="1">
-                                            <use xlink:href="#image0_578_1199" transform="scale(0.01)" />
-                                        </pattern>
-                                        <image id="image0_578_1199" width="100" height="100"
-                                            xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAADHElEQVR4nO2av2oVQRSHPy6ECIaApeIDBNRSrdL4AAaSPEXyFKYwZbQztenT5BEsfAExplMESwkR1MaRhS0uw2bvzp27u2fO/j4YWO7snzPz7ezsnL0ghBBCCCGEEHYIKvTZBxKCrZtMQhhfgoTgWIjIQ0KMISHGkBBjSIgxJMQYEmIMCTGGhBhDQowhIcaQEGNMSsijulhmMkJmwAfgY71tlckIOZyL8QC7TELIA+DnXIzXwENsMgkh5w1xXmAT90L2Wr7G7WIP10I2ge8tQn4A97CFayGnUWx/6zL/W7WPJdwK2Qb+RbG9Ao6i36p9XmAHl0LWgU9RXF+AOwvqLOBSyNGCUXDb6LGAOyFbwJ8opncd5xcLaRVXQmZ1eqTLm1TTG5iFtIorIYeJa42mNcrYaRU3Qu5H6ZGuq/F4FT92WsWNkPMlO3ZZkX3hQshe5qMn9VHXJ8UL2VzB5JzyMtA3xQs5XdHra9fX5b4pWsj2ihd4FtIqxQpZ7yEFYiGtUqyQo57u5rHTKkUK2er5eT9mWqU4IbMB3ojGTKusXMgYZXfgT79DlmTGDviCYf8cISEtnXDdc96pKa0iIS2dcED/HJQm5DZ6O7ETBu8fCWlHQowhIcaQEGNIiDEkxBgSYgxzQoZYMK0B+8AZ8Bn4BdzU22d13dqS7cmNd3JCdoCrDue5qvdNbY+EdBQyA44TO6z6IPV6QXpdQpYcIccZnVdJkZCOj6AuQnYaPr/+Bk6AZ8DdulTbb+q6eKS8zLh+yv7m55Dc8601zBlfgcct53wCfGuYU5omeglJ7JD9hpHRJmNeSvx9vjqXhGQKOYvqq8dUV95Gx76XkHwhl1H90wQhz6NjL5e4fur+7ueQm6h+IyHWjejYmwHidS8kZDawtHjdNzAUFq/7BobC4nXfwFBYvMmkBpRaxhYydrzuGxgKi9d9A0Nh8bpvYCgs3mSGvmDoWciqkZAFSMiKCRohvu64UFi85i8YJERCctAIcTaizV8w6JElITlohDgb0dkXVCEptSIhjHvTSAi2Rq2EMDEhQgghhBBCCEEG/wGEVRusmtYuggAAAABJRU5ErkJggg==" />
-                                    </defs>
-                                </svg>
-                                <span class="mt-2">Home Service</span>
-                            </label>
-                        </ul>
+
+                                <!-- Home Service Button -->
+                                <input type="checkbox" v-model="homeserviceChecked" id="homeservice-option" value="" class="hidden peer" required="">
+                                <label for="homeservice-option"
+                                    class="active:shadow-sm flex flex-col items-center justify-center w-[165px] h-[85px] sm:p-2 sm:px-8 border shadow-md rounded-md peer-checked:border-black hover:text-gray-600  peer-checked:text-gray-600 ">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="41" height="41" viewBox="0 0 41 41" fill="none">
+                                        <path d="M41 0H0V41H41V0Z" fill="url(#homeservice_button)" />
+                                        <defs>
+                                            <pattern id="homeservice_button" patternContentUnits="objectBoundingBox"
+                                                width="1" height="1">
+                                                <use xlink:href="#image0_578_1199" transform="scale(0.01)" />
+                                            </pattern>
+                                            <image id="image0_578_1199" width="100" height="100"
+                                                xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAADHElEQVR4nO2av2oVQRSHPy6ECIaApeIDBNRSrdL4AAaSPEXyFKYwZbQztenT5BEsfAExplMESwkR1MaRhS0uw2bvzp27u2fO/j4YWO7snzPz7ezsnL0ghBBCCCGEEHYIKvTZBxKCrZtMQhhfgoTgWIjIQ0KMISHGkBBjSIgxJMQYEmIMCTGGhBhDQowhIcaQEGNMSsijulhmMkJmwAfgY71tlckIOZyL8QC7TELIA+DnXIzXwENsMgkh5w1xXmAT90L2Wr7G7WIP10I2ge8tQn4A97CFayGnUWx/6zL/W7WPJdwK2Qb+RbG9Ao6i36p9XmAHl0LWgU9RXF+AOwvqLOBSyNGCUXDb6LGAOyFbwJ8opncd5xcLaRVXQmZ1eqTLm1TTG5iFtIorIYeJa42mNcrYaRU3Qu5H6ZGuq/F4FT92WsWNkPMlO3ZZkX3hQshe5qMn9VHXJ8UL2VzB5JzyMtA3xQs5XdHra9fX5b4pWsj2ihd4FtIqxQpZ7yEFYiGtUqyQo57u5rHTKkUK2er5eT9mWqU4IbMB3ojGTKusXMgYZXfgT79DlmTGDviCYf8cISEtnXDdc96pKa0iIS2dcED/HJQm5DZ6O7ETBu8fCWlHQowhIcaQEGNIiDEkxBgSYgxzQoZYMK0B+8AZ8Bn4BdzU22d13dqS7cmNd3JCdoCrDue5qvdNbY+EdBQyA44TO6z6IPV6QXpdQpYcIccZnVdJkZCOj6AuQnYaPr/+Bk6AZ8DdulTbb+q6eKS8zLh+yv7m55Dc8601zBlfgcct53wCfGuYU5omeglJ7JD9hpHRJmNeSvx9vjqXhGQKOYvqq8dUV95Gx76XkHwhl1H90wQhz6NjL5e4fur+7ueQm6h+IyHWjejYmwHidS8kZDawtHjdNzAUFq/7BobC4nXfwFBYvMmkBpRaxhYydrzuGxgKi9d9A0Nh8bpvYCgs3mSGvmDoWciqkZAFSMiKCRohvu64UFi85i8YJERCctAIcTaizV8w6JElITlohDgb0dkXVCEptSIhjHvTSAi2Rq2EMDEhQgghhBBCCEEG/wGEVRusmtYuggAAAABJRU5ErkJggg==" />
+                                        </defs>
+                                    </svg>
+                                    <span class="mt-2">Home Service</span>
+                                </label>
+                            </ul>
                         </div>
                         <div>
                             <h2 class="font-bold">Type of Session</h2>
@@ -187,27 +301,27 @@ export default {
                             <!-- Individual Button -->
                             <ul>
 
-                            <input type="checkbox" id="individual-option" value="" class="hidden peer" required="">
-                            <label for="individual-option"
-                                class="active:shadow-sm flex flex-col items-center justify-center w-[165px] h-[85px] sm:p-2 sm:px-8 border shadow-md rounded-md peer-checked:border-black hover:text-gray-600  peer-checked:text-gray-600 ">
-                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                    width="40" height="40" viewBox="0 0 40 40" fill="none">
-                                    <path d="M40 0H0V40H40V0Z" fill="url(#individual_icon)" />
-                                    <defs>
-                                        <pattern id="individual_icon" patternContentUnits="objectBoundingBox" width="1"
-                                            height="1">
-                                            <use xlink:href="#image0_580_1206" transform="scale(0.01)" />
-                                        </pattern>
-                                        <image id="image0_580_1206" width="100" height="100"
-                                            xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFZUlEQVR4nO2dXYhWRRjHf+2qa2VY5GYEfZDdRCRZ9qEUFBWF0EVkEFmBRSxlddOHkZTRpykFFYagGUofNxlYXSh2VRRBXfQlQlhaVKSxWmm1a+rEE7Px9uycd3Xfc87Mnnl+MLDs7jvzP//nPefMmXlmDhiGYRiGYRhGNzAbWASsAzYDu4B9vsjPX/m/PQTMgn8/Y5TMqcAy4EfAHWaRzywFTrGodM5UYJX/9rsOi9SxEjjBAjM6bgF2lxAIXeSydpMF5dCZAKwewdA1wHxgJjAFGO9Lr/+d/G2t/9+ielb6zxhtOBrYWGDgF8CNQM9hOCj/Ow/4sqDODb5No+DM2Bgw7TegD+jqwDXpad3h6woFxc6UAKsDZn0GTCvx63uGP9NCly9D3cCdKh8Akytw6Vjgw0B7cmkzfNd2V+DMmFyhO9IR2Kba7PedguxZFbhnTKvBlenAHtX2ityjcTIwqEzpq7H9BYGHRxkVyJZlga5tV43td/uxr1YNS8iU7sDY1LwIOm5WGn6o+UuRDLMDT+A9EXRMBH5VWi4kQxYpE9ZE1PKq0vIgGfKWMmF+RC23KS1vkiGblQkzI2q5QGmRsa/s6FcmTImopVdp+YUM0c8fEyJq6VFaBsgQPZYUm9T0kLsBLjE95G6AS0wPuRvgEtND7ga4xPSQuwEuMT3kboBLTA+5G+AS00PuBrjE9JC7AS4xPeRugEtMD7kb4BLTUzsDyoCJEbUcqbT8SYbsUCacGFHLSUrLT2SIToC+KKH5fcl+yY43lAl3RtRyt9Iic+zZsVCZsC6h+f37yZBzlAl/RFqrMcnfxFu1SJppluiE57sSuFx9Q8Y8rMzYVnOynLS1XWmQfLFs6Q1cLh6psf1HA88fMbNfkmCJMmUAOLeGds8LPJw+XUO7yTMpkHT9nV/IUxVS9/eBJGvRYgBXAweUQVv8E3QVwdAPpdL2VRaJ//NkYIBPejwzSjRKLoXfBtp5woIxnC6/2F+b9Zdf6dQpC3xdLpB1n+V6kENhHPB6wLQyhsNDdb7m2zTacATweA0Becy3ZYzSwE7JfgIqNQNd7jOCneIsIGnhLCBp4SwgaeEsIGnhLCBp4SwgaeEsIOlwZWDbjU7RO5xeXEKdjafLDwLqiaN3S6h7g6pzj989woZP2pwVnwYuVQdK+jZfXjDA+DFwRQn1NwLJ5721YGNK58sDFc+5DJXPvZYYOxJFZ6pPMND5va6lyJZJcyto+/ZAYkVr+RlYnMuW5NP9drD6HqEvUWv99n9VcSbwThsNQxNjLwNn0zDkpjkH2DSCAYM+EHVmDV4CrA/M57eWg177nCZ0AORm+ckIgZBdSJ+v+IwYidO9hr0jaJV73fVjMTDyLX9/hIOTBIZ7Eku9Oc4ngesUIV0+8nldySPmPgv83eZgZFfp6xJ/88144AbfJS46jv3Acr9TdrLZ7F+3OYD1kRfljJZZXvvBguPanuJx9RWk2Eh5ryG7fJ7f5lUasgHzvSS68KZ1nZ5sst80rgksoxgqy2Pf8JcWCHsFOIbmchTwUsGxr4iVeHdfQMzehp4VRcwteEmMjELUfqPbFxjqkNWsuTED2Bkzeft4n7rfKmB35H13Y3NWICg7Kl5S8R/62indwWvraDhxLvPPJrW+Sum0wEPfi1U3OobQnZz9Vb+c5jnV4O+2Jm/Y0IueKn6BihgXmL94pqrGxjBPKY92VrXk4dJA906GS4zhA6vaJ/GudBarRrZW0UhD2FrHUu+3VSOyeYwRRq8Ck8HJ0tlSYfJB01iovJJ3pZROFa/SzqX0VxGQMl4yn2sZrCIgsQ/KjfFiAaHhATEMwzAMwzAMw6AE/gE10plSBoXPogAAAABJRU5ErkJggg==" />
-                                    </defs>
-                                </svg>
-                                <span class="mt-2 px-2">Individual</span>
-                            </label>
-                        </ul>
+                                <input type="checkbox" v-model="individualChecked" id="individual-option" value="" class="hidden peer" required="">
+                                <label for="individual-option"
+                                    class="active:shadow-sm flex flex-col items-center justify-center w-[165px] h-[85px] sm:p-2 sm:px-8 border shadow-md rounded-md peer-checked:border-black hover:text-gray-600  peer-checked:text-gray-600 ">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                        <path d="M40 0H0V40H40V0Z" fill="url(#individual_icon)" />
+                                        <defs>
+                                            <pattern id="individual_icon" patternContentUnits="objectBoundingBox" width="1"
+                                                height="1">
+                                                <use xlink:href="#image0_580_1206" transform="scale(0.01)" />
+                                            </pattern>
+                                            <image id="image0_580_1206" width="100" height="100"
+                                                xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFZUlEQVR4nO2dXYhWRRjHf+2qa2VY5GYEfZDdRCRZ9qEUFBWF0EVkEFmBRSxlddOHkZTRpykFFYagGUofNxlYXSh2VRRBXfQlQlhaVKSxWmm1a+rEE7Px9uycd3Xfc87Mnnl+MLDs7jvzP//nPefMmXlmDhiGYRiGYRhGNzAbWASsAzYDu4B9vsjPX/m/PQTMgn8/Y5TMqcAy4EfAHWaRzywFTrGodM5UYJX/9rsOi9SxEjjBAjM6bgF2lxAIXeSydpMF5dCZAKwewdA1wHxgJjAFGO9Lr/+d/G2t/9+ielb6zxhtOBrYWGDgF8CNQM9hOCj/Ow/4sqDODb5No+DM2Bgw7TegD+jqwDXpad3h6woFxc6UAKsDZn0GTCvx63uGP9NCly9D3cCdKh8Akytw6Vjgw0B7cmkzfNd2V+DMmFyhO9IR2Kba7PedguxZFbhnTKvBlenAHtX2ityjcTIwqEzpq7H9BYGHRxkVyJZlga5tV43td/uxr1YNS8iU7sDY1LwIOm5WGn6o+UuRDLMDT+A9EXRMBH5VWi4kQxYpE9ZE1PKq0vIgGfKWMmF+RC23KS1vkiGblQkzI2q5QGmRsa/s6FcmTImopVdp+YUM0c8fEyJq6VFaBsgQPZYUm9T0kLsBLjE95G6AS0wPuRvgEtND7ga4xPSQuwEuMT3kboBLTA+5G+AS00PuBrjE9JC7AS4xPeRugEtMD7kb4BLTUzsDyoCJEbUcqbT8SYbsUCacGFHLSUrLT2SIToC+KKH5fcl+yY43lAl3RtRyt9Iic+zZsVCZsC6h+f37yZBzlAl/RFqrMcnfxFu1SJppluiE57sSuFx9Q8Y8rMzYVnOynLS1XWmQfLFs6Q1cLh6psf1HA88fMbNfkmCJMmUAOLeGds8LPJw+XUO7yTMpkHT9nV/IUxVS9/eBJGvRYgBXAweUQVv8E3QVwdAPpdL2VRaJ//NkYIBPejwzSjRKLoXfBtp5woIxnC6/2F+b9Zdf6dQpC3xdLpB1n+V6kENhHPB6wLQyhsNDdb7m2zTacATweA0Becy3ZYzSwE7JfgIqNQNd7jOCneIsIGnhLCBp4SwgaeEsIGnhLCBp4SwgaeEsIOlwZWDbjU7RO5xeXEKdjafLDwLqiaN3S6h7g6pzj989woZP2pwVnwYuVQdK+jZfXjDA+DFwRQn1NwLJ5721YGNK58sDFc+5DJXPvZYYOxJFZ6pPMND5va6lyJZJcyto+/ZAYkVr+RlYnMuW5NP9drD6HqEvUWv99n9VcSbwThsNQxNjLwNn0zDkpjkH2DSCAYM+EHVmDV4CrA/M57eWg177nCZ0AORm+ckIgZBdSJ+v+IwYidO9hr0jaJV73fVjMTDyLX9/hIOTBIZ7Eku9Oc4ngesUIV0+8nldySPmPgv83eZgZFfp6xJ/88144AbfJS46jv3Acr9TdrLZ7F+3OYD1kRfljJZZXvvBguPanuJx9RWk2Eh5ryG7fJ7f5lUasgHzvSS68KZ1nZ5sst80rgksoxgqy2Pf8JcWCHsFOIbmchTwUsGxr4iVeHdfQMzehp4VRcwteEmMjELUfqPbFxjqkNWsuTED2Bkzeft4n7rfKmB35H13Y3NWICg7Kl5S8R/62indwWvraDhxLvPPJrW+Sum0wEPfi1U3OobQnZz9Vb+c5jnV4O+2Jm/Y0IueKn6BihgXmL94pqrGxjBPKY92VrXk4dJA906GS4zhA6vaJ/GudBarRrZW0UhD2FrHUu+3VSOyeYwRRq8Ck8HJ0tlSYfJB01iovJJ3pZROFa/SzqX0VxGQMl4yn2sZrCIgsQ/KjfFiAaHhATEMwzAMwzAMw6AE/gE10plSBoXPogAAAABJRU5ErkJggg==" />
+                                        </defs>
+                                    </svg>
+                                    <span class="mt-2 px-2">Individual</span>
+                                </label>
+                            </ul>
 
                             <!-- Group Button -->
-                            <input type="checkbox" id="group-option" value="" class="hidden peer" required="">
+                            <input type="checkbox" v-model="groupChecked" id="group-option" value="" class="hidden peer" required="">
                             <label for="group-option"
                                 class="active:shadow-sm flex flex-col items-center justify-center w-[165px] h-[85px] sm:p-2 sm:px-8 border shadow-md rounded-md peer-checked:border-black hover:text-gray-600  peer-checked:text-gray-600 ">
                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -232,8 +346,9 @@ export default {
                             <h2 class="font-bold">Interventions</h2>
                         </div>
                         <div class="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-2">
-    <AppCheckbox v-for="service in services" :key="service.key" :label="service.label" :id_="service.key" class="min-h-[35px]" />
-</div>
+                            <AppCheckbox v-for="service in services" :key="service.key" :label="service.label"
+                                :id_="service.key" class="min-h-[35px]" />
+                        </div>
 
                     </div>
 
@@ -243,10 +358,12 @@ export default {
                         class="flex items-center p-6 space-x-2 border-t justify-between border-gray-200 rounded-b dark:border-gray-600">
                         <button type="button" class="">
                             Clear all filters</button>
-                        <button type="button" class="border px-4 py-2 bg-black active:bg-gray-700 text-white rounded-lg">
+                        <button type="button" @click="generateQuery" class="border px-4 py-2 bg-black active:bg-gray-700 text-white rounded-lg">
                             Apply filters</button>
                     </div>
                 </div>
             </div>
+        </div>
     </div>
-</div></template>
+</template>
+

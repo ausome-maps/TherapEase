@@ -108,11 +108,12 @@ export default {
     },
 
     async getMapCoordinates() {
-      if (this.data && Array.isArray(this.data.hits)) {
-        return this.data.hits.map(facility => {
-          const name = facility._source.properties.placename
-          const coords = facility._source.geometry.coordinates;
-          const id = facility._id;
+      console.log("getMapCoordinates")
+      if (this.data && Array.isArray(this.data)) {
+        return this.data.map(facility => {
+          const name = facility.properties.placename
+          const coords = facility.geometry.coordinates;
+          const id = facility.id;
           console.log(id)
           return [coords[1], coords[0], name, id.toString()]; // returns [latitude, longitude]
         });
@@ -124,10 +125,11 @@ export default {
       this.searchQuery = query;
       try {
         await this.fetchSearch();
-        this.data = this.filteredData.hits;
-        this.totalResults = this.data.total.value;
+        this.data = this.filteredData.features;
+        console.log("data", this.data)
+        this.totalResults = this.filteredData.total.value;
         this.totalPages = Math.ceil(this.totalResults / this.paginationSize);
-        this.currentPageResults = Math.min(this.paginationSize, this.data.hits.length);
+        this.currentPageResults = Math.min(this.paginationSize, this.data.length);
 
         // Set the coordinates array after the data has been fetched
         this.coordinates = await this.getMapCoordinates();
@@ -138,67 +140,64 @@ export default {
       }
     },
 
-    async fetchSearch() {
-  const startIndex = (this.currentPage - 1) * this.paginationSize;
-
-
-
-  const queryParameters = {
-    q: this.searchQuery,
-    size: this.paginationSize,
-    from: startIndex};
-
-  const queryString = new URLSearchParams(queryParameters).toString();
-  const url = `${this.$config.search}?${queryString}`;
-
-  try {
-    const response = await fetch(url);
-
-    // Check if the response is successful
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-
-    const data = await response.json();
-    this.filteredData = data;
-    this.isFetching = false;
-    this.error = null;
-  } catch (error) {
-    this.filteredData = null;
-    this.error = error.message;
-    this.isFetching = false;
-  }
-}
     // async fetchSearch() {
     //   const startIndex = (this.currentPage - 1) * this.paginationSize;
-    //   const url = this.$config.search;
-
+    //   const queryParameters = {
+    //     q: this.searchQuery,
+    //     size: this.paginationSize,
+    //     from: startIndex
+    //   };
+    //   const queryString = new URLSearchParams(queryParameters).toString();
+    //   const url = `${this.$config.search}?${queryString}`;
     //   try {
-    //     const response = await fetch("http://localhost:9001/facilities", {
-    //       body: '{"query": {"bool": {"filter": { "match":  { "properties.city": "Manila" }}}}}',
-    //       headers: {
-    //         "Content-Type": "application/json"
-    //       },
-    //       method: "POST"
-    //     });
+    //     const response = await fetch(url);
 
-    //     // Check if the response is successful
     //     if (!response.ok) {
     //       throw new Error('Network response was not ok');
     //     }
 
     //     const data = await response.json();
-    //     console.log(data.features[0].properties);
+    //     this.filteredData = data;
     //     this.isFetching = false;
     //     this.error = null;
     //   } catch (error) {
-    //     console.log("no response")
     //     this.filteredData = null;
     //     this.error = error.message;
     //     this.isFetching = false;
     //   }
-    // }
-    //
+    // },
+    async fetchSearch() {
+      const startIndex = (this.currentPage - 1) * this.paginationSize;
+      const url = this.$config.search;
+
+      try {
+        const response = await fetch("http://localhost:9001/facilities", {
+          // body: '{"query": {"bool": {"filter": { "match": { "properties.accreditation.paot": "0" }}}}, "from": "0", "size": "10"}',
+          body: '{"query": {"bool": {"filter": { "match": { "properties.accreditation.paot": "1" }}}}, "from": "0", "size": "20"}',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          method: "POST"
+        });
+
+        // Check if the response is successful
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log(data.features);
+        this.filteredData = data;
+        this.isFetching = false;
+        this.error = null;
+      } catch (error) {
+        console.log("no response")
+        this.filteredData = null;
+        this.error = error.message;
+        this.isFetching = false;
+      }
+    }
+    
     ,
     goToPage(pageNumber) {
       this.currentPage = pageNumber;
