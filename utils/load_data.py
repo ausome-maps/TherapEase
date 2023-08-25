@@ -11,9 +11,7 @@ import json
 import requests
 
 # replace with location of data json
-data_path = (
-    "/Users/lkp/Dev/projects/ausomemaps/formatted_therapycenters_with_id_8222023.json"
-)
+data_path = "/Users/lkp/Dev/projects/ausomemaps/FINAL_PASP_PAOT_with_id.json"
 
 with open(data_path, "r") as therap_file:
     therap_data = json.load(therap_file)
