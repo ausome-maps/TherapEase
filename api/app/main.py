@@ -5,9 +5,9 @@ from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from fastapi.middleware.cors import CORSMiddleware
 
-from db import User, create_db_and_tables
+from db import create_db_and_tables
 from models.users import UserCreate, UserRead, UserUpdate
-from libs.users import auth_backend, current_active_user, fastapi_users
+from libs.users import auth_backend, fastapi_users
 
 
 from redis import asyncio as aioredis
