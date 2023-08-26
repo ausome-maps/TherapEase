@@ -1,22 +1,22 @@
+## DESCRIPTION OF YOUR CHALLENGE
+This challenge tasks you to add therapy center POIs in the Philippines. These therapy centers are **Health Facility** features with a *speech therapist*, *occupational therapist*, or *physiotherapist*.
 
-1.Check if the POI already exist. If it is, update the values as needed.
+## DETAILED INSTRUCTIONS FOR MAPPERS  
+1. Check if the POI already exist. If it is, update the values as needed.  
+2. Please add a POINT on the general area where the map marker is shown here. You can enable the location panel on the iD Editor( CTRL + SHIFT + L ) to get close to the {{geometry.coordinates}} value  
+3. Choose Health Facility as Feature type
+4. Add address based on this {{address}}    
+5. Add the following tags with value and ignore the ones without.  
+         name={{name}}
+         phone={{phone}}
+         mobile={{mobile}}
+         website={{website}}
+         email={{email}}
+         {{sources}}
+         {{tags}}
 
-2. Please add a POINT on the general area where the map marker is shown here. You can enable the location panel on the iD Editor( CTRL + SHIFT + L ) to get close to the geometry.coordinates value
+## PREFERRED MR TAGS
+healthcare, name, phone, mobile, website, email, sources
+
+
    
-4. Choose Health Facility as Feature type
-   
-6. Add name using **name** value
-   
-8. Add address based on this **address** value
-   
-10. Add telephone using **phone** value
-    
-12. Add mobile using **mobile** value
-    
-14. Add website using **website** value
-    
-16. Add email using **email** value
-    
-18. Add sources using **sources** value
-    
-20. Add tags using **tags** value
