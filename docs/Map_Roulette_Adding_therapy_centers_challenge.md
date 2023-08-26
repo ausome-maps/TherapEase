@@ -6,14 +6,14 @@ This challenge tasks you to add therapy center POIs in the Philippines. These th
 2. Please add a POINT on the general area where the map marker is shown here. You can enable the location panel on the iD Editor( CTRL + SHIFT + L ) to get close to the **{{coordinates}}** value  
 3. Choose/Search for **Health Facility** as Feature type
 4. Add **address** based on this {{address}}    
-5. Scroll down the Tags section. Click the button (I) to open the text field.  
+5. Scroll down the Tags section. Click the button   <img src="https://raw.githubusercontent.com/ausome-maps/therapEase-data-works/main/textFieldicon.png"  width="30">     to open the text field. 
 6. Copy-paste the following tags under the Tags section. Remove properties that are blank.  
          name={{name}}
          phone={{phone}}
          mobile={{mobile}}
          website={{website}}
          email={{email}}
-         {{sources}}
+         {{source}}
          {{tags}}
 
 ## CHANGESET DESCRIPTION
