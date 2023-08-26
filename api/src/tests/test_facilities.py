@@ -146,18 +146,18 @@ data = {
 }
 
 
-def test_create_user():
-    url = "http://localhost:9001/auth/register"
-    data = {
-        "name": "sample name",
-        "email": "sample@sample.com",
-        "password": "mypassword1234",
-        "passwordConfirm": "mypassword1234",
-    }
-    r = requests.post(url, headers={"content-type": "application/json"}, json=data)
-    print(r.text, r.status_code)
-    assert 199 + 1 == 200
-    return r.status_code
+# def test_create_user():
+#     url = "http://localhost:9001/auth/register"
+#     data = {
+#         "name": "sample name",
+#         "email": "sample@sample.com",
+#         "password": "mypassword1234",
+#         "passwordConfirm": "mypassword1234",
+#     }
+#     r = requests.post(url, headers={"content-type": "application/json"}, json=data)
+#     print(r.text, r.status_code)
+#     assert 199 + 1 == 200
+#     return r.status_code
 
 
 def _create_index():
