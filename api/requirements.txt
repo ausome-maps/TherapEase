@@ -1,9 +1,0 @@
-fastapi==0.100.0
-uvicorn==0.23.1
-gunicorn==21.2.0
-requests==2.31.0
-types-requests==2.31.0.2
-pytest==7.4.0
-httpx==0.24.1
-fastapi-cache2==0.2.1
-redis==4.6.0

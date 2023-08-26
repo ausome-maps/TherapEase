@@ -18,11 +18,11 @@ services:
   api:
     container_name: therapease_api
     build:
-      context: ./api
+      context: ./api/src
       dockerfile: Dockerfile
-    command: uvicorn main:app --host 0.0.0.0 --port 9001 --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 9001 --reload
     volumes:
-      - ./api:/usr/src
+      - ./api/src:/usr/src/app
     ports:
       - "9001:9001"
     env_file:
@@ -31,6 +31,14 @@ services:
       - geocoding
       - search
       - cache
+      - db
+  db: 
+    container_name: therapease_db
+    image: postgres:15.4-alpine3.18
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.sample
   cache:
     container_name: therapease_cache
     image: redis:6.0.20-alpine3.18
@@ -65,4 +73,5 @@ services:
 
 volumes:
   geocoding_data:
-  search_data: 
+  search_data:
+  postgres_data:
