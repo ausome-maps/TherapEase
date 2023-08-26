@@ -3,12 +3,17 @@ from typing import AsyncGenerator
 from fastapi import Depends
 from fastapi_users.db import SQLAlchemyBaseUserTableUUID, SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
-import dependencies
+from app.config import get_settings
+
+settings = get_settings()
+
+SQLALCHEMY_DATABASE_URL = f"postgresql+asyncpg://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_DB}"
 
 
-SQLALCHEMY_DATABASE_URL = f"postgresql+asyncpg://{dependencies.POSTGRES_USER}:{dependencies.POSTGRES_PASSWORD}@{dependencies.POSTGRES_HOST}:{dependencies.POSTGRES_PORT}/{dependencies.POSTGRES_DB}"
+engine = create_async_engine(SQLALCHEMY_DATABASE_URL)
+async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
 
 class Base(DeclarativeBase):
@@ -17,10 +22,6 @@ class Base(DeclarativeBase):
 
 class User(SQLAlchemyBaseUserTableUUID, Base):
     pass
-
-
-engine = create_async_engine(SQLALCHEMY_DATABASE_URL)
-async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
 
 async def create_db_and_tables():

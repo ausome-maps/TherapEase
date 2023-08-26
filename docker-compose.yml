@@ -18,11 +18,11 @@ services:
   api:
     container_name: therapease_api
     build:
-      context: ./api
+      context: ./api/src
       dockerfile: Dockerfile
-    command: uvicorn main:app --host 0.0.0.0 --port 9001 --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 9001 --reload
     volumes:
-      - ./api:/usr/src
+      - ./api/src:/usr/src/app
     ports:
       - "9001:9001"
     env_file:

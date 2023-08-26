@@ -1,17 +1,20 @@
-import dependencies
-import json
-from fastapi import APIRouter, Request
-from models.facilities import Facilities
-from libs.search.full_text import FullTextSearch
-from libs.facilities.transform import transform_es_result_to_geojson
-from fastapi_cache.decorator import cache
-from fastapi_cache.coder import JsonCoder
+from fastapi import APIRouter, Request, Depends
+from app.models.facilities import Facilities
+from app.libs.search.full_text import FullTextSearch
+from app.libs.facilities.transform import transform_es_result_to_geojson
+from app.libs.users import current_active_user
+from app.config import get_settings
+from app.db import User
 
 router = APIRouter()
 
+settings = get_settings()
+
 
 @router.put("/facilities")
-async def facilities_store_url(facilities: Facilities):
+async def facilities_store_url(
+    facilities: Facilities, user: User = Depends(current_active_user)
+):
     """
     Stores facilities in FullTextSearch. This is a low - level function to be used by clients that want to store a set of facilities in a full text search.
 
@@ -22,7 +25,7 @@ async def facilities_store_url(facilities: Facilities):
     fts = FullTextSearch()
     resp = fts.put(
         facilities.model_dump_json(),
-        dependencies.SEARCH_URL + f'/facilities/_doc/{facilities.model_dump()["id"]}',
+        settings.SEARCH_URL + f'/facilities/_doc/{facilities.model_dump()["id"]}',
     )
     return resp
 
@@ -40,9 +43,7 @@ async def facilities_fetch_url(request: Request):
     if len(request.query_params) == 0:
         return {"message": "No supplied query for searching."}
     fts = FullTextSearch()
-    resp = fts.get(
-        request.query_params, dependencies.SEARCH_URL + "/facilities/_search"
-    )
+    resp = fts.get(request.query_params, settings.SEARCH_URL + "/facilities/_search")
     return transform_es_result_to_geojson(resp)
 
 
@@ -58,5 +59,5 @@ async def facilities_fetch_url(request: Request):
     # Returns a message if no query parameters are supplied.
     fts = FullTextSearch()
     data_query = await request.json()
-    resp = fts.post(data_query, dependencies.SEARCH_URL + "/facilities/_search")
+    resp = fts.post(data_query, settings.SEARCH_URL + "/facilities/_search")
     return transform_es_result_to_geojson(resp)

@@ -39,6 +39,10 @@ The entire platform can be run using `Docker` using `docker compose`. Refer to t
 
 Development information can be found under the `docs` directory.
 
+### Running Tests
+
+To run the test suite: `pytest -v`
+
 ## Utils
 
 The `utils` directory contains a variety of scripts that are used to work with the application.
