@@ -23,3 +23,7 @@ The Ausome Maps team will publish a feature roadmap for the future versions of T
 ## Data
 
 The Ausome Maps team and the Therapease project will posting data challenges that will focus on adding, validating, and enriching the dataset of SPED facilities and services. The team uses OSM as the main database. Hence, if you want to contribute to this area, learn how to map using OSM.
+
+## Other Docs
+
+Help other people out by providing documentation on how to use, develop, or even contribute.
