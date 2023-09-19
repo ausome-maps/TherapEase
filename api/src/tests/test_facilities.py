@@ -168,8 +168,8 @@ def test_facilities_lib():
     _create_index()
     fts = FullTextSearch()
     resp_post = fts.put(
-        json.dumps(data),
-        settings.SEARCH_URL + f'/facilities_test/_doc/{data["id"]}',
+        data=data,
+        url=settings.SEARCH_URL + f'/facilities_test/_doc/{data["id"]}',
     )
     time.sleep(5)
     resp_get = fts.get(
