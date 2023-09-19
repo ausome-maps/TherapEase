@@ -1,8 +1,8 @@
-import json
 from typing import Optional
 import requests
 
 Response = requests.models.Response
+SEARCH_DEFAULT = "search"
 
 
 class BaseSearch:
@@ -10,7 +10,7 @@ class BaseSearch:
         self,
         url: str,
         token: Optional[str] = None,
-        search_type: Optional[str] = "search",
+        search_type: Optional[str] = SEARCH_DEFAULT,
     ):
         """Initialize BaseSearch Class.
 
@@ -68,10 +68,10 @@ class BaseSearch:
         Returns:
             Response: The response from the API call, as a JSON string. If the request is unsuccessful, a dictionary with details of the failure will be returned.
         """
-        url_get = self.url
+        url_post = self.url
         if url is not None:
-            url_get = url
-        resp = requests.get(url_get, json=data, headers=self.headers)
+            url_post = url
+        resp = requests.post(url_post, json=data, headers=self.headers)
         # Returns a JSON string with the response.
         if resp.status_code != 200:
             return {
@@ -101,7 +101,6 @@ class BaseSearch:
         url_put = self.url
         if url is not None:
             url_put = url
-        data = json.loads(data)
         resp = requests.put(url_put, json=data, headers=self.headers)
         # Returns a JSON string with the response.
         if resp.status_code >= 400:
