@@ -1,17 +1,13 @@
 <template>
     <div class="checkbox-container">
-        <input :id="id_" type="checkbox" v-model="checked" class="checkbox-input">
+        <input :id="id_" type="checkbox" v-model="model" class="checkbox-input">
         <label :for="id_" class="checkbox-label">{{label}}</label>
     </div>
 </template>
 
+
 <script>
 export default {
-    data() {
-        return {
-            checked: false,
-        }
-    },
     props: {
         label: {
             type: String,
@@ -20,10 +16,25 @@ export default {
         id_: {
             type: String,
             required: true
+        },
+        modelValue: {
+            type: Boolean,
+            default: false
+        }
+    },
+    computed: {
+        model: {
+            get() {
+                return this.modelValue;
+            },
+            set(value) {
+                this.$emit('update:modelValue', value);
+            }
         }
     }
 }
 </script>
+
 
 
 <style scoped>

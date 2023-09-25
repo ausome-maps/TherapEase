@@ -1,176 +1,241 @@
 <template>
   <div class="relative z-1 w-full flex flex-col justify-center rounded">
     <div :class="{ 'justify-center': !showMap }" class="flex flex-col sm:flex-row h-[100%] min-h-[800px] gap-4">
+
+      <!-- Content Section -->
       <div class="w-full lg:max-w-[850px] xl:max-w-[1100px] flex-grow">
         <ClientOnly>
+          <!-- Search and Header Section -->
           <div class="px-5 pb-4 sticky top-0 z-50 bg-white">
-            <AppSearchAndFilter />
+            <AppSearchAndFilter @update-search="handleSearch" @query-passed="handleQueryPassed"/>
             <AppListingHeader :show-map="showMap" @hide-map="showMap = false" @show-map="showMap = true"
-            :view-mode="viewMode" @change-view-mode="handleChangeViewMode" :facilities="data"
-            :filteredFacilities="filteredFacilities" />
+              :view-mode="viewMode" @change-view-mode="handleChangeViewMode" :facilitiesLength="totalResults"
+              :filteredFacilitiesLength="currentPageResults" />
           </div>
-          
-          <AppCardList v-if="viewMode === 'card'" :facilities="data" :filteredFacilities="filteredFacilities" />
-          <AppListView v-else-if="viewMode === 'list'" :facilities="data"
-            :filteredFacilities="filteredFacilities" />
+
+          <!-- No Results Section -->
+          <div v-if="currentPageResults === 0" class="w-full text-center py-10">
+            <h2 class="text-xl font-semibold">No results found</h2>
+            <p>Try adjusting your search or filter criteria.</p>
+          </div>
+
+          <!-- Listings View -->
+          <AppCardList v-if="viewMode === 'card'" :facilities="data" :filteredFacilities="data" />
+          <AppListView v-else-if="viewMode === 'list'" :facilities="data" :filteredFacilities="data" />
+
+          <!-- Pagination -->
+          <div v-if="totalPages > 1" class="flex justify-center my-4">
+            <button @click="prevPage" :disabled="currentPage === 1"
+              class="px-4 py-2 bg-gray-200 text-gray-700 border rounded-l-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed mr-2">Previous</button>
+
+            <template v-for="page in totalPages">
+              <button v-if="page === currentPage" class="px-4 py-2 bg-gray-300 text-gray-700 border mx-1">{{ page
+              }}</button>
+              <button v-else @click="goToPage(page)"
+                class="px-4 py-2 bg-gray-200 text-gray-700 border hover:bg-red-300 mx-1">{{ page }}</button>
+            </template>
+
+            <button @click="nextPage" :disabled="currentPage === totalPages"
+              class="px-4 py-2 bg-gray-200 text-gray-700 border rounded-r-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed ml-2">Next</button>
+          </div>
         </ClientOnly>
       </div>
-        <div v-if="showMap" class="w-full lg:flex-grow mr-8 h-[99vh] sticky top-5 z-10">
-        <AppMap :latitude="12.852673" :longitude="121.377034" />
+
+      <!-- Map Section -->
+      <div v-if="showMap" class="w-full lg:flex-grow mr-8 h-[99vh] sticky top-5 z-10">
+        <AppMap :coordinates="coordinates" :latitude="14.621071" :longitude="121.0073" />
       </div>
     </div>
   </div>
   <div class="h-[100px]"></div>
 </template>
 
-  
-  
-  
 <script>
 import data from '../components/facility-data.json'
+
 export default {
-  
   data() {
     return {
+      searchQuery: '*',
       data: data.features,
-      filteredFacilities: [{}],
       viewMode: 'card',
       showMap: true,
-      facilities: [
-        {
-          "id": 1,
-          "facilityUrl": "https://example.com/facility1",
-          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
-          "facilityName": "Harmony - Accessible Accommodations",
-          "averageRating": 4.5,
-          "facilityRate": 120.99,
-          "facilityLocation": "123 Example St, San Francisco, CA 94105",
-          "services": [{}]
-        }
-        ,
-        {
-          "id": 2,
-          "facilityUrl": "https://example.com/facility2",
-          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
-          "facilityName": "Red Tomato",
-          "averageRating": 4.8,
-          "facilityRate": 60.0,
-          "facilityLocation": "123 Example St, San Francisco, CA 94105",
-          "services": [{}]
-        }
-        ,
-        {
-          "id": 3,
-          "facilityUrl": "https://example.com/facility3",
-          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
-          "facilityName": "AccessTech - Assistive Technology Center",
-          "averageRating": 4.2,
-          "facilityRate": null,
-          "facilityLocation": "123 Example St, San Francisco, CA 94105",
-          "services": [{}]
-        }
-        ,
-        {
-          "id": 4,
-          "facilityUrl": "https://example.com/facility4",
-          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
-          "facilityName": "Aquatic Haven - Swimming Facility",
-          "averageRating": 4.6,
-          "facilityRate": 30.0,
-          "facilityLocation": "123 Example St, San Francisco, CA 94105",
-          "services": [{}]
-        }
-        ,
-        {
-          "id": 5,
-          "facilityUrl": "https://example.com/facility5",
-          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
-          "facilityName": "Paws & Partners - Service Animals Welcome",
-          "averageRating": 4.9,
-          "facilityRate": null,
-          "facilityLocation": "123 Example St, San Francisco, CA 94105",
-          "services": [{}]
-        }
-        ,
-        {
-          "id": 6,
-          "facilityUrl": "https://example.com/facility6",
-          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
-          "facilityName": "SoundSense - Hearing Loop System",
-          "averageRating": 4.4,
-          "facilityRate": 80.0,
-          "facilityLocation": "123 Example St, San Francisco, CA 94105",
-          "services": [{}]
-        }
-        ,
-        {
-          "id": 7,
-          "facilityUrl": "https://example.com/facility7",
-          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
-          "facilityName": "FlexFit - Fitness Center",
-          "averageRating": 4.7,
-          "facilityRate": 50.0,
-          "facilityLocation": "123 Example St, San Francisco, CA 94105",
-          "services": [{}]
-        }
-        ,
-        {
-          "id": 8,
-          "facilityUrl": "https://example.com/facility8",
-          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
-          "facilityName": "AscendElevate",
-          "averageRating": 4.3,
-          "facilityRate": null,
-          "facilityLocation": "123 Example St, San Francisco, CA 94105",
-          "services": [{}]
-        }
-        ,
-        {
-          "id": 9,
-          "facilityUrl": "https://example.com/facility9",
-          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
-          "facilityName": "ParkEase",
-          "averageRating": 4.1,
-          "facilityRate": 10.0,
-          "facilityLocation": "123 Example St, San Francisco, CA 94105",
-          "services": [{}]
-        }
-        ,
-        {
-          "id": 10,
-          "facilityUrl": "https://example.com/facility10",
-          "facilityImage": "https://plus.unsplash.com/premium_photo-1664392032070-80073c185d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=738&q=80",
-          "facilityName": "BraillePath",
-          "averageRating": 4.5,
-          "facilityRate": null,
-          "facilityLocation": "123 Example St, San Francisco, CA 94105",
-          "services": [{}]
-        }
-      ]
-
+      isMobile: false,
+      filteredData: [],
+      error: null,
+      isFetching: false,
+      paginationSize: 20,
+      totalResults: 0,
+      currentPageResults: 0,
+      currentPage: 1,
+      totalPages: Math.ceil(this.totalResults / this.paginationSize),
+      coordinates: [],  // New coordinates array
+      selectedService: 'orthoses',
+      filter: [],
     };
   },
 
-  mounted() {
-    this.checkIfMobile(); // Initial check
-    // Watch for changes in the window width
+  async mounted() {
+    this.checkIfMobile();
     window.addEventListener('resize', this.checkIfMobile);
+    await this.$nextTick();
+    this.searchQuery = this.$route.query.search || '*';
+    this.currentPage = Number(this.$route.query.page) || 1;
+    this.$router.push({ query: { search: this.searchQuery, page: this.currentPage } });
+    await this.handleSearch();
   },
+
   beforeUnmount() {
-    // Clean up the event listener before the component is unmounted
     window.removeEventListener('resize', this.checkIfMobile);
   },
+
+  watch: {
+    searchQuery(newQuery) {
+      this.$router.push({ query: { search: newQuery, page: this.currentPage } });
+    },
+  },
+
   methods: {
     checkIfMobile() {
-      // Check if the viewport width is less than or equal to 768px (tablet width)
       this.isMobile = window.visualViewport.width <= 768;
     },
+
+    updateURL() {
+      this.$router.push({ query: { search: this.searchQuery, page: this.currentPage } });
+    },
+
     handleChangeViewMode(newViewMode) {
       this.viewMode = newViewMode;
-      console.log(this.viewMode);
+    },
+
+    handleQueryPassed(queryBody) {
+      this.filter = queryBody.filter;
+      console.log(this.filter)
+    },
+
+    async getMapCoordinates() {
+      console.log("getMapCoordinates")
+      if (this.data && Array.isArray(this.data)) {
+        return this.data.map(facility => {
+          const name = facility.properties.placename
+          const coords = facility.geometry.coordinates;
+          const id = facility.id;
+          console.log(id)
+          return [coords[1], coords[0], name, id.toString()]; // returns [latitude, longitude]
+        });
+      }
+      return [];
+    },
+
+    async handleSearch(query = this.searchQuery) {
+      this.searchQuery = query;
+      try {
+        await this.fetchSearch();
+        this.data = this.filteredData.features;
+        console.log("data", this.data)
+        this.totalResults = this.filteredData.total.value;
+        this.totalPages = Math.ceil(this.totalResults / this.paginationSize);
+        this.currentPageResults = Math.min(this.paginationSize, this.data.length);
+
+        // Set the coordinates array after the data has been fetched
+        this.coordinates = await this.getMapCoordinates();
+      } catch (error) {
+        this.totalResults = 0;
+        this.currentPageResults = 0;
+
+         // Reset the coordinates if there's an error
+        this.coordinates = []; 
+      }
+    },
+    async fetchSearch() {
+      const startIndex = (this.currentPage - 1) * this.paginationSize;
+      this.isFetching = true;
+      let search = this.searchQuery;
+
+      // If the search query is empty, set it to a wildcard
+      if (search === '*') {
+        search = '';
+      }
+
+
+      // Build the body of the request
+      let bodyObj = {
+  query: {
+    bool: {
+      must: {
+        multi_match: {
+          query: search
+        }
+      },
+      filter: this.filter
+    }
+  },
+  from: startIndex,
+  size: this.paginationSize
+};
+
+
+      let body = JSON.stringify(bodyObj);
+      console.log(body)
+
+      // Fetch the data
+      try {
+        const response = await fetch("http://localhost:9001/facilities", {
+body: body
+// `{
+//   "query": {
+//     "bool": {"filter":[{"term":{"properties.accreditation.pasp":1}},{"bool":{"should":[{"term":{"properties.services_offered.speechlanguagetherapy.mode.onsite":1}}],"minimum_should_match":1}}]}
+//   },
+//   "from": ${startIndex},
+//   "size": ${this.paginationSize}
+// }`
+,      
+    headers: {
+            "Content-Type": "application/json"
+          },
+          method: "POST"
+        });
+
+        
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log(data.features);
+        this.filteredData = data;
+        this.isFetching = false;
+        this.error = null;
+      } catch (error) {
+        console.log("no response")
+        this.filteredData = null;
+        this.error = error.message;
+        this.isFetching = false;
+      }
+    }
+
+    ,
+    goToPage(pageNumber) {
+      this.currentPage = pageNumber;
+      this.handleSearch();
+      this.updateURL();
+    },
+
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+        this.handleSearch();
+        this.updateURL();
+      }
+    },
+
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.handleSearch();
+        this.updateURL();
+      }
     }
   }
-
 }
 </script>
-  

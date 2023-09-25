@@ -30,7 +30,7 @@
     export default {
         props: {
             facilities: {
-                type: Array,
+                type: Object,
                 required: true
             }
         },
