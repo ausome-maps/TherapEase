@@ -3,12 +3,12 @@
     <NuxtLink :to="`/details-page?id=${facilityData.id}`">
       <div v-if="loading">
         <!-- Skeleton -->
-        <div class="animate-pulse bg-gray-200 h-[220px] rounded-[15px]"></div>
+        <div class="animate-pulse bg-gray-200 h-[220px] rounded-t-xl"></div>
       </div>
-      <img v-else class="object-cover mx-auto rounded-[15px] h-[220px] min-w-full sm:w-auto" :src="imageSource"
+      <img v-else class="object-cover mx-auto rounded-t-xl rounded-b-none h-[220px] min-w-full sm:w-auto" :src="imageSource"
         :alt="facilityData.properties.placename" @load="handleImageLoad" @error="handleImageError" />
     </NuxtLink>
-    <div class="px-5 pb-5">
+    <div class="px-5 pb-5 pt-3">
       <NuxtLink :to="facilityData.properties.url">
         <h5
           class="w-full whitespace-nowrap overflow-hidden overflow-ellipsis font-semibold tracking-tight text-gray-900 ">
@@ -20,7 +20,7 @@
 
 
 <script>
-import placeholder from "assets/images/ausome_placeholder.png"
+import placeholder from "assets/images/ausome_placeholder_notext_1.png"
 export default {
   props: {
     facilityData: {

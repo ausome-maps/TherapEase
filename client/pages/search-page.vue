@@ -42,7 +42,7 @@
       </div>
 
       <!-- Map Section -->
-      <div v-if="showMap" class="w-full lg:flex-grow mr-4 h-[99vh] sticky top-5 z-10">
+      <div v-if="showMap" class="w-2/4 lg:flex-grow mr-4 h-[99vh] sticky top-5 z-10">
         <AppMap :coordinates="coordinates" :latitude="14.621071" :longitude="121.0073" />
       </div>
     </div>

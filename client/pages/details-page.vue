@@ -1,5 +1,5 @@
 <template>
-  <div class="justify center">
+  <div class="justify center top-5">
     <div class="flex justify-center">
       <div class="w-[1440px]">
 
