@@ -44,7 +44,7 @@ export default {
   },
   computed: {
     mapCenter() {
-      return [this.latitude, this.longitude]; // Swap the order of latitude and longitude.
+      return [this.longitude, this.latitude];
     },
   },
   created() {

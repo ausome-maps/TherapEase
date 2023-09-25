@@ -1,13 +1,13 @@
 <template>
     <div class="tile flex overflow-ellipsis w-full py-2 overflow-hidden">
         <div class="w-[250px] h-[200px] relative">
-            <a :href="facilityData.properties.url">
+            <NuxtLink :to="`/details-page?id=${facilityData.id}`">
                 <img class="tile-image object-cover rounded-[15px] h-full sm:min-w-[150px] md:min-w-[165px] lg:min-w-[230px] xl:min-w-[250px]"
                     :src="imageSource" :alt="facilityData.properties.placename" style="width:260px;" />
-            </a>
+            </NuxtLink>
         </div>
         <div class="ml-5 flex flex-col justify-center w-full overflow-hidden">
-            <a :href="facilityData.facilityUrl" class="overflow-hidden">
+            <NuxtLink :to="`/details-page?id=${facilityData.id}`" class="overflow-hidden">
                 <div class="flex">
                     <div class="icons">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%"
@@ -46,7 +46,7 @@
                         {{ servicesWithNonZeroModeLength }} interventions on offer</h2>
                 </div>
 
-            </a>
+            </NuxtLink>
             <div class="justify-center flex mt-5">
                 <button @click="openModal(index)"><svg class="arrow_down" xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="20" viewBox="0 0 22 20" fill="none">
@@ -128,9 +128,11 @@
                                 <h2 class="mt-5 font-extrabold">Contact Information</h2>
                                 <div class="h-full flex flex-col justify-end">
                                     <div class="flex justify-end">
+                                        <NuxtLink :to="`/details-page?id=${facilityData.id}`">
                                         <button class="bg-black px-5 py-2 rounded-tl-[15px]">
                                             <h2 class="text-white ">More Details</h2>
                                         </button>
+                                    </NuxtLink>
                                     </div>
                                 </div>
                             </div>

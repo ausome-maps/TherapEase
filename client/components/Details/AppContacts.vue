@@ -81,7 +81,7 @@
       </div>
       <div class="text-left px-8">
         <span class="font-bold">{{ facilityDetails.info_src_name }} </span> on <span class="font-bold">{{
-          getDateFromTimestamp(facilityDetails.date_updated) }}</span>
+          getDateFromTimestamp(facilityDetails.start) }}</span>
       </div>
     </div>
   </div>
