@@ -1,5 +1,5 @@
 <template>
-  <div class="relative z-1 w-full flex flex-col justify-center rounded">
+  <div class="relative z-1 w-full flex top-5 flex-col justify-center rounded">
     <div :class="{ 'justify-center': !showMap }" class="flex flex-col sm:flex-row h-[100%] min-h-[800px] gap-4">
 
       <!-- Content Section -->
@@ -42,7 +42,7 @@
       </div>
 
       <!-- Map Section -->
-      <div v-if="showMap" class="w-full lg:flex-grow mr-8 h-[99vh] sticky top-5 z-10">
+      <div v-if="showMap" class="w-full lg:flex-grow mr-4 h-[99vh] sticky top-5 z-10">
         <AppMap :coordinates="coordinates" :latitude="14.621071" :longitude="121.0073" />
       </div>
     </div>
