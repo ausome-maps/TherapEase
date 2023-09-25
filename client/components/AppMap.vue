@@ -57,16 +57,6 @@ export default {
     this.cardContent = content;
     this.$nextTick(() => {
         this.showCard = true;
-        
-        const mapContainer = this.$refs.map.$el;
-        const point = this.$refs.map.latLngToContainerPoint(event.latlng);
-        
-        // get the height of the info card
-        const cardHeight = this.$el.querySelector('.info-card').offsetHeight;
-        
-        // Adjust the y position to offset by the card height plus a little extra
-        this.cardPosition.x = `${point.x}px`;
-        this.cardPosition.y = `${point.y - cardHeight - 10}px`; // The 10px is a small padding
     });
 }
 

@@ -128,9 +128,11 @@
                                 <h2 class="mt-5 font-extrabold">Contact Information</h2>
                                 <div class="h-full flex flex-col justify-end">
                                     <div class="flex justify-end">
+                                        <NuxtLink :to="`/details-page?id=${facilityData.id}`">
                                         <button class="bg-black px-5 py-2 rounded-tl-[15px]">
                                             <h2 class="text-white ">More Details</h2>
                                         </button>
+                                    </NuxtLink>
                                     </div>
                                 </div>
                             </div>

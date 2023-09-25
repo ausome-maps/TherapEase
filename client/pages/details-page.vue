@@ -42,7 +42,7 @@
             </div>
           </template>
           <div class="w-[100%] relative z-[0]">
-            <AppDetailsMap :latitude="geometry.coordinates[0]" :longitude="geometry.coordinates[1]" />
+            <AppDetailsMap :latitude="coordinates[0]" :longitude="coordinates[1]" />
           </div>
           <div class="h-[100px]"></div>
         </template>
@@ -60,7 +60,7 @@ export default {
   data() {
     return {
       properties: null,
-      geometry: data.features[0].geometry,
+      coordinates: null,
       isMobile: false,
       filteredData: null,
       error: null,
@@ -96,9 +96,9 @@ export default {
     async handleSearch() {
       await this.fetchSearch();
       try {
-        console.log("HATDOG", this.filteredData);
         this.properties = this.filteredData.features[0].properties;
         this.coordinates = this.filteredData.features[0].geometry.coordinates;
+        console.log(this.coordinates);
       } catch (error) {
         console.log("Error on HandleSearch");
       }

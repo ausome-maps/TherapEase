@@ -88,87 +88,90 @@ export default {
     },
 
     methods: {
-        buildQuery() {
-      const queryClauses = [];
-      
-      // Iterate over standard checkboxes
-      for (let checkbox in this) {
-        if (typeof this[checkbox] === "boolean" && this[checkbox]) {
-          queryClauses.push({ term: { [checkbox]: true } });
-        }
-      }
-      
-      // Iterate over serviceCheckboxes
-      for (let service in this.serviceCheckboxes) {
-        if (this.serviceCheckboxes[service]) {
-          queryClauses.push({ term: { [service]: true } });
-        }
-      }
-      
-      // Combine all clauses with a logical OR (should)
-      return {
-        query: {
-          bool: {
-            match: queryClauses
-          }
-        }
-      };
-    },
-    generateQuery() {
-  const queryBody = this.buildQuery();
-  const queryBodyString = JSON.stringify(queryBody);
-  console.log(queryBodyString);
-  // Now you can send 'queryBodyString' to your OpenSearch backend or do whatever you need with it
-}
+        generateElasticSearchQuery() {
+            const body = {
+                filter: []
+            };
 
-  },
-        showValues(){
-            console.log(isPAOTChecked);
-        },
-    constructQuery(filters) {
-        let filterList = [];
-
-        // Add services to the filter
-        for (let service in filters) {
-            if (filters[service] && service !== 'isPASPChecked' && service !== 'isPAOTChecked') {
-                filterList.push({
-                    match: {
-                        ['properties.services.' + service]: '1'
-                    }
+            // Checking for PAOT and PASP accreditations
+            if (this.isPASPChecked) {
+                body.filter.push({
+                    term: { "properties.accreditation.pasp": 1 }
                 });
             }
-        }
 
-        // Add PASP and PAOT to the filter if they're checked
-        if (filters.isPASPChecked) {
-            filterList.push({
-                match: {
-                    'properties.accreditation.pasp': '1'
+            if (this.isPAOTChecked) {
+                body.filter.push({
+                    term: { "properties.accreditation.paot": 1 }
+                });
+            }
+
+            // Checking for service modes
+            const serviceModes = {
+                teletherapy: this.teletherapyChecked,
+                onsite: this.onsiteChecked,
+                home_service: this.homeserviceChecked
+            };
+
+            let modeSelected = this.teletherapyChecked || this.onsiteChecked || this.homeserviceChecked;
+            let sessionSelected = this.individualChecked || this.groupChecked;
+
+            for (const service in this.serviceCheckboxes) {
+                if (this.serviceCheckboxes[service]) { // If this service is checked
+                    const should = [];
+
+                    for (const mode in serviceModes) {
+                        if (serviceModes[mode]) { // If this mode is checked
+                            if (this.individualChecked && !this.groupChecked) {
+                                should.push({
+                                    term: { [`properties.services_offered.${service}.mode.${mode}`]: 1 }
+                                });
+                            }
+
+                            if (this.groupChecked && !this.individualChecked) {
+                                should.push({
+                                    term: { [`properties.services_offered.${service}.mode.${mode}`]: 2 }
+                                });
+                            }
+
+                            if (this.groupChecked && this.individualChecked) {
+                                should.push({
+                                    term: { [`properties.services_offered.${service}.mode.${mode}`]: 3 }
+                                });
+                            }
+                        }
+                    }
+
+                    // If neither mode nor session type is selected, but the service is checked
+                    if (!modeSelected && !sessionSelected) {
+                        for (const mode in serviceModes) {
+                            should.push({
+                                range: { [`properties.services_offered.${service}.mode.${mode}`]: { gt: 0 } }
+                            });
+                        }
+                    }
+
+                    // If any mode or existence condition is added for a service
+                    if (should.length > 0) {
+                        body.filter.push({
+                            bool: {
+                                should: should,
+                                minimum_should_match: 1
+                            }
+                        });
+                    }
                 }
-            });
+            }
+            this.$emit('query-generated', body);
+            console.log(JSON.stringify(body));
         }
-
-        if (filters.isPAOTChecked) {
-            filterList.push({
-                match: {
-                    'properties.accreditation.paot': '1'
-                }
-            });
-        }
-
-        // Construct the final query
-        let query = {
-            query: {
-                bool: {
-                    filter: filterList
-                }
-            },
-            from: '0',
-            size: '10'
-        };
-
-        return JSON.stringify(query);
+        ,
+        showValues() {
+            console.log(isPAOTChecked);
+        },
     }
+
+
 }
 
 </script>
@@ -218,12 +221,14 @@ export default {
                         <h2 class="font-bold">Accreditation</h2>
                         <div class="flex justify-between border-b pb-6">
                             <div>
-                                <AppCheckbox label="Philippine Association of Speech Pathologists" id_="PASP" v-model="isPASPChecked"/>
+                                <AppCheckbox label="Philippine Association of Speech Pathologists" id_="PASP"
+                                    v-model="isPASPChecked" />
 
                             </div>
 
                             <div>
-                                <AppCheckbox label="Philippine Academy of Occupational Therapist" id_="PAOT" v-model="isPAOTChecked"/>
+                                <AppCheckbox label="Philippine Academy of Occupational Therapist" id_="PAOT"
+                                    v-model="isPAOTChecked" />
                             </div>
                         </div>
                         <div>
@@ -232,7 +237,8 @@ export default {
                         <div class="flex space-x-2 sm:space-x-4 md:space-x-6 lg:space-x-6 pb-6 border-b">
                             <!-- Teletherapy Button -->
                             <ul>
-                                <input type="checkbox" v-model="teletherapyChecked" id="teletherapy-option" value="" class="hidden peer" required="">
+                                <input type="checkbox" v-model="teletherapyChecked" id="teletherapy-option" value=""
+                                    class="hidden peer" required="">
                                 <label for="teletherapy-option"
                                     class="active:shadow-sm flex flex-col items-center justify-center w-[165px] h-[85px] sm:p-2 sm:px-8 border shadow-md rounded-md peer-checked:border-black hover:text-gray-600  peer-checked:text-gray-600 ">
                                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -253,7 +259,8 @@ export default {
                             <ul>
 
                                 <!-- Onsite Button -->
-                                <input type="checkbox" v-model="onsiteChecked" id="onsite-option" value="" class="hidden peer" required="">
+                                <input type="checkbox" v-model="onsiteChecked" id="onsite-option" value=""
+                                    class="hidden peer" required="">
                                 <label for="onsite-option"
                                     class="active:shadow-sm flex flex-col items-center justify-center w-[165px] h-[85px] sm:p-2 sm:px-8 border shadow-md rounded-md peer-checked:border-black hover:text-gray-600  peer-checked:text-gray-600 ">
                                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -275,7 +282,8 @@ export default {
 
 
                                 <!-- Home Service Button -->
-                                <input type="checkbox" v-model="homeserviceChecked" id="homeservice-option" value="" class="hidden peer" required="">
+                                <input type="checkbox" v-model="homeserviceChecked" id="homeservice-option" value=""
+                                    class="hidden peer" required="">
                                 <label for="homeservice-option"
                                     class="active:shadow-sm flex flex-col items-center justify-center w-[165px] h-[85px] sm:p-2 sm:px-8 border shadow-md rounded-md peer-checked:border-black hover:text-gray-600  peer-checked:text-gray-600 ">
                                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -301,7 +309,8 @@ export default {
                             <!-- Individual Button -->
                             <ul>
 
-                                <input type="checkbox" v-model="individualChecked" id="individual-option" value="" class="hidden peer" required="">
+                                <input type="checkbox" v-model="individualChecked" id="individual-option" value=""
+                                    class="hidden peer" required="">
                                 <label for="individual-option"
                                     class="active:shadow-sm flex flex-col items-center justify-center w-[165px] h-[85px] sm:p-2 sm:px-8 border shadow-md rounded-md peer-checked:border-black hover:text-gray-600  peer-checked:text-gray-600 ">
                                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -321,7 +330,8 @@ export default {
                             </ul>
 
                             <!-- Group Button -->
-                            <input type="checkbox" v-model="groupChecked" id="group-option" value="" class="hidden peer" required="">
+                            <input type="checkbox" v-model="groupChecked" id="group-option" value="" class="hidden peer"
+                                required="">
                             <label for="group-option"
                                 class="active:shadow-sm flex flex-col items-center justify-center w-[165px] h-[85px] sm:p-2 sm:px-8 border shadow-md rounded-md peer-checked:border-black hover:text-gray-600  peer-checked:text-gray-600 ">
                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -347,7 +357,7 @@ export default {
                         </div>
                         <div class="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-2">
                             <AppCheckbox v-for="service in services" :key="service.key" :label="service.label"
-                                :id_="service.key" class="min-h-[35px]" />
+                                v-model="serviceCheckboxes[service.key]" :id_="service.key" class="min-h-[35px]" />
                         </div>
 
                     </div>
@@ -358,7 +368,8 @@ export default {
                         class="flex items-center p-6 space-x-2 border-t justify-between border-gray-200 rounded-b dark:border-gray-600">
                         <button type="button" class="">
                             Clear all filters</button>
-                        <button type="button" @click="generateQuery" class="border px-4 py-2 bg-black active:bg-gray-700 text-white rounded-lg">
+                        <button type="button" @click="generateElasticSearchQuery"
+                            class="border px-4 py-2 bg-black active:bg-gray-700 text-white rounded-lg">
                             Apply filters</button>
                     </div>
                 </div>

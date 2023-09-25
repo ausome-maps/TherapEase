@@ -35,14 +35,14 @@
               <img :src="image" :alt="image.alt" class="rounded-xl object-cover h-[100%] w-[100%]" @click="openModal(index)" />
             </div>
           </div> -->
-          <v-viewer :options="{ navbar: false, toolbar: false, tooltip: true }">
+
             <div class="grid grid-cols-4 gap-2 mt-4 px-4 ">
               <div v-for="(image, index) in images" :key="index" class="">
                 <img :src="image.img_url" :alt="image.img_name" class="rounded-xl object-cover h-[100%] w-[100%]"
                   @click="openModal(index)" />
               </div>
             </div>
-          </v-viewer>
+ 
 
         </div>
       </div>
@@ -54,8 +54,6 @@
   
   
 <script>
-import 'viewerjs/dist/viewer.css'
-import { viewer as VViewer } from 'v-viewer'
 
 export default {
   props: {
@@ -64,9 +62,7 @@ export default {
       required: true,
     },
   },
-  components: {
-    VViewer,
-  },
+
   data() {
     return {
       showModal: false,

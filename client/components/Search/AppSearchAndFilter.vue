@@ -16,7 +16,7 @@
             Search
         </button>
     </div>
-         <AppFilter />
+         <AppFilter @query-generated="handleQueryGenerated"/>
     </div>
 </template>
 
@@ -37,6 +37,9 @@ export default {
         this.emitInput = this.searchInput;
       }
       this.$emit('update-search', this.emitInput);
+    },
+    handleQueryGenerated(queryBody) {
+      this.$emit('query-passed', queryBody);
     }
   }
 }

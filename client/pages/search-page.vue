@@ -7,7 +7,7 @@
         <ClientOnly>
           <!-- Search and Header Section -->
           <div class="px-5 pb-4 sticky top-0 z-50 bg-white">
-            <AppSearchAndFilter @update-search="handleSearch" />
+            <AppSearchAndFilter @update-search="handleSearch" @query-passed="handleQueryPassed"/>
             <AppListingHeader :show-map="showMap" @hide-map="showMap = false" @show-map="showMap = true"
               :view-mode="viewMode" @change-view-mode="handleChangeViewMode" :facilitiesLength="totalResults"
               :filteredFacilitiesLength="currentPageResults" />
@@ -70,7 +70,8 @@ export default {
       currentPage: 1,
       totalPages: Math.ceil(this.totalResults / this.paginationSize),
       coordinates: [],  // New coordinates array
-      selectedService: 'orthoses'
+      selectedService: 'orthoses',
+      filter: [],
     };
   },
 
@@ -107,6 +108,11 @@ export default {
       this.viewMode = newViewMode;
     },
 
+    handleQueryPassed(queryBody) {
+      this.filter = queryBody.filter;
+      console.log(this.filter)
+    },
+
     async getMapCoordinates() {
       console.log("getMapCoordinates")
       if (this.data && Array.isArray(this.data)) {
@@ -136,51 +142,61 @@ export default {
       } catch (error) {
         this.totalResults = 0;
         this.currentPageResults = 0;
-        this.coordinates = [];  // Reset the coordinates if there's an error
+
+         // Reset the coordinates if there's an error
+        this.coordinates = []; 
       }
     },
-
-    // async fetchSearch() {
-    //   const startIndex = (this.currentPage - 1) * this.paginationSize;
-    //   const queryParameters = {
-    //     q: this.searchQuery,
-    //     size: this.paginationSize,
-    //     from: startIndex
-    //   };
-    //   const queryString = new URLSearchParams(queryParameters).toString();
-    //   const url = `${this.$config.search}?${queryString}`;
-    //   try {
-    //     const response = await fetch(url);
-
-    //     if (!response.ok) {
-    //       throw new Error('Network response was not ok');
-    //     }
-
-    //     const data = await response.json();
-    //     this.filteredData = data;
-    //     this.isFetching = false;
-    //     this.error = null;
-    //   } catch (error) {
-    //     this.filteredData = null;
-    //     this.error = error.message;
-    //     this.isFetching = false;
-    //   }
-    // },
     async fetchSearch() {
       const startIndex = (this.currentPage - 1) * this.paginationSize;
-      const url = this.$config.search;
+      this.isFetching = true;
+      let search = this.searchQuery;
 
+      // If the search query is empty, set it to a wildcard
+      if (search === '*') {
+        search = '';
+      }
+
+
+      // Build the body of the request
+      let bodyObj = {
+  query: {
+    bool: {
+      must: {
+        multi_match: {
+          query: search
+        }
+      },
+      filter: this.filter
+    }
+  },
+  from: startIndex,
+  size: this.paginationSize
+};
+
+
+      let body = JSON.stringify(bodyObj);
+      console.log(body)
+
+      // Fetch the data
       try {
         const response = await fetch("http://localhost:9001/facilities", {
-          // body: '{"query": {"bool": {"filter": { "match": { "properties.accreditation.paot": "0" }}}}, "from": "0", "size": "10"}',
-          body: `{"query": {"bool": {"filter": { "match": { "properties.accreditation.paot": "1" }}}}, "from": "${startIndex}", "size": "20"}`,
-          headers: {
+body: body
+// `{
+//   "query": {
+//     "bool": {"filter":[{"term":{"properties.accreditation.pasp":1}},{"bool":{"should":[{"term":{"properties.services_offered.speechlanguagetherapy.mode.onsite":1}}],"minimum_should_match":1}}]}
+//   },
+//   "from": ${startIndex},
+//   "size": ${this.paginationSize}
+// }`
+,      
+    headers: {
             "Content-Type": "application/json"
           },
           method: "POST"
         });
 
-        // Check if the response is successful
+        
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -197,7 +213,7 @@ export default {
         this.isFetching = false;
       }
     }
-    
+
     ,
     goToPage(pageNumber) {
       this.currentPage = pageNumber;
