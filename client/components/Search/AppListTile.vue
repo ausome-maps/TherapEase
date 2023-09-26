@@ -146,7 +146,7 @@
 </template>
 
 <script>
-import placeholder from "assets/images/ausome_placeholder.png"
+import placeholder from "assets/images/ausome_placeholder_notext_1.png"
 
 export default {
     data() {

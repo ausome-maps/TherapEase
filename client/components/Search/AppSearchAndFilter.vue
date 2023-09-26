@@ -1,6 +1,7 @@
 <template>
-    <div class="flex justify-between items-center ">
-      <div class="relative flex items-center w-3/4">
+    <div class="flex justify-between items-center pb-5">
+      <!-- <div class="relative flex items-center w-3/4"> -->
+        <div class="relative flex items-center w-full">
         <!-- Input Field -->
         <input 
             type="text" 
@@ -16,7 +17,7 @@
             Search
         </button>
     </div>
-         <AppFilter @query-generated="handleQueryGenerated"/>
+         <!-- <AppFilter @query-generated="handleQueryGenerated"/> -->
     </div>
 </template>
 

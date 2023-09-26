@@ -6,8 +6,9 @@ export default defineNuxtConfig({
           apiURL: process.env.NUXT_API_URL || "http://localhost:9001",
           geocode: "http://localhost:9001/geocode",
           search: "http://localhost:9001/search",
-          baseURL: "http://localhost:9002/search-page",
-          facilities:  "http://localhost:9001/facilities"
+          baseURL: "http://localhost:9002",
+          facilities:  "http://localhost:9001/facilities",
+          feedbackUrl: process.env.FEEDBACK_FORM
         }
       },
       routeRules: {
