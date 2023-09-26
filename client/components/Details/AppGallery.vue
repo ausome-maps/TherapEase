@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="relative ">
-      <div class="grid grid-cols-3 gap-3">
+      <div class="grid grid-cols-3 gap-3 pt-5">
         <div v-for="(image, index) in images.slice(0, 3)" :key="index" class="cursor-pointer">
           <img :src="image.img_url" :alt="image.img_name" :class="[
             'w-full',
