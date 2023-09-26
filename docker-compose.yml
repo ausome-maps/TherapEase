@@ -13,6 +13,7 @@ services:
       - ./.env.sample
     ports:
       - "9002:3000"
+      - "24600:24600"
     depends_on:
       - api
   api:
