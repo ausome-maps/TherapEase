@@ -92,13 +92,18 @@ export default {
   props: {
     facilityDetails: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
+
   },
   methods: {
     getDateFromTimestamp: function(timestamp) {
-      const date = new Date(timestamp);
-      return date.toISOString().split('T')[0];
+      try{
+        const date = new Date(timestamp);
+        return date.toISOString().split('T')[0];
+      }catch(error){
+        return '';
+      }
     }
   },
 }
