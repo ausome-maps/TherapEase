@@ -4,7 +4,7 @@
   ]
 
 [http.routers.api]
-  rule = "Host(`therapease_monitor_domain_name`)"
+  rule = "Host(`{{therapease_monitor_domain_name}}`)"
   entrypoints = ["websecure"]
   middlewares = ["simpleAuth"]
   service = "api@internal"

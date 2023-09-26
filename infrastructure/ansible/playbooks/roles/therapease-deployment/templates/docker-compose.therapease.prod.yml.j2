@@ -12,7 +12,7 @@ services:
     depends_on:
       - api
     labels:
-      - traefik.http.routers.client.rule=Host(`therapease_ui_domain_name`) 
+      - traefik.http.routers.client.rule=Host(`{{therapease_ui_domain_name}}`) 
       - traefik.http.routers.client.tls=true
       - traefik.http.routers.client.tls.certresolver=lets-encrypt
       - traefik.port=80
@@ -28,7 +28,7 @@ services:
     env_file:
       - ./.env.therapease
     labels:
-      - "traefik.http.routers.api.rule=Host(`therapease_api_domain_name`)" # need to be configured in DNS registrar
+      - "traefik.http.routers.api.rule=Host(`{{therapease_api_domain_name}}`)" # need to be configured in DNS registrar
       - "traefik.http.routers.api.tls=true"
       - "traefik.http.routers.api.tls.certresolver=lets-encrypt"
       - "traefik.port=80"
