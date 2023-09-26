@@ -76,10 +76,10 @@
       </ul>
 
       <div class="border-t border-black mx-8 my-6"></div>
-      <div v-if="isValidDate" class="text-left px-8">
+      <div class="text-left px-8">
         CREATED by
       </div>
-      <div v-if="isValidDate" class="text-left px-8">
+      <div class="text-left px-8">
         <span class="font-bold">{{ facilityDetails.info_src_name }} </span> on <span class="font-bold">{{
           getDateFromTimestamp(facilityDetails.start) }}</span>
       </div>
@@ -93,8 +93,8 @@ export default {
     facilityDetails: {
       type: Object,
       required: true,
-      isValidDate: true
-    }
+    },
+
   },
   methods: {
     getDateFromTimestamp: function(timestamp) {
@@ -102,7 +102,7 @@ export default {
         const date = new Date(timestamp);
         return date.toISOString().split('T')[0];
       }catch(error){
-        isValidDate = false;
+        return '';
       }
     }
   },
