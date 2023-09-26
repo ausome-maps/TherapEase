@@ -7,7 +7,8 @@ export default defineNuxtConfig({
           geocode: "http://localhost:9001/geocode",
           search: "http://localhost:9001/search",
           baseURL: "http://localhost:9002",
-          facilities:  "http://localhost:9001/facilities"
+          facilities:  "http://localhost:9001/facilities",
+          feedbackUrl: process.env.FEEDBACK_FORM
         }
       },
       routeRules: {

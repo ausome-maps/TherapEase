@@ -43,7 +43,7 @@
                 </div>
                 <div class="min-w-[34%] p-5 mr-2">
                   <AppContacts :facilityDetails="properties" />
-                  <AppShareSubmit />
+                  <AppShareSubmit :feedback-url="$config.feedbackUrl" />
                 </div>
               </div>
             </div>
