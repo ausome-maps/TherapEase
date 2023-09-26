@@ -180,7 +180,7 @@ export default {
 
       // Fetch the data
       try {
-        const response = await fetch("http://localhost:9001/facilities", {
+        const response = await fetch(`${this.$config.apiURL}/facilities`, {
 body: body
 // `{
 //   "query": {
