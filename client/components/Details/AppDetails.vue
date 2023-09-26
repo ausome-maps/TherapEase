@@ -1,7 +1,9 @@
 <template>
   <div class="text-left">
     <div class="flex justify-between">
-      <div class="text-xl">{{ facilityDetails.city }}, {{facilityDetails.province}}</div>
+      <div v-if="facilityDetails.city!=''&&facilityDetails.province!=''" class="text-xl">{{ facilityDetails.city }}, {{facilityDetails.province}}</div>
+      <div v-if="facilityDetails.city==''&&facilityDetails.province!=''" class="text-xl">{{facilityDetails.province}}</div>
+      <div v-if="facilityDetails.city!=''&&facilityDetails.province==''" class="text-xl">{{facilityDetails.city}}</div>
       <AppAccBadge :accreditation="facilityDetails.accreditation"/>
     </div>
     <h1 class="text-4xl font-bold mb-4 text-red-400">

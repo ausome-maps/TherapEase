@@ -77,11 +77,14 @@
 
       <div class="border-t border-black mx-8 my-6"></div>
       <div class="text-left px-8">
-        CREATED by
+        Contact person:
       </div>
-      <div class="text-left px-8">
+      <!-- <div class="text-left px-8">
         <span class="font-bold">{{ facilityDetails.info_src_name }} </span> on <span class="font-bold">{{
           getDateFromTimestamp(facilityDetails.start) }}</span>
+      </div> -->
+      <div class="text-left px-8">
+        <span class="font-bold">{{ facilityDetails.info_src_name }} </span> 
       </div>
     </div>
   </div>

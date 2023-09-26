@@ -1,24 +1,30 @@
 <template>
   <div>
     <div class="relative ">
-      <div class="grid grid-cols-3 gap-3 pt-5">
+      <div :class="['grid',
+                    { 'grid-cols-3': images.length>2 },
+                    { 'grid-cols-2': images.length==2 },
+                    { 'gap-3': images.length>1 }, 
+                    'pt-5'
+      ]">
         <div v-for="(image, index) in images.slice(0, 3)" :key="index" class="cursor-pointer">
           <img :src="image.img_url" :alt="image.img_name" :class="[
             'w-full',
             'h-[350px]',
             'object-cover',
             { 'rounded-l-xl': index === 0 },
-            { 'rounded-r-xl': index === 2 },
-          ]" @click="openModal(index)" />
+            { 'rounded-r-xl': index === 2 && images.length>3  },
+            { 'rounded-r-xl': index === 1 && images.length === 2  },
+          ]" />
         </div>
       </div>
       <!-- Align button to right -->
-      <div class="absolute bottom-[20px] right-0 pr-[30px]">
+      <!-- <div class="absolute bottom-[20px] right-0 pr-[30px]">
         <span @click="openModal(index)"
           class="shadow-xl text-red-400 h-10 w-40 flex items-center justify-center bg-white rounded-3xl transition-colors duration-300 hover:bg-red-400 hover:text-white cursor-pointer">
           View All Images
         </span>
-      </div>
+      </div> -->
 
 
 
