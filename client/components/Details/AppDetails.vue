@@ -18,7 +18,7 @@
     </div>
     <!-- Insert a thick h line-->
     <div class="border-t border-gray-300 my-4 mr-4"></div>
-    <AppFeatures v-if="facilityDetails.other_services!=''" :services="filteredServices" :other_services="facilityDetails.other_services" label="Services" />
+    <AppFeatures :services="filteredServices" :other_services="facilityDetails.other_services" label="Services" />
   </div>
   
 </template>

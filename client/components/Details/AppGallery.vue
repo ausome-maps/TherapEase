@@ -13,7 +13,7 @@
             'h-[350px]',
             'object-cover',
             { 'rounded-l-xl': index === 0 },
-            { 'rounded-r-xl': index === 2 && images.length>3  },
+            { 'rounded-r-xl': index === 2 && images.length>2  },
             { 'rounded-r-xl': index === 1 && images.length === 2  },
           ]" />
         </div>

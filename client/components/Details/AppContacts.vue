@@ -18,7 +18,7 @@
               </span>
             </div>
             <div class="truncate">
-  <a href="mailto:example@example.com">Email: {{ facilityDetails.email_address }}</a>
+  <a :href="malitoLink">Email: {{ facilityDetails.email_address }}</a>
 </div>
 
           </div>
@@ -50,10 +50,10 @@
               </svg>
             </div>
             <div>
-              <a :href="facilityDetails.facilityWebsite" target="_blank">
+              <!-- <a :href="facilityDetails.facilityWebsite" target="_blank">
                 Website: {{ facilityDetails.website }}
-              </a>
-
+              </a> -->
+              <span>Website:  </span><span><a :href="websiteLink" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" target="_blank" rel="noopener noreferrer">{{ facilityDetails.website }}</a></span>
             </div>
           </div>
         </li>
@@ -92,6 +92,12 @@
   
 <script>
 export default {
+  data() {
+    return {
+      malitoLink:'',
+      websiteLink:''
+    }
+  },
   props: {
     facilityDetails: {
       type: Object,
@@ -108,6 +114,11 @@ export default {
         return '';
       }
     }
+  },
+  mounted() {
+    console.log(this.facilityDetails);
+    this.malitoLink="mailto:"+this.facilityDetails.email_address;
+    this.websiteLink=this.facilityDetails.website;
   },
 }
 </script>
