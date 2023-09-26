@@ -1,0 +1,104 @@
+version: '3.7'
+
+services:
+  frontend:
+    container_name: therapease_frontend
+    image: ghcr.io/ausome-maps/therapease-ui:latest
+    command: node server/index.mjs
+    env_file:
+      - ./.env.therapease
+    expose:
+      - 9002
+    depends_on:
+      - api
+    labels:
+      - traefik.http.routers.client.rule=Host(`therapease_ui_domain_name`) 
+      - traefik.http.routers.client.tls=true
+      - traefik.http.routers.client.tls.certresolver=lets-encrypt
+      - traefik.port=80
+    networks:
+      - internal
+      - web
+  api:
+    container_name: therapease_api
+    image: ghcr.io/ausome-maps/therapease-api:latest
+    command: uvicorn app.main:app --host 0.0.0.0 --port 9001 --reload
+    expose:
+      - 9001
+    env_file:
+      - ./.env.therapease
+    labels:
+      - "traefik.http.routers.api.rule=Host(`therapease_api_domain_name`)" # need to be configured in DNS registrar
+      - "traefik.http.routers.api.tls=true"
+      - "traefik.http.routers.api.tls.certresolver=lets-encrypt"
+      - "traefik.port=80"
+    depends_on:
+      - search
+      - cache
+      - db
+    networks:
+      - internal
+      - web
+  db:
+    container_name: therapease_db
+    image: postgres:15.4-alpine3.18
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.therapease
+    networks:
+      - internal
+    labels:
+      - traefik.enable=false 
+  cache:
+    container_name: therapease_cache
+    image: redis:6.0.20-alpine3.18
+    networks:
+      - internal
+    labels:
+      - traefik.enable=false 
+  search:
+    container_name: therapease_search
+    image: opensearchproject/opensearch:2.9.0
+    environment:
+      - cluster.name=opensearch-cluster
+      - node.name=therapease_search # Name the node that will run in this container
+      - discovery.seed_hosts=therapease_search
+      - bootstrap.memory_lock=true # Disable JVM heap memory swapping
+      - "OPENSEARCH_JAVA_OPTS=-Xms256m -Xmx256m" # Set min and max JVM heap sizes to at least 50% of system RAM
+      - DISABLE_SECURITY_PLUGIN=true # this should be removed if SSL is configured
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1 # Set memlock to unlimited (no soft or hard limit)
+        hard: -1
+      nofile:
+        soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
+        hard: 65536
+    volumes: 
+      - search_data:/usr/share/opensearch/data
+    networks:
+      - internal
+    labels:
+      - traefik.enable=false 
+
+volumes:
+  postgres_data:
+    driver: local
+    driver_opts:
+      o: 'bind'
+      device: /datadrive/postgres
+      type: 'none'
+  search_data: 
+    driver: local
+    driver_opts:
+      o: 'bind'
+      device: /datadrive/search
+      type: 'none'
+
+
+networks:
+  web:
+    external: true
+  internal:
+    external: false

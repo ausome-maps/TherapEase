@@ -13,7 +13,9 @@ settings = get_settings()
 
 @router.put("/facilities")
 async def facilities_store_url(
-    facilities: Facilities, user: User = Depends(current_active_user)
+    facilities: Facilities,
+    request: Request,
+    user: User = Depends(current_active_user),
 ):
     """
     Stores facilities in FullTextSearch. This is a low - level function to be used by clients that want to store a set of facilities in a full text search.
@@ -23,6 +25,8 @@ async def facilities_store_url(
     @return The response from the search request as a JSON object. Example usage. code - block :: python import fts >>> urls = await facilities_store_url
     """
     fts = FullTextSearch()
+    if request.cookies.get("key") != settings.FASTAPI_SECRET_KEY:
+        return {"detail": "Invalid secret key"}
     resp = fts.put(
         facilities.model_dump_json(),
         settings.SEARCH_URL + f'/facilities/_doc/{facilities.model_dump()["id"]}',
