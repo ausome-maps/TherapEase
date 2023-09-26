@@ -1,0 +1,65 @@
+- name: Creates search data directory
+  file:
+    path: /datadrive/search
+    state: directory
+    mode: 0777
+    recurse: yes
+
+- name: Creates postgres data directory
+  file:
+    path: /datadrive/postgres
+    state: directory
+    mode: 0777
+    recurse: yes
+
+- name: Creates traefik directory
+  file:
+    path: "{{ apps_directory }}/traefik"
+    state: directory
+    mode: 0777
+    recurse: yes
+
+- name: configure traefik toml
+  become: yes
+  template:
+    src: roles/therapease-deployment/templates/traefik.prod.toml
+    dest: "{{ apps_directory }}/traefik/traefik_dynamic.toml"
+
+- name: configure docker environment
+  become: yes
+  template:
+    src: roles/therapease-deployment/templates/docker.env.j2
+    dest: "{{ apps_directory }}/.env.therapease"
+
+- name: configure therapease docker compose file
+  become: yes
+  template:
+    src: roles/therapease-deployment/templates/docker-compose.therapease.prod.yml.j2
+    dest: "{{apps_directory}}/docker-compose.therapease.yml"
+
+- name: download the app image
+  become: yes
+  shell: |
+    echo {{ cr.password }} | docker login ghcr.io -u {{ cr.user }} --password-stdin
+    docker pull ghcr.io/ausome-maps/therapease-ui:latest
+    docker pull ghcr.io/ausome-maps/therapease-api:latest
+
+- name: setup traefik prod toml
+  become: yes
+  template:
+    src: roles/therapease-deployment/templates/traefik.prod.toml
+    dest: "{{ apps_directory }}/traefik/traefik.prod.toml"
+
+- name: configure traefik dynamic toml
+  become: yes
+  template:
+    src: roles/therapease-deployment/templates/traefik_dynamic.toml
+    dest: "{{ apps_directory }}/traefik/traefik_dynamic.toml"
+
+- name: Creates acme directory
+  file:
+    path: "{{ apps_directory }}/traefik/acme.json"
+    state: touch
+    mode: 0600
+    modification_time: preserve
+    access_time: preserve

@@ -1,0 +1,23 @@
+---
+- hosts: all
+  tasks:
+    - name: Ensure locale is set to en_PH.UTF-8
+      become: true
+      locale_gen:
+        name: en_PH.UTF-8
+        state: present
+
+    - name: Ensure ntp is installed
+      become: true
+      apt:
+        name: ntp
+
+    - name: Ensure htop is installed
+      become: true
+      apt:
+        name: htop
+
+  roles:
+    - role: therapease-deployment
+      become: true
+      when: deploy_therapease

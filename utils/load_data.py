@@ -11,25 +11,28 @@ import json
 import requests
 
 # replace with location of data json
-data_path = "/Users/lkp/Dev/projects/ausomemaps/FINAL_PASP_PAOT_with_id.json"
-
+data_path = "/Users/lkp/Dev/projects/ausomemaps/data/FINAL_PASP_PAOT_with_id.json"
+# api_url = "https://api.find.ausomemaps.org"
+api_url = "http://127.0.0.1:9001"
 # force register user
 user_reg = {
-    "name": "sample name",
+    "name": "admin_user",
     "email": "sample@sample.com",
     "password": "mypassword1234",
     "passwordConfirm": "mypassword1234",
+    # "email": "info@ausomemaps.org",
+    # "password": "AtwnHdomfT3kSago",
+    # "passwordConfirm": "AtwnHdomfT3kSago",
 }
 user_reg_resp = requests.post(
-    "http://localhost:9001/auth/register",
+    f"{api_url}/auth/register",
     headers={"Content-type": "application/json"},
     json=user_reg,
 )
-print(user_reg_resp.text)
 
 # authenticate user
-user = {"username": "sample@sample.com", "password": "mypassword1234"}
-token = requests.post("http://localhost:9001/auth/jwt/login", data=user)
+user = {"username": user_reg["email"], "password": user_reg["password"]}
+token = requests.post(f"{api_url}/auth/jwt/login", data=user)
 access_token = token.json()["access_token"]
 
 # store to opensearch index
@@ -40,5 +43,5 @@ with open(data_path, "r") as therap_file:
             "Content-Type": "application/json",
             "Authorization": f"Bearer {access_token}",
         }
-        resp = requests.put("http://localhost:9001/facilities", headers=headers, json=d)
+        resp = requests.put(f"{api_url}/facilities", headers=headers, json=d)
         print(resp.json())
