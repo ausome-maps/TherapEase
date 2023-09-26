@@ -38,10 +38,10 @@
                 <AppGallery :images="properties.images" />
               </div>
               <div class="flex">
-                <div class="min-w-[60%] pl-4 pt-4">
+                <div class="min-w-[60%] pl-4 pt-5">
                   <AppDetails :facilityDetails="properties" />
                 </div>
-                <div class="min-w-[34%] p-4 mr-2">
+                <div class="min-w-[34%] p-5 mr-2">
                   <AppContacts :facilityDetails="properties" />
                   <AppShareSubmit />
                 </div>
