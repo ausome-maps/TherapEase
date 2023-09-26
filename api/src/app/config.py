@@ -9,7 +9,6 @@ class Settings(BaseSettings):
     FASTAPI_SECRET_KEY: str = os.environ.get(
         "FASTAPI_SECRET_KEY", "this1saveryS3creTKey000111"
     )
-
     SEARCH_URL: str = os.environ.get("SEARCH_URL", "http://localhost:8999")
     SEARCH_TOKEN: str = os.environ.get("SEARCH_TOKEN", "")
     REDIS_URL: str = os.environ.get("REDIS_URL", "http://localhost:5380")

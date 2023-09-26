@@ -12,17 +12,16 @@ import requests
 
 # replace with location of data json
 data_path = "/Users/lkp/Dev/projects/ausomemaps/data/FINAL_PASP_PAOT_with_id.json"
-# api_url = "https://api.find.ausomemaps.org"
 api_url = "http://127.0.0.1:9001"
+
+secret_key = "thisisaverysecretkey12345"
+
 # force register user
 user_reg = {
     "name": "admin_user",
     "email": "sample@sample.com",
     "password": "mypassword1234",
     "passwordConfirm": "mypassword1234",
-    # "email": "info@ausomemaps.org",
-    # "password": "AtwnHdomfT3kSago",
-    # "passwordConfirm": "AtwnHdomfT3kSago",
 }
 user_reg_resp = requests.post(
     f"{api_url}/auth/register",
@@ -43,5 +42,11 @@ with open(data_path, "r") as therap_file:
             "Content-Type": "application/json",
             "Authorization": f"Bearer {access_token}",
         }
-        resp = requests.put(f"{api_url}/facilities", headers=headers, json=d)
-        print(resp.json())
+        d["key"] = secret_key
+        resp = requests.put(
+            f"{api_url}/facilities",
+            headers=headers,
+            json=d,
+            cookies={"key": secret_key},
+        )
+        print(resp.text)

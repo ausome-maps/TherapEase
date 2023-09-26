@@ -102,7 +102,6 @@ class BaseSearch:
         url_put = self.url
         if url is not None:
             url_put = url
-        print(type(data))
         resp = requests.put(url_put, json=json.loads(data), headers=self.headers)
         # Returns a JSON string with the response.
         if resp.status_code >= 400:
