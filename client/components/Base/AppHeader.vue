@@ -18,7 +18,7 @@ export default {
   },
   mounted(){
     let recaptchaScript = document.createElement('script')
-      recaptchaScript.setAttribute('src', 'https://www.googletagmanager.com/gtag/js?id=G-E1HY2D8NC8')
+      recaptchaScript.setAttribute('src', this.$config.googleTagManager)
       document.head.appendChild(recaptchaScript)
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
