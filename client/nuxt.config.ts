@@ -8,7 +8,8 @@ export default defineNuxtConfig({
           search: "http://localhost:9001/search",
           baseURL: "http://localhost:9002",
           facilities:  "http://localhost:9001/facilities",
-          feedbackUrl: process.env.FEEDBACK_FORM
+          feedbackUrl: process.env.FEEDBACK_FORM,
+          googleTagManager: process.env.GOOGLE_TAG_MANAGER || "https://www.googletagmanager.com/gtag/js?id=G-E1HY2D8NC8", 
         }
       },
       routeRules: {
