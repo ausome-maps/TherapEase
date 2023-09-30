@@ -1,3 +1,4 @@
+import json
 from typing import Optional
 import requests
 
@@ -101,11 +102,11 @@ class BaseSearch:
         url_put = self.url
         if url is not None:
             url_put = url
-        resp = requests.put(url_put, json=data, headers=self.headers)
+        resp = requests.put(url_put, json=json.loads(data), headers=self.headers)
         # Returns a JSON string with the response.
         if resp.status_code >= 400:
             return {
-                "detail": f"{self.search_type} query failed. Error: {resp.json()}",
+                "detail": f"{self.search_type} query failed. Error: {resp.text}",
                 "status_code": resp.status_code,
             }
         return resp.json()

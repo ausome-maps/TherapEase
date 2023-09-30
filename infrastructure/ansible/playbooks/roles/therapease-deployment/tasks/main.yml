@@ -1,0 +1,15 @@
+- name: Update repositories cache
+  apt:
+    update_cache: yes
+  become: yes
+- name: ensure apps directory is owned by app user
+  become: yes
+  file:
+    path: "{{apps_directory}}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    state: directory
+    recurse: yes
+- include: docker.yml
+- include: app.yml
+- include: start.yml

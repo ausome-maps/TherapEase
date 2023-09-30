@@ -1,0 +1,10 @@
+---
+therapease_ui_domain_name: "sample.com"
+therapease_api_domain_name: "api.sample.com"
+therapease_monitor_domain_name: "monitor.sample.com"
+is_ssl: false
+postgres:
+  username: tuser
+  password: tpassword
+  host: t_db_host
+  dbname: tdb
