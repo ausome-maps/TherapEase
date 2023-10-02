@@ -7,7 +7,7 @@
         <ClientOnly>
           <!-- Search and Header Section -->
           <div class="px-5 pb-4 sticky top-0 z-50 bg-white">
-            <AppSearchAndFilter @update-search="handleSearch" @query-passed="handleQueryPassed"/>
+            <AppSearchAndFilter @update-search="handleSearch" @query-passed="handleQueryPassed" />
             <AppListingHeader :show-map="showMap" @hide-map="showMap = false" @show-map="showMap = true"
               :view-mode="viewMode" @change-view-mode="handleChangeViewMode" :facilitiesLength="totalResults"
               :filteredFacilitiesLength="currentPageResults" />
@@ -51,13 +51,13 @@
 </template>
 
 <script>
-import data from '../components/facility-data.json'
+// import data from '../components/facility-data.json'
 
 export default {
   data() {
     return {
       searchQuery: '*',
-      data: data.features,
+      data: [],
       viewMode: 'card',
       showMap: true,
       isMobile: false,
@@ -132,19 +132,19 @@ export default {
       try {
         await this.fetchSearch();
         this.data = this.filteredData.features;
-        console.log("data", this.data)
+        // console.log("handleSearch", this.data)
         this.totalResults = this.filteredData.total.value;
         this.totalPages = Math.ceil(this.totalResults / this.paginationSize);
         this.currentPageResults = Math.min(this.paginationSize, this.data.length);
-
         // Set the coordinates array after the data has been fetched
         this.coordinates = await this.getMapCoordinates();
       } catch (error) {
+        console.log(error)
         this.totalResults = 0;
         this.currentPageResults = 0;
 
-         // Reset the coordinates if there's an error
-        this.coordinates = []; 
+        // Reset the coordinates if there's an error
+        this.coordinates = [];
       }
     },
     async fetchSearch() {
@@ -154,25 +154,23 @@ export default {
 
       // If the search query is empty, set it to a wildcard
       if (search === '*') {
-        search = '';
+        search = '*';
       }
-
-
       // Build the body of the request
       let bodyObj = {
-  query: {
-    bool: {
-      must: {
-        multi_match: {
-          query: search
-        }
-      },
-      filter: this.filter
-    }
-  },
-  from: startIndex,
-  size: this.paginationSize
-};
+        query: {
+          bool: {
+            must: {
+              query_string: {
+                query: search
+              }
+            },
+            filter: this.filter
+          }
+        },
+        from: startIndex,
+        size: this.paginationSize
+      };
 
 
       let body = JSON.stringify(bodyObj);
@@ -180,34 +178,26 @@ export default {
 
       // Fetch the data
       try {
+        console.log("fetchSearchFunction", `${this.$config.apiURL}/facilities`);
         const response = await fetch(`${this.$config.apiURL}/facilities`, {
-body: body
-// `{
-//   "query": {
-//     "bool": {"filter":[{"term":{"properties.accreditation.pasp":1}},{"bool":{"should":[{"term":{"properties.services_offered.speechlanguagetherapy.mode.onsite":1}}],"minimum_should_match":1}}]}
-//   },
-//   "from": ${startIndex},
-//   "size": ${this.paginationSize}
-// }`
-,      
-    headers: {
+          body: body,
+          headers: {
             "Content-Type": "application/json"
           },
           method: "POST"
         });
 
-        
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-
         const data = await response.json();
-        console.log(data.features);
+        // console.log("fetchSearchFunction - response JSON", data.features);
         this.filteredData = data;
         this.isFetching = false;
         this.error = null;
       } catch (error) {
-        console.log("no response")
+        console.log("no response from search endpoint!")
         this.filteredData = null;
         this.error = error.message;
         this.isFetching = false;

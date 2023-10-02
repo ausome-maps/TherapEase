@@ -2,10 +2,12 @@
   <div class="justify center top-5 px-10">
     <div class="flex justify-left pt-5">
       <NuxtLink to="/">
-        <p class="w-44 inline-block"><svg class="w-5 h-5 text-gray-800 dark:text-white inline-block" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 1 1.3 6.326a.91.91 0 0 0 0 1.348L7 13"/>
-  </svg>  Go back to search</p>
-  </NuxtLink>
+        <p class="w-44 inline-block"><svg class="w-5 h-5 text-gray-800 dark:text-white inline-block" aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M7 1 1.3 6.326a.91.91 0 0 0 0 1.348L7 13" />
+          </svg> Go back to search</p>
+      </NuxtLink>
     </div>
     <div class="flex justify-center">
       <div class="w-[1440px]">
@@ -61,7 +63,7 @@
 <script>
 
 // placeholder data
-import data from '../components/facility-data.json'
+// import data from '../components/facility-data.json'
 
 export default {
   data() {
@@ -111,6 +113,7 @@ export default {
       }
     },
     async fetchSearch() {
+      console.log(`endpoint, ${this.$config.facilities}?q=${this.id}`);
       const { data, error, isFetching } = await useFetch(`${this.$config.facilities}?q=${this.id}`, {
         method: "GET"
       });
