@@ -134,14 +134,14 @@ export default {
       try {
         await this.fetchSearch();
         this.data = this.filteredData.features;
-        console.log("data", this.data)
+        // console.log("handleSearch", this.data)
         this.totalResults = this.filteredData.total.value;
         this.totalPages = Math.ceil(this.totalResults / this.paginationSize);
         this.currentPageResults = Math.min(this.paginationSize, this.data.length);
-
         // Set the coordinates array after the data has been fetched
         this.coordinates = await this.getMapCoordinates();
       } catch (error) {
+        console.log(error)
         this.totalResults = 0;
         this.currentPageResults = 0;
 
@@ -156,16 +156,14 @@ export default {
 
       // If the search query is empty, set it to a wildcard
       if (search === '*') {
-        search = '';
+        search = '*';
       }
-
-
       // Build the body of the request
       let bodyObj = {
         query: {
           bool: {
             must: {
-              multi_match: {
+              query_string: {
                 query: search
               }
             },
@@ -182,16 +180,9 @@ export default {
 
       // Fetch the data
       try {
+        console.log("fetchSearchFunction", `${this.$config.apiURL}/facilities`);
         const response = await fetch(`${this.$config.apiURL}/facilities`, {
-          body: body
-          // `{
-          //   "query": {
-          //     "bool": {"filter":[{"term":{"properties.accreditation.pasp":1}},{"bool":{"should":[{"term":{"properties.services_offered.speechlanguagetherapy.mode.onsite":1}}],"minimum_should_match":1}}]}
-          //   },
-          //   "from": ${startIndex},
-          //   "size": ${this.paginationSize}
-          // }`
-          ,
+          body: body,
           headers: {
             "Content-Type": "application/json"
           },
@@ -202,14 +193,13 @@ export default {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-
         const data = await response.json();
-        console.log(data.features);
+        // console.log("fetchSearchFunction - response JSON", data.features);
         this.filteredData = data;
         this.isFetching = false;
         this.error = null;
       } catch (error) {
-        console.log("no response")
+        console.log("no response from search endpoint!")
         this.filteredData = null;
         this.error = error.message;
         this.isFetching = false;

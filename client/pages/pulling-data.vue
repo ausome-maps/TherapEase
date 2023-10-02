@@ -2,7 +2,7 @@
     <div>
         <input type="text" v-model="address" placeholder="Enter an address" />
         <button @click="fetchSearch">Get geocode</button>
-        
+
         <div v-if="isFetching">Loading…</div>
         <div v-else-if="error">Error: {{ error }}</div>
         <div v-else-if="data">
@@ -43,34 +43,34 @@ export default {
         }
     }, methods: {
         async fetchGeocode() {
-            const { data, error, isFetching } = useFetch(`${this.$config.geocode}?q=${this.address}`)
+            const { data, error, isFetching } = useFetch(`${this.$config.geocodeURL}?q=${this.address}`)
             this.data = await data
             console.log(this.data)
             this.error = error
             this.isFetching = isFetching
         },
         async fetchSearch() {
-    //   const startIndex = (this.currentPage - 1) * this.paginationSize;
-      const queryParameters = {
-        q: this.address,
-        // size: this.paginationSize,
-        // from: startIndex,
-//         "query": {
-//     "match": {
-//       "placename": {
-//         "query": "alternative",
-//         "fuzziness": 2
-//       }
-//     }
-//   }
-      };
+            //   const startIndex = (this.currentPage - 1) * this.paginationSize;
+            const queryParameters = {
+                q: this.address,
+                // size: this.paginationSize,
+                // from: startIndex,
+                //         "query": {
+                //     "match": {
+                //       "placename": {
+                //         "query": "alternative",
+                //         "fuzziness": 2
+                //       }
+                //     }
+                //   }
+            };
 
-      const { data, error, isFetching } = await useFetch(this.$config.search, {
-        query: queryParameters,
-      });
-      this.data = data;
-      this.error = error;
-      this.isFetching = isFetching;
-    },
+            const { data, error, isFetching } = await useFetch(this.$config.search, {
+                query: queryParameters,
+            });
+            this.data = data;
+            this.error = error;
+            this.isFetching = isFetching;
+        },
     }
 } </script>
