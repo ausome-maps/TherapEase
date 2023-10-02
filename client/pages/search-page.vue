@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import data from '../components/facility-data.json'
+// import data from '../components/facility-data.json'
 
 export default {
   data() {

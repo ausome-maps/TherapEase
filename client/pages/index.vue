@@ -7,7 +7,7 @@
         <ClientOnly>
           <!-- Search and Header Section -->
           <div class="px-5 pb-4 sticky top-0 z-50 bg-white">
-            <AppSearchAndFilter @update-search="handleSearch" @query-passed="handleQueryPassed"/>
+            <AppSearchAndFilter @update-search="handleSearch" @query-passed="handleQueryPassed" />
             <AppListingHeader :show-map="showMap" @hide-map="showMap = false" @show-map="showMap = true"
               :view-mode="viewMode" @change-view-mode="handleChangeViewMode" :facilitiesLength="totalResults"
               :filteredFacilitiesLength="currentPageResults" />
@@ -51,13 +51,13 @@
 </template>
 
 <script>
-import data from '../components/facility-data.json'
+// import data from '../components/facility-data.json'
 
 export default {
   data() {
     return {
       searchQuery: '*',
-      data: data.features,
+      data: [],
       viewMode: 'card',
       showMap: true,
       isMobile: false,
@@ -77,7 +77,9 @@ export default {
 
   async mounted() {
     this.checkIfMobile();
+
     window.addEventListener('resize', this.checkIfMobile);
+    await this.$nextTick();
     await this.$nextTick();
     this.searchQuery = this.$route.query.search || '*';
     this.currentPage = Number(this.$route.query.page) || 1;
@@ -143,8 +145,8 @@ export default {
         this.totalResults = 0;
         this.currentPageResults = 0;
 
-         // Reset the coordinates if there's an error
-        this.coordinates = []; 
+        // Reset the coordinates if there's an error
+        this.coordinates = [];
       }
     },
     async fetchSearch() {
@@ -160,19 +162,19 @@ export default {
 
       // Build the body of the request
       let bodyObj = {
-  query: {
-    bool: {
-      must: {
-        multi_match: {
-          query: search
-        }
-      },
-      filter: this.filter
-    }
-  },
-  from: startIndex,
-  size: this.paginationSize
-};
+        query: {
+          bool: {
+            must: {
+              multi_match: {
+                query: search
+              }
+            },
+            filter: this.filter
+          }
+        },
+        from: startIndex,
+        size: this.paginationSize
+      };
 
 
       let body = JSON.stringify(bodyObj);
@@ -181,22 +183,22 @@ export default {
       // Fetch the data
       try {
         const response = await fetch(`${this.$config.apiURL}/facilities`, {
-body: body
-// `{
-//   "query": {
-//     "bool": {"filter":[{"term":{"properties.accreditation.pasp":1}},{"bool":{"should":[{"term":{"properties.services_offered.speechlanguagetherapy.mode.onsite":1}}],"minimum_should_match":1}}]}
-//   },
-//   "from": ${startIndex},
-//   "size": ${this.paginationSize}
-// }`
-,      
-    headers: {
+          body: body
+          // `{
+          //   "query": {
+          //     "bool": {"filter":[{"term":{"properties.accreditation.pasp":1}},{"bool":{"should":[{"term":{"properties.services_offered.speechlanguagetherapy.mode.onsite":1}}],"minimum_should_match":1}}]}
+          //   },
+          //   "from": ${startIndex},
+          //   "size": ${this.paginationSize}
+          // }`
+          ,
+          headers: {
             "Content-Type": "application/json"
           },
           method: "POST"
         });
 
-        
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
