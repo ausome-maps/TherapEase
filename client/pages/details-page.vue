@@ -113,8 +113,8 @@ export default {
       }
     },
     async fetchSearch() {
-      console.log(`endpoint, ${this.$config.facilities}?q=${this.id}`);
-      const { data, error, isFetching } = await useFetch(`${this.$config.facilities}?q=${this.id}`, {
+      console.log(`endpoint, ${this.$config.apiURL}/facilities?q=${this.id}`);
+      const { data, error, isFetching } = await useFetch(`${this.$config.apiURL}/facilities?q=${this.id}`, {
         method: "GET"
       });
       this.filteredData = data;
