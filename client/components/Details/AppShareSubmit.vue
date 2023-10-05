@@ -22,5 +22,8 @@ export default {
       required: true,
     },
   },
+  async mounted() {
+    console.log(this);
+  }
 }
 </script>

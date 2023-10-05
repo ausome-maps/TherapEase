@@ -45,7 +45,7 @@
                 </div>
                 <div class="min-w-[34%] p-5 mr-2">
                   <AppContacts :facilityDetails="properties" />
-                  <AppShareSubmit :feedback-url="$config.feedbackUrl" />
+                  <AppShareSubmit :feedback-url="$config.feedbackURL" />
                 </div>
               </div>
             </div>
@@ -74,7 +74,8 @@ export default {
       filteredData: null,
       error: null,
       isFetching: false,
-      id: this.$route.query.id
+      id: this.$route.query.id,
+      feedbackUrl:''
     }
   },
   beforeRouteUpdate(to, from, next) {
@@ -90,6 +91,8 @@ export default {
     window.addEventListener('resize', this.checkIfMobile);
     await this.$nextTick();
     await this.handleSearch();
+
+    console.log(this.$config.feedbackURL);
   },
 
   beforeUnmount() {
