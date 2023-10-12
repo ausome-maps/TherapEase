@@ -9,6 +9,7 @@
       <li>
         
           <h4 class="cursor-pointer font-bold">{{ service.label }}</h4>
+          <p>{{ service }}</p>
           <li v-for="(value, key) in service.mode" :key="key">
             <span v-if="value !== 0">
               <span class="list-item-bullet ml-4">&#8226;</span>
