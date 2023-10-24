@@ -1,12 +1,12 @@
 <template>
   <div class="h-full w-full rounded-xl -z-10 relative">
     <div class="info-card" :style="{ left: cardPosition.x, top: cardPosition.y }" v-if="showCard">
-  {{ cardContent }}
-</div>
+      {{ cardContent }}
+    </div>
 
 
 
-    <l-map ref="map" v-model:zoom="zoom" :center="mapCenter" :use-global-leaflet="false">
+    <l-map ref="map" v-model:zoom="zoom" :center="mapCenter" :bounds="bounds" :use-global-leaflet="false">
       <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base"
         name="OpenStreetMap"></l-tile-layer>
       <l-marker v-for="([lat, lng, name, id]) in coordinates" :key="`${lat},${lng}`" :lat-lng="[lat, lng]"
@@ -16,8 +16,10 @@
 </template>
 
 <script>
+import L from 'leaflet';
 import "leaflet/dist/leaflet.css";
 import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
+globalThis.L = L;
 
 export default {
   components: {
@@ -42,6 +44,10 @@ export default {
     id: {
       type: String,
       required: false,
+    },
+    bounds: {
+      type: Object,
+      required: true,
     }
   },
   data() {
@@ -50,29 +56,64 @@ export default {
       showCard: false,
       cardContent: '',
       cardPosition: { x: '50px', y: '20px' },
+      //mapObject: {},
+      //mapKey:0,
+      //mapBounds:L.latLngBounds(L.latLng(40.712, -74.227), L.latLng(40.774, -74.125)),
     };
   },
   methods: {
     showInfoCard(event, content) {
-    this.cardContent = content;
-    this.$nextTick(() => {
+      this.cardContent = content;
+      this.$nextTick(() => {
         this.showCard = true;
-    });
-}
-
-,
+      });
+    },
     hideInfoCard() {
       this.showCard = false;
     },
     navigateToDetails(id) {
       this.$router.push(`/details-page?id=${id}`);
     },
-  }
-  ,
+    computeBoundsZoom() {
+      
+      this.$nextTick(() => {
+        this.$nextTick(()=>{
+          setTimeout((a) => {
+            // console.log(a);
+            // console.log(this.$refs.map);
+            // console.log(this.$refs.map.leafletObject);
+            let mapObject = this.$refs.map.leafletObject;
+            mapObject.fitBounds(this.bounds);
+            this.zoom = mapObject.getBoundsZoom(this.bounds);
+            mapObject.setView([this.latitude, this.longitude], this.zoom);
+          }, 3000);
+        })
+      })
+    },
+    // onReady(mapObject) {
+    //   this.zoom = mapObject.getBoundsZoom(this.bounds);
+    //   console.log("onReady");
+    //   console.log(this.zoom);
+    //   // use the mapObject to call native Leaflet methods
+    //   mapObject.on("moveend", function(e) {
+    //     console.log(e);
+    //   });
+    // },
+    // onUpdateBounds({ bounds }) {
+    //   // assign the center coordinates to the data properties
+    //   this.bounds = bounds;
+    //   console.log(bounds);
+    // }
+  
+    
+  },
   computed: {
     mapCenter() {
       return [this.latitude, this.longitude];
     },
+  },
+  mounted() {
+    this.computeBoundsZoom();
   },
 };
 </script>

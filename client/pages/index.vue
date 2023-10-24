@@ -43,7 +43,7 @@
 
       <!-- Map Section -->
       <div v-if="showMap" class="w-2/4 lg:flex-grow mr-4 h-[99vh] sticky top-5 z-10">
-        <AppMap :coordinates="coordinates" :latitude="14.621071" :longitude="121.0073" />
+        <AppMap :coordinates="coordinates" :bounds="bounds" :latitude="center.lat" :longitude="center.lng" />
       </div>
     </div>
   </div>
@@ -51,7 +51,8 @@
 </template>
 
 <script>
-// import data from '../components/facility-data.json'
+import L from 'leaflet';
+import "leaflet/dist/leaflet.css";
 
 export default {
   data() {
@@ -72,6 +73,20 @@ export default {
       coordinates: [],  // New coordinates array
       selectedService: 'orthoses',
       filter: [],
+      bounds:{
+    "_southWest": {
+        "lat": 7.054338,
+        "lng": -237.179385
+    },
+    "_northEast": {
+        "lat": 18.195933,
+        "lng": 125.597421
+    }
+},
+      center:{
+    "lat": 12.6251355,
+    "lng": -55.790982
+},
     };
   },
 
@@ -112,19 +127,45 @@ export default {
 
     handleQueryPassed(queryBody) {
       this.filter = queryBody.filter;
-      console.log(this.filter)
+      // console.log(this.filter)
     },
 
     async getMapCoordinates() {
-      console.log("getMapCoordinates")
+      // console.log("getMapCoordinates")
       if (this.data && Array.isArray(this.data)) {
-        return this.data.map(facility => {
+        
+        let coordinates =  this.data.map(facility => {
+          
           const name = facility.properties.placename
           const coords = facility.geometry.coordinates;
           const id = facility.id;
-          console.log(id)
-          return [coords[1], coords[0], name, id.toString()]; // returns [latitude, longitude]
+          // console.log(id)
+          let row = [coords[1], coords[0], name, id.toString()];
+          
+          return row; // returns [latitude, longitude]
         });
+
+        let features = coordinates;
+        let markers = [];
+
+        for (let i = 0; i < features.length; i++) {
+          let el = features[i];
+          // console.log(el);
+          let m = L.marker([el[0], el[1]]);
+          markers.push(m);
+        }
+
+        // console.log("markers", markers);
+
+        let fGroup = L.featureGroup(markers);
+        // console.log(fGroup);
+        let bounds = fGroup.getBounds();
+        // console.log(bounds);
+        
+        let center = bounds.getCenter();
+        // console.log(center);
+
+        return [ coordinates, bounds, center ]
       }
       return [];
     },
@@ -139,7 +180,7 @@ export default {
         this.totalPages = Math.ceil(this.totalResults / this.paginationSize);
         this.currentPageResults = Math.min(this.paginationSize, this.data.length);
         // Set the coordinates array after the data has been fetched
-        this.coordinates = await this.getMapCoordinates();
+        [this.coordinates,this.bounds, this.center] = await this.getMapCoordinates();
       } catch (error) {
         console.log(error)
         this.totalResults = 0;
@@ -176,11 +217,11 @@ export default {
 
 
       let body = JSON.stringify(bodyObj);
-      console.log(body)
+      // console.log(body)
 
       // Fetch the data
       try {
-        console.log("fetchSearchFunction", `${this.$config.apiURL}/facilities`);
+        // console.log("fetchSearchFunction", `${this.$config.apiURL}/facilities`);
         const response = await fetch(`${this.$config.apiURL}/facilities`, {
           body: body,
           headers: {
@@ -194,10 +235,15 @@ export default {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        // console.log("fetchSearchFunction - response JSON", data.features);
+
         this.filteredData = data;
         this.isFetching = false;
         this.error = null;
+
+
+        // console.log("data", data);
+        // console.log("data.features", data.features);
+
       } catch (error) {
         console.log("no response from search endpoint!")
         this.filteredData = null;
