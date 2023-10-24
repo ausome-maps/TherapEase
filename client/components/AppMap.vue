@@ -56,9 +56,6 @@ export default {
       showCard: false,
       cardContent: '',
       cardPosition: { x: '50px', y: '20px' },
-      //mapObject: {},
-      //mapKey:0,
-      //mapBounds:L.latLngBounds(L.latLng(40.712, -74.227), L.latLng(40.774, -74.125)),
     };
   },
   methods: {
@@ -75,13 +72,9 @@ export default {
       this.$router.push(`/details-page?id=${id}`);
     },
     computeBoundsZoom() {
-      
       this.$nextTick(() => {
         this.$nextTick(()=>{
           setTimeout((a) => {
-            // console.log(a);
-            // console.log(this.$refs.map);
-            // console.log(this.$refs.map.leafletObject);
             let mapObject = this.$refs.map.leafletObject;
             mapObject.fitBounds(this.bounds);
             this.zoom = mapObject.getBoundsZoom(this.bounds);
@@ -90,22 +83,6 @@ export default {
         })
       })
     },
-    // onReady(mapObject) {
-    //   this.zoom = mapObject.getBoundsZoom(this.bounds);
-    //   console.log("onReady");
-    //   console.log(this.zoom);
-    //   // use the mapObject to call native Leaflet methods
-    //   mapObject.on("moveend", function(e) {
-    //     console.log(e);
-    //   });
-    // },
-    // onUpdateBounds({ bounds }) {
-    //   // assign the center coordinates to the data properties
-    //   this.bounds = bounds;
-    //   console.log(bounds);
-    // }
-  
-    
   },
   computed: {
     mapCenter() {

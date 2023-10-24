@@ -127,11 +127,9 @@ export default {
 
     handleQueryPassed(queryBody) {
       this.filter = queryBody.filter;
-      // console.log(this.filter)
     },
 
     async getMapCoordinates() {
-      // console.log("getMapCoordinates")
       if (this.data && Array.isArray(this.data)) {
         
         let coordinates =  this.data.map(facility => {
@@ -139,7 +137,7 @@ export default {
           const name = facility.properties.placename
           const coords = facility.geometry.coordinates;
           const id = facility.id;
-          // console.log(id)
+    
           let row = [coords[1], coords[0], name, id.toString()];
           
           return row; // returns [latitude, longitude]
@@ -150,20 +148,15 @@ export default {
 
         for (let i = 0; i < features.length; i++) {
           let el = features[i];
-          // console.log(el);
+     
           let m = L.marker([el[0], el[1]]);
           markers.push(m);
         }
 
-        // console.log("markers", markers);
-
         let fGroup = L.featureGroup(markers);
-        // console.log(fGroup);
         let bounds = fGroup.getBounds();
-        // console.log(bounds);
         
         let center = bounds.getCenter();
-        // console.log(center);
 
         return [ coordinates, bounds, center ]
       }
@@ -175,7 +168,7 @@ export default {
       try {
         await this.fetchSearch();
         this.data = this.filteredData.features;
-        // console.log("handleSearch", this.data)
+       
         this.totalResults = this.filteredData.total.value;
         this.totalPages = Math.ceil(this.totalResults / this.paginationSize);
         this.currentPageResults = Math.min(this.paginationSize, this.data.length);
@@ -215,9 +208,7 @@ export default {
         size: this.paginationSize
       };
 
-
       let body = JSON.stringify(bodyObj);
-      // console.log(body)
 
       // Fetch the data
       try {
@@ -239,10 +230,6 @@ export default {
         this.filteredData = data;
         this.isFetching = false;
         this.error = null;
-
-
-        // console.log("data", data);
-        // console.log("data.features", data.features);
 
       } catch (error) {
         console.log("no response from search endpoint!")
