@@ -35,8 +35,7 @@
               </span>
             </div>
             <div>
-              <a href="tel:+63{{facilityDetails.facilityContactNumber.replace(/^0+/, '')}}">Contact: {{
-                facilityDetails.contact_number_mobile }} </a>
+              <a :href="contactNumber">Contact: {{facilityDetails.contact_number }} </a>
             </div>
           </div>
         </li>
@@ -95,7 +94,8 @@ export default {
   data() {
     return {
       malitoLink:'',
-      websiteLink:''
+      websiteLink:'',
+      contactNumber:'',
     }
   },
   props: {
@@ -119,6 +119,7 @@ export default {
     console.log(this.facilityDetails);
     this.malitoLink="mailto:"+this.facilityDetails.email_address;
     this.websiteLink=this.facilityDetails.website;
+    this.contactNumber="tel:+63"+this.facilityDetails.contact_number.replace(/^0+/, '');
   },
 }
 </script>

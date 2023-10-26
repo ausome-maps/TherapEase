@@ -12,7 +12,7 @@
           <li v-for="(value, key) in service.mode" :key="key">
             <span v-if="value !== 0">
               <span class="list-item-bullet ml-4">&#8226;</span>
-              {{ key }}: {{ getSessionType(value) }}
+              {{ formatSessionMode(key) }}: {{ getSessionType(value) }}
             </span>
           </li>
    
@@ -54,9 +54,17 @@ export default {
   getSessionType(value) {
     switch(value) {
       case 0: return "No Offering";
-      case 1: return "Individual";
-      case 2: return "Group";
-      case 3: return "Individual and Group";
+      case 1: return "Individual Sessions";
+      case 2: return "Group Sessions";
+      case 3: return "Individual and Group Sessions";
+      default: return "";
+    }
+  },
+  formatSessionMode(value){
+    switch(value) {
+      case 'teletherapy': return "Teletherapy";
+      case 'onsite': return "Onsite";
+      case 'home_service': return "Home Service";
       default: return "";
     }
   }
