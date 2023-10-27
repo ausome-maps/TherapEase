@@ -1,0 +1,15 @@
+---
+
+- hosts: all
+  tasks:
+    - name: stopping traefik and inbound traffic
+      docker_container:
+        name: traefik
+        state: absent  
+    - name: stopping therapease
+      become: yes
+      docker_compose:
+        project_src: "{{apps_directory}}"
+        files: "docker-compose.therapease.yml"
+        state: present
+        stopped: yes
