@@ -50,7 +50,7 @@
               </div>
             </div>
           </template>
-          <div class="w-[100%] relative z-[0]">
+          <div v-if="coordinates[0] != '' && coordinates[1] != ''" class="w-[100%] relative z-[0]">
             <AppDetailsMap :latitude="coordinates[0]" :longitude="coordinates[1]" />
           </div>
           <div class="h-[100px]"></div>
