@@ -148,9 +148,10 @@ export default {
 
         for (let i = 0; i < features.length; i++) {
           let el = features[i];
-     
-          let m = L.marker([el[0], el[1]]);
-          markers.push(m);
+          if(el[0] != "" && el[1] != ""){
+            let m = L.marker([el[0], el[1]]);
+            markers.push(m);
+          }
         }
 
         let fGroup = L.featureGroup(markers);

@@ -18,7 +18,7 @@ npm v9.5.0
 
 2. Create `.env` file and define the following:
    ```
-   NUXT_API_URL=http://api-env-url
+   NUXT_PUBLIC_API_URL=http://api-env-url
    ```
 3. Run this command to compile and bundle the source code:
    ```
