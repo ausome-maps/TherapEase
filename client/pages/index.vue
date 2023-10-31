@@ -142,16 +142,16 @@ export default {
           
           return row; // returns [latitude, longitude]
         });
-
+        coordinates = coordinates.filter(el => {
+          return el[0] != "" && el[1] != "";
+        })
         let features = coordinates;
         let markers = [];
 
         for (let i = 0; i < features.length; i++) {
           let el = features[i];
-          if(el[0] != "" && el[1] != ""){
             let m = L.marker([el[0], el[1]]);
             markers.push(m);
-          }
         }
 
         let fGroup = L.featureGroup(markers);
