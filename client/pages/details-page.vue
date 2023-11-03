@@ -66,18 +66,21 @@
 // import data from '../components/facility-data.json'
 
 export default {
-  data() {
-    return {
-      properties: null,
-      coordinates: null,
-      isMobile: false,
-      filteredData: null,
-      error: null,
-      isFetching: false,
-      id: this.$route.query.id,
-      feedbackUrl:''
-    }
-  },
+data() {
+  return {
+    properties: null,
+    coordinates: null,
+    isMobile: false,
+    filteredData: null,
+    error: null,
+    isFetching: false,
+    id: null,
+    feedbackUrl: '',
+  };
+},
+beforeMount() {
+  this.id = this.$route.query.id;
+},
   beforeRouteUpdate(to, from, next) {
     if (to.query.id !== from.query.id) {
       this.handleSearch();
@@ -116,7 +119,7 @@ export default {
       }
     },
     async fetchSearch() {
-      console.log(`endpoint, ${this.$config.apiURL}/facilities?q=${this.id}`);
+      // console.log(`endpoint, ${this.$config.apiURL}/facilities?q=${this.id}`);
       const { data, error, isFetching } = await useFetch(`${this.$config.apiURL}/facilities?q=${this.id}`, {
         method: "GET"
       });
