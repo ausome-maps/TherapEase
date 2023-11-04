@@ -52,7 +52,7 @@
           delete services[service];
         }
       }
-      console.log(services);
+      //console.log(services);
       return services;
     },
   }

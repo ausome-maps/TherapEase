@@ -110,17 +110,17 @@ export default {
 
     handleQueryPassed(queryBody) {
       this.filter = queryBody.filter;
-      console.log(this.filter)
+      //console.log(this.filter)
     },
 
     async getMapCoordinates() {
-      console.log("getMapCoordinates")
+      //console.log("getMapCoordinates")
       if (this.data && Array.isArray(this.data)) {
         return this.data.map(facility => {
           const name = facility.properties.placename
           const coords = facility.geometry.coordinates;
           const id = facility.id;
-          console.log(id)
+          //console.log(id)
           return [coords[1], coords[0], name, id.toString()]; // returns [latitude, longitude]
         });
       }
@@ -132,7 +132,7 @@ export default {
       try {
         await this.fetchSearch();
         this.data = this.filteredData.features;
-        console.log("data", this.data)
+        //console.log("data", this.data)
         this.totalResults = this.filteredData.total.value;
         this.totalPages = Math.ceil(this.totalResults / this.paginationSize);
         this.currentPageResults = Math.min(this.paginationSize, this.data.length);
@@ -175,7 +175,7 @@ export default {
       };
 
       let body = JSON.stringify(bodyObj);
-      console.log(body)
+      //console.log(body)
       // Fetch the data
       try {
         const response = await fetch(`${this.$config.apiURL}/facilities`, {

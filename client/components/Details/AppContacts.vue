@@ -116,7 +116,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.facilityDetails);
+    //(this.facilityDetails);
     this.malitoLink="mailto:"+this.facilityDetails.email_address;
     this.websiteLink=this.facilityDetails.website;
     this.contactNumber="tel:+63"+this.facilityDetails.contact_number.replace(/^0+/, '');

@@ -163,7 +163,7 @@ export default {
                 }
             }
             this.$emit('query-generated', body);
-            console.log(JSON.stringify(body));
+            //console.log(JSON.stringify(body));
         }
         ,
         showValues() {
