@@ -65,7 +65,7 @@ export default {
       filteredData: [],
       error: null,
       isFetching: false,
-      paginationSize: 20,
+      paginationSize: 50,
       totalResults: 0,
       currentPageResults: 0,
       currentPage: 1,
@@ -73,20 +73,11 @@ export default {
       coordinates: [],  // New coordinates array
       selectedService: 'orthoses',
       filter: [],
-      bounds:{
-    "_southWest": {
-        "lat": 7.054338,
-        "lng": -237.179385
-    },
-    "_northEast": {
-        "lat": 18.195933,
-        "lng": 125.597421
-    }
-},
-      center:{
-    "lat": 12.6251355,
-    "lng": -55.790982
-},
+      bounds:L.latLngBounds(L.latLng(5.458624890542083, 116.51879773556522), L.latLng(19.215291042674977, 127.04232194261539)),
+      center: {
+        "lat": 12.384994440877549,
+        "lng": 121.67093979526709
+      },
     };
   },
 
@@ -131,35 +122,43 @@ export default {
 
     async getMapCoordinates() {
       if (this.data && Array.isArray(this.data)) {
-        
-        let coordinates =  this.data.map(facility => {
-          
+
+        let coordinates = this.data.map(facility => {
+
           const name = facility.properties.placename
           const coords = facility.geometry.coordinates;
           const id = facility.id;
-    
+
+          if (coords[1] < -180 && coords[0] < -180) {
+            console.log(coords[0], coords[1]);
+          }
+
           let row = [coords[1], coords[0], name, id.toString()];
-          
+
           return row; // returns [latitude, longitude]
         });
         coordinates = coordinates.filter(el => {
           return el[0] != "" && el[1] != "";
+        }).filter(i => {
+          return i[0] > -180 && i[1] > -180;
         })
+
         let features = coordinates;
         let markers = [];
 
         for (let i = 0; i < features.length; i++) {
           let el = features[i];
-            let m = L.marker([el[0], el[1]]);
-            markers.push(m);
+          let m = L.marker([el[0], el[1]]);
+          markers.push(m);
         }
 
         let fGroup = L.featureGroup(markers);
         let bounds = fGroup.getBounds();
-        
+
+
         let center = bounds.getCenter();
 
-        return [ coordinates, bounds, center ]
+        return [coordinates, bounds, center]
       }
       return [];
     },
@@ -169,12 +168,12 @@ export default {
       try {
         await this.fetchSearch();
         this.data = this.filteredData.features;
-       
+
         this.totalResults = this.filteredData.total.value;
         this.totalPages = Math.ceil(this.totalResults / this.paginationSize);
         this.currentPageResults = Math.min(this.paginationSize, this.data.length);
         // Set the coordinates array after the data has been fetched
-        [this.coordinates,this.bounds, this.center] = await this.getMapCoordinates();
+        [this.coordinates, this.bounds, this.center] = await this.getMapCoordinates();
       } catch (error) {
         console.log(error)
         this.totalResults = 0;

@@ -16,7 +16,7 @@ export default {
         }
     },
     mounted() {
-        console.log(this.accreditation)
+        //console.log(this.accreditation)
     }
 
 }

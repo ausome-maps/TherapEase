@@ -6,11 +6,11 @@
 
 
 
-    <l-map ref="map" v-model:zoom="zoom" :center="mapCenter" :bounds="bounds" :use-global-leaflet="false">
+    <l-map ref="map" v-model:zoom="zoom" :center="mapCenter" :bounds="boundsLocal" :use-global-leaflet="false">
       <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base"
         name="OpenStreetMap"></l-tile-layer>
-      <l-marker v-for="([lat, lng, name, id]) in coordinates" :key="`${lat},${lng}`" :lat-lng="[lat, lng]"
-        @mouseover="showInfoCard($event, name)" @mouseout="hideInfoCard" @click="navigateToDetails(id)"></l-marker>
+      <l-marker v-for="([lat, lng, name, id]) in coordinates" :key="`${id}`" :lat-lng="[lat, lng]"
+        @mouseover="showInfoCard($event, name)" @mouseout="hideInfoCard" @click="navigateToDetails(id)" :icon="icon"></l-marker>
     </l-map>
   </div>
 </template>
@@ -20,6 +20,8 @@ import L from 'leaflet';
 import "leaflet/dist/leaflet.css";
 import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
 globalThis.L = L;
+
+import icon_marker from "assets/images/ausome_marker.png"
 
 export default {
   components: {
@@ -52,10 +54,16 @@ export default {
   },
   data() {
     return {
-      zoom: 12,
+      zoom: 6,
       showCard: false,
       cardContent: '',
       cardPosition: { x: '50px', y: '20px' },
+      icon: L.icon({
+        iconUrl: icon_marker,
+        iconSize: [19.1, 29.67],
+        iconAnchor: [10, 30]
+      }),
+      boundsLocal:this.bounds,
     };
   },
   methods: {
@@ -76,9 +84,19 @@ export default {
         this.$nextTick(()=>{
           setTimeout((a) => {
             let mapObject = this.$refs.map.leafletObject;
-            mapObject.fitBounds(this.bounds);
-            this.zoom = mapObject.getBoundsZoom(this.bounds);
-            mapObject.setView([this.latitude, this.longitude], this.zoom);
+
+            let corner1 = L.latLng(19.215291042674977, 116.51879773556522),
+            corner2 = L.latLng(5.458624890542083, 127.04232194261539),
+            fallbackBounds = L.latLngBounds(corner1, corner2);
+
+            if(this.boundsLocal.isValid()){
+              this.zoom = 9;
+            }else{
+              this.boundsLocal = fallbackBounds;
+              this.zoom = 9;
+            }
+              
+            
           }, 3000);
         })
       })

@@ -10,7 +10,7 @@
           layer-type="base"
           name="OpenStreetMap"
         ></l-tile-layer>
-        <l-marker :lat-lng="mapCenter"></l-marker>
+        <l-marker :lat-lng="mapCenter" :icon="icon"></l-marker>
       </l-map>
     </div>
   </div>
@@ -18,8 +18,12 @@
 
 
 <script>
+import L from 'leaflet';
 import "leaflet/dist/leaflet.css";
 import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
+globalThis.L = L;
+
+import icon_marker from "assets/images/ausome_marker.png"
 
 export default {
   components: {
@@ -39,7 +43,12 @@ export default {
   },
   data() {
     return {
-      zoom: 12,
+      zoom: 18,
+      icon: L.icon({
+        iconUrl: icon_marker,
+        iconSize: [19.1, 29.67],
+        iconAnchor: [10, 30]
+      }),
     };
   },
   computed: {
@@ -48,8 +57,8 @@ export default {
     },
   },
   created() {
-    console.log("Latitude:", this.latitude);
-    console.log("Longitude:", this.longitude);
+    // console.log("Latitude:", this.latitude);
+    // console.log("Longitude:", this.longitude);
   },
 };
 </script>

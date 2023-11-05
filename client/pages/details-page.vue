@@ -95,7 +95,7 @@ beforeMount() {
     await this.$nextTick();
     await this.handleSearch();
 
-    console.log(this.$config.feedbackURL);
+    //console.log(this.$config.feedbackURL);
   },
 
   beforeUnmount() {
@@ -113,7 +113,7 @@ beforeMount() {
       try {
         this.properties = this.filteredData.features[0].properties;
         this.coordinates = this.filteredData.features[0].geometry.coordinates;
-        console.log(this.coordinates);
+        //console.log(this.coordinates);
       } catch (error) {
         console.log("Error on HandleSearch");
       }

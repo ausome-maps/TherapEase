@@ -45,7 +45,7 @@ export default {
         async fetchGeocode() {
             const { data, error, isFetching } = useFetch(`${this.$config.geocodeURL}?q=${this.address}`)
             this.data = await data
-            console.log(this.data)
+            //console.log(this.data)
             this.error = error
             this.isFetching = isFetching
         },

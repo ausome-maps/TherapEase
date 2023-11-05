@@ -34,7 +34,7 @@ export default {
         }
     },
     mounted() {
-        console.log("Initial value:", this.facilities)
+        //console.log("Initial value:", this.facilities)
     },
     watch: {
         'facilities.hits': {
