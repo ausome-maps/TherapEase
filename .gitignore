@@ -11,3 +11,4 @@ env
 .vscode
 .mypy_cache
 .pytest_cache
+django/*.log
