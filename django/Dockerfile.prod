@@ -1,0 +1,36 @@
+FROM python:3.11.1-slim
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV LIBRARY_PATH=/lib:/usr/lib
+ENV HOME=/home/app
+ENV APP_HOME=/home/app/web
+
+RUN apt -y update \
+    && apt install -y libpq-dev postgresql gcc python3-dev netcat
+
+# set work directory
+WORKDIR /home/app/web
+RUN addgroup -S app && adduser -S app -G app
+
+RUN pip install --upgrade pip
+COPY ./requirements.txt /home/app/web/requirements.txt
+RUN pip install -r requirements.txt
+
+COPY . /home/app/web
+
+RUN mkdir -p /var/log/django-app
+
+# copy entrypoint-prod.sh
+COPY ./entrypoint.prod.sh $APP_HOME
+
+# copy project
+COPY . $APP_HOME
+
+# chown all the files to the app user
+RUN chown -R app:app $APP_HOME
+
+
+# run entrypoint.prod.sh
+ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]

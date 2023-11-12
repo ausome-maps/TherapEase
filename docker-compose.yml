@@ -1,38 +1,50 @@
 version: '3.7'
 
 services:
-  frontend:
-    container_name: therapease_frontend
+  # frontend:
+  #   container_name: therapease_frontend
+  #   build:
+  #     context: ./client
+  #     dockerfile: Dockerfile
+  #   command: npm run dev
+  #   volumes:
+  #     - ./client:/code/app
+  #   env_file:
+  #     - ./.env.sample
+  #   ports:
+  #     - "9002:3000"
+  #     - "24600:24600"
+  #   depends_on:
+  #     - api
+  # api:
+  #   container_name: therapease_api
+  #   build:
+  #     context: ./api/src
+  #     dockerfile: Dockerfile
+  #   command: uvicorn app.main:app --host 0.0.0.0 --port 9001 --reload
+  #   volumes:
+  #     - ./api/src:/usr/src/app
+  #   ports:
+  #     - "9001:9001"
+  #   env_file:
+  #     - ./.env.sample
+  #   depends_on:
+  #     - geocoding
+  #     - search
+  #     - cache
+  #     - db
+  django:
+    container_name: therapease_django
     build:
-      context: ./client
+      context: ./django
       dockerfile: Dockerfile
-    command: npm run dev
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./client:/code/app
+      - ./django:/usr/src/app
+    ports:
+      - "8000:8000"
     env_file:
       - ./.env.sample
-    ports:
-      - "9002:3000"
-      - "24600:24600"
-    depends_on:
-      - api
-  api:
-    container_name: therapease_api
-    build:
-      context: ./api/src
-      dockerfile: Dockerfile
-    command: uvicorn app.main:app --host 0.0.0.0 --port 9001 --reload
-    volumes:
-      - ./api/src:/usr/src/app
-    ports:
-      - "9001:9001"
-    env_file:
-      - ./.env.sample
-    depends_on:
-      - geocoding
-      - search
-      - cache
-      - db
   db: 
     container_name: therapease_db
     image: postgres:15.4-alpine3.18
@@ -43,14 +55,14 @@ services:
   cache:
     container_name: therapease_cache
     image: redis:6.0.20-alpine3.18
-  geocoding:
-    container_name: therapease_geocoding
-    image: mediagis/nominatim:4.2
-    volumes:
-      - geocoding_data:/var/lib/postgresql/14/main
-    shm_size: '1gb'
-    env_file:
-      - ./.env.sample
+  # geocoding:
+  #   container_name: therapease_geocoding
+  #   image: mediagis/nominatim:4.2
+  #   volumes:
+  #     - geocoding_data:/var/lib/postgresql/14/main
+  #   shm_size: '1gb'
+  #   env_file:
+  #     - ./.env.sample
   search:
     container_name: therapease_search
     image: opensearchproject/opensearch:2.9.0
@@ -73,6 +85,6 @@ services:
       - search_data:/usr/share/opensearch/data
 
 volumes:
-  geocoding_data:
+  # geocoding_data:
   search_data:
   postgres_data:

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>{% block title %}Django App{% endblock %}</title>
+    <!-- <link rel="stylesheet" type="text/css" href="" /> -->
+    <style>
+        {% block internalCSS %} {% endblock %}
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <hr/>
+    <div id="footer">
+    <p>
+        This is a system generated email. <br/>
+        For problems, please contact <a href="mailto:admin@sample.com">admin@sample.com</a>
+    </p>
+    <p><i>Django App Team</i></p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,8 @@
+Hi {{first_name }},
+
+You have been registered to Django App.  Below are your account details.
+
+Username: {{ email }} 
+
+You account is valid until {{ account_expiry }}
+
