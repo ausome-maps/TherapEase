@@ -116,7 +116,7 @@ def get_default_accredition():
 
 
 class FacilityProperties(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    osm_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     info_src_name = models.CharField(max_length=100, null=True, blank=True)
     info_src_designation = models.CharField(max_length=100, null=True, blank=True)
     placename = models.CharField(max_length=250, null=True, blank=True)

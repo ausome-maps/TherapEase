@@ -19,7 +19,7 @@ class FacilitiesSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         property_data = validated_data.pop("properties")
         id = validated_data.pop("id")
-        properties = FacilityProperties.objects.create(id=id, **property_data)
+        properties = FacilityProperties.objects.create(osm_id=id, **property_data)
         facilities = Facilities.objects.create(
             **validated_data, id=id, properties=properties
         )
