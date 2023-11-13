@@ -116,6 +116,7 @@ def get_default_accredition():
 
 
 class FacilityProperties(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     info_src_name = models.CharField(max_length=100, null=True, blank=True)
     info_src_designation = models.CharField(max_length=100, null=True, blank=True)
     placename = models.CharField(max_length=250, null=True, blank=True)
@@ -142,7 +143,7 @@ class FacilityProperties(models.Model):
 # Create your models here.
 class Facilities(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    properties = models.ForeignKey(
+    properties = models.OneToOneField(
         FacilityProperties, on_delete=models.CASCADE, related_name="facilities"
     )
     geometry = models.JSONField(null=True, blank=True)
