@@ -1,13 +1,19 @@
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
-from rest_framework.response import Response
 from rest_framework_tracking.mixins import LoggingMixin
+from django.http import JsonResponse
 from .permissions import FacilitiesPermissions
 from .serializers import Facilities, FacilitiesSerializer
 
 # search
 from apps.core.facilities.documents import FacilitiesDocument
-from django.db.models import Q
+
+
+template = {
+    "type": "FeatureCollection",
+    "name": "Ausome Maps - Therapy Centers",
+    "features": [],
+}
 
 
 class FacilitiesViewset(LoggingMixin, viewsets.ModelViewSet):
@@ -21,8 +27,21 @@ class FacilitiesViewset(LoggingMixin, viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get", "post"], name="search")
     def search(self, request):
-        results = FacilitiesDocument.search().query(
-            "term", properties__placename="center"
-        )
+        text_search = request.query_params.get("q", "*")
+        start_from = int(request.query_params.get("start_from", 0))
+        size = int(request.query_params.get("size", 50))
+        q = {
+            "multi_match": {
+                "query": text_search,
+                "fields": [
+                    "properties.placename",
+                    "properties.address",
+                    "properties.city",
+                    "properties.region",
+                ],
+            }
+        }
+        results = FacilitiesDocument.search().query(q)[start_from:size]
         res = self.serializer_class(results.to_queryset(), many=True).data
-        return Response(res)
+        template["features"] = res
+        return JsonResponse(template)
