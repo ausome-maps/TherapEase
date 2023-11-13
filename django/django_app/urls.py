@@ -16,14 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls import static
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
     TokenVerifyView,
 )
+from rest_framework import routers
+from apps.core.facilities.api import FacilitiesViewset
 
-
+routers = routers.SimpleRouter(trailing_slash=False)
+routers.register(r"facilities", FacilitiesViewset, basename="facilities")
 urlpatterns = [
     path("admin/", admin.site.urls),
     # path('accounts/', include('django.contrib.auth.urls')),
@@ -33,7 +36,7 @@ urlpatterns = [
     path("auth/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
 ]
-
+urlpatterns += routers.urls
 
 if settings.DEBUG:
     urlpatterns += static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

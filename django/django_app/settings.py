@@ -52,16 +52,15 @@ INSTALLED_APPS = [
 
 # ELASTICSEARCH
 INSTALLED_APPS += [
-    "django_elasticsearch_dsl",
-    "django_elasticsearch_dsl_drf",
+    "django_opensearch_dsl",
 ]
-ELASTICSEARCH_DSL = {
+OPENSEARCH_DSL = {
     "default": {"hosts": os.environ.get("SEARCH_URL", "localhost:9200")},
 }
 
-
 CORE_APPS = [
     "apps.core.users",
+    "apps.core.facilities",
 ]
 
 PLUGIN_APPS = []
@@ -270,3 +269,5 @@ DEFAULT_FILE_STORAGE = os.environ.get(
 )
 MEDIA_ROOT = os.path.join(BASE_DIR, "files")
 MEDIA_URL = "/uploaded/"
+
+APPEND_SLASH = False
