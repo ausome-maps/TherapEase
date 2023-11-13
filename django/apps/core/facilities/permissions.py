@@ -3,7 +3,6 @@ from rest_framework import permissions
 
 class FacilitiesPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
-        print(view.action)
         if view.action in ["list", "retrieve", "search"]:
             return True
         elif view.action in [
@@ -13,7 +12,7 @@ class FacilitiesPermissions(permissions.BasePermission):
             "destroy",
             "create",
         ]:
-            return request.user.is_admin
+            return request.user.is_superuser
         else:
             return False
 
@@ -21,6 +20,6 @@ class FacilitiesPermissions(permissions.BasePermission):
         if view.action == "retrieve":
             return True
         elif view.action in ["update", "partial_update", "destroy"]:
-            return obj == request.user or request.user.is_admin
+            return obj == request.user or request.user.is_superuser
         else:
             return False

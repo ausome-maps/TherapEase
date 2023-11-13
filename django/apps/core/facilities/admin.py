@@ -3,7 +3,8 @@ from .models import Facilities, FacilityProperties
 
 
 class FacilityPropertiesAdmin(admin.ModelAdmin):
-    list_display = ("id", "placename")
+    list_display = ("id", "placename", "city", "region")
+    list_filter = ("city", "region")
 
 
 class FacilitiesAdmin(admin.ModelAdmin):

@@ -1,3 +1,4 @@
+import json
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework_tracking.mixins import LoggingMixin
@@ -44,4 +45,5 @@ class FacilitiesViewset(LoggingMixin, viewsets.ModelViewSet):
         results = FacilitiesDocument.search().query(q)[start_from:size]
         res = self.serializer_class(results.to_queryset(), many=True).data
         template["features"] = res
+        template["total"] = results.execute().hits.total.to_dict()
         return JsonResponse(template)
