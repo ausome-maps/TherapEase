@@ -131,7 +131,9 @@ class FacilityProperties(models.Model):
     social_media = models.JSONField(blank=True, null=True)
     services_offered = models.JSONField(default=get_default_services_offered)
     other_services = models.JSONField(blank=True, null=True)
-    caters_to = ArrayField(models.CharField(max_length=100, blank=True, null=True))
+    caters_to = ArrayField(
+        models.CharField(max_length=100, blank=True, null=True), null=True, blank=True
+    )
     images = ArrayField(models.JSONField(blank=True, null=True), null=True, blank=True)
     accreditation = models.JSONField(default=get_default_accredition)
 
