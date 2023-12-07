@@ -56,10 +56,19 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    organization = serializers.CharField(source="profile.organization")
-    login_count = serializers.IntegerField(source="profile.login_count")
-    account_expiry = serializers.DateTimeField(source="profile.account_expiry")
+    organization = serializers.SerializerMethodField(method_name="get_organization")
+    login_count = serializers.SerializerMethodField(method_name="get_login_count")
+    account_expiry = serializers.SerializerMethodField(method_name="get_account_expiry")
     active = serializers.BooleanField(source="is_active")
+
+    def get_organization(self, obj):
+        return self.context["request"].user.profile.first().organization
+
+    def get_login_count(self, obj):
+        return self.context["request"].user.profile.first().login_count
+
+    def get_account_expiry(self, obj):
+        return self.context["request"].user.profile.first().account_expiry
 
     class Meta:
         model = User
@@ -81,4 +90,4 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = "__all__"
+        exclude = ["organization", "login_count", "account_expiry"]
