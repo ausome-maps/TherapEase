@@ -8,10 +8,17 @@ class FacilityPropertiesAdmin(admin.ModelAdmin):
 
 
 class FacilitiesAdmin(admin.ModelAdmin):
-    list_display = ("id", "placename", "geometry")
+    list_display = ("id", "placename", "city", "region")
+    list_filter = ("properties__city", "properties__region")
 
     def placename(self, obj):
         return obj.properties.placename
+
+    def city(self, obj):
+        return obj.properties.city
+
+    def region(self, obj):
+        return obj.properties.region
 
 
 admin.site.register(Facilities, FacilitiesAdmin)

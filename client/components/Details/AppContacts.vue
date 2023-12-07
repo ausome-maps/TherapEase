@@ -18,8 +18,8 @@
               </span>
             </div>
             <div class="truncate">
-  <a :href="malitoLink">Email: {{ facilityDetails.email_address }}</a>
-</div>
+              <a :href="malitoLink">Email: {{ facilityDetails.email_address }}</a>
+            </div>
 
           </div>
         </li>
@@ -35,7 +35,7 @@
               </span>
             </div>
             <div>
-              <a :href="contactNumber">Contact: {{facilityDetails.contact_number }} </a>
+              <a :href="contactNumber">Contact: {{ facilityDetails.contact_number }} </a>
             </div>
           </div>
         </li>
@@ -52,7 +52,9 @@
               <!-- <a :href="facilityDetails.facilityWebsite" target="_blank">
                 Website: {{ facilityDetails.website }}
               </a> -->
-              <span>Website:  </span><span><a :href="websiteLink" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" target="_blank" rel="noopener noreferrer">{{ facilityDetails.website }}</a></span>
+              <span>Website: </span><span><a :href="websiteLink"
+                  class="font-medium text-blue-600 dark:text-blue-500 hover:underline" target="_blank"
+                  rel="noopener noreferrer">{{ facilityDetails.website }}</a></span>
             </div>
           </div>
         </li>
@@ -83,7 +85,7 @@
           getDateFromTimestamp(facilityDetails.start) }}</span>
       </div> -->
       <div class="text-left px-8">
-        <span class="font-bold">{{ facilityDetails.info_src_name }} </span> 
+        <span class="font-bold">{{ facilityDetails.info_src_name }} </span>
       </div>
     </div>
   </div>
@@ -93,9 +95,9 @@
 export default {
   data() {
     return {
-      malitoLink:'',
-      websiteLink:'',
-      contactNumber:'',
+      malitoLink: '',
+      websiteLink: '',
+      contactNumber: '',
     }
   },
   props: {
@@ -106,23 +108,25 @@ export default {
 
   },
   methods: {
-    getDateFromTimestamp: function(timestamp) {
-      try{
+    getDateFromTimestamp: function (timestamp) {
+      try {
         const date = new Date(timestamp);
         return date.toISOString().split('T')[0];
-      }catch(error){
+      } catch (error) {
         return '';
       }
     }
   },
   mounted() {
-    //(this.facilityDetails);
-    this.malitoLink="mailto:"+this.facilityDetails.email_address;
-    this.websiteLink=this.facilityDetails.website;
-    this.contactNumber="tel:+63"+this.facilityDetails.contact_number.replace(/^0+/, '');
+    console.log(this.facilityDetails);
+    this.malitoLink = "mailto:" + this.facilityDetails.email_address;
+    this.websiteLink = this.facilityDetails.website;
+    this.contactNumber = "tel:+63" + this.facilityDetails.contact_number.replace(/^0+/, '');
   },
 }
 </script>
   
-<style scoped>/* Add your custom styles here if needed */</style>
+<style scoped>
+/* Add your custom styles here if needed */
+</style>
   

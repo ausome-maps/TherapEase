@@ -21,7 +21,10 @@ class FacilitiesDocument(Document):
         model = Facilities  # The model associated with this Document
 
         # The fields of the model you want to be indexed in Opensearch
-        fields = ["id"]
+        fields = [
+            "id",
+        ]
+        ordering = ["properties.osm_id"]
         # Paginate the django queryset used to populate the index with the specified size
         # (by default it uses the database driver's default setting)
         # queryset_pagination = 5000

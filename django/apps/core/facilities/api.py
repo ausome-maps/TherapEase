@@ -29,10 +29,11 @@ class FacilitiesViewset(LoggingMixin, viewsets.ModelViewSet):
     @action(detail=False, methods=["get", "post"], name="search")
     def search(self, request):
         text_search = request.query_params.get("q", "*")
+        print(text_search)
         start_from = int(request.query_params.get("start_from", 0))
         size = int(request.query_params.get("size", 50))
         q = {
-            "multi_match": {
+            "query_string": {
                 "query": text_search,
                 "fields": [
                     "properties.placename",

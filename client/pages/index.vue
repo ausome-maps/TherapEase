@@ -73,7 +73,7 @@ export default {
       coordinates: [],  // New coordinates array
       selectedService: 'orthoses',
       filter: [],
-      bounds:L.latLngBounds(L.latLng(5.458624890542083, 116.51879773556522), L.latLng(19.215291042674977, 127.04232194261539)),
+      bounds: L.latLngBounds(L.latLng(5.458624890542083, 116.51879773556522), L.latLng(19.215291042674977, 127.04232194261539)),
       center: {
         "lat": 12.384994440877549,
         "lng": 121.67093979526709
@@ -213,7 +213,7 @@ export default {
       // Fetch the data
       try {
         // console.log("fetchSearchFunction", `${this.$config.apiURL}/facilities`);
-        const response = await fetch(`${this.$config.apiURL}/facilities`, {
+        const response = await fetch(`${this.$config.apiURL}/facilities/search`, {
           body: body,
           headers: {
             "Content-Type": "application/json"

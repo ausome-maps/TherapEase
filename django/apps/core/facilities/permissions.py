@@ -3,6 +3,7 @@ from rest_framework import permissions
 
 class FacilitiesPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
+        print(view.action)
         if view.action in ["list", "retrieve", "search"]:
             return True
         elif view.action in [

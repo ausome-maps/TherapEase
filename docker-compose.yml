@@ -1,21 +1,21 @@
 version: '3.7'
 
 services:
-  # frontend:
-  #   container_name: therapease_frontend
-  #   build:
-  #     context: ./client
-  #     dockerfile: Dockerfile
-  #   command: npm run dev
-  #   volumes:
-  #     - ./client:/code/app
-  #   env_file:
-  #     - ./.env.sample
-  #   ports:
-  #     - "9002:3000"
-  #     - "24600:24600"
-  #   depends_on:
-  #     - api
+  frontend:
+    container_name: therapease_frontend
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    command: npm run dev
+    volumes:
+      - ./client:/code/app
+    env_file:
+      - ./.env.sample
+    ports:
+      - "9002:3000"
+      - "24600:24600"
+    depends_on:
+      - django
   # api:
   #   container_name: therapease_api
   #   build:
@@ -42,7 +42,7 @@ services:
     volumes:
       - ./django:/usr/src/app
     ports:
-      - "8000:8000"
+      - "9001:8000"
     env_file:
       - ./.env.sample
   db: 

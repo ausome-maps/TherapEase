@@ -25,6 +25,10 @@ from rest_framework_simplejwt.views import (
 from rest_framework import routers
 from apps.core.facilities.api import FacilitiesViewset
 
+admin.site.site_header = "Therapease Admin"
+admin.site.site_title = "Therapease Admin Portal"
+admin.site.index_title = "Welcome to Therapease API"
+
 routers = routers.SimpleRouter(trailing_slash=False)
 routers.register(r"facilities", FacilitiesViewset, basename="facilities")
 urlpatterns = [

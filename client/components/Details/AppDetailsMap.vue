@@ -5,11 +5,8 @@
     </div>
     <div class="h-[400px] rounded-xl mx-4">
       <l-map ref="map" v-model:zoom="zoom" :center="mapCenter" :use-global-leaflet="false">
-        <l-tile-layer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          layer-type="base"
-          name="OpenStreetMap"
-        ></l-tile-layer>
+        <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base"
+          name="OpenStreetMap"></l-tile-layer>
         <l-marker :lat-lng="mapCenter" :icon="icon"></l-marker>
       </l-map>
     </div>
@@ -52,13 +49,15 @@ export default {
     };
   },
   computed: {
+
     mapCenter() {
+      console.log("Latitude:", this.latitude);
+      console.log("Longitude:", this.longitude);
+
       return [this.longitude, this.latitude];
     },
   },
   created() {
-    // console.log("Latitude:", this.latitude);
-    // console.log("Longitude:", this.longitude);
   },
 };
 </script>

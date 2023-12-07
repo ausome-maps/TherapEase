@@ -117,17 +117,21 @@ def get_default_accredition():
 
 class FacilityProperties(models.Model):
     osm_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    info_src_name = models.CharField(max_length=100, null=True, blank=True)
-    info_src_designation = models.CharField(max_length=100, null=True, blank=True)
-    placename = models.CharField(max_length=250, null=True, blank=True)
-    address = models.TextField(null=True, blank=True)
-    region = models.CharField(max_length=100, null=True, blank=True)
-    city = models.CharField(max_length=100, null=True, blank=True)
-    landmarks_desc = models.TextField(null=True, blank=True)
-    contact_number = models.CharField(max_length=100, null=True, blank=True)
-    alt_contact_number = models.CharField(max_length=100, null=True, blank=True)
-    email_address = models.CharField(max_length=100, null=True, blank=True)
-    website = models.CharField(max_length=100, null=True, blank=True)
+    info_src_name = models.CharField(max_length=100, null=True, blank=True, default="")
+    info_src_designation = models.CharField(
+        max_length=100, null=True, blank=True, default=""
+    )
+    placename = models.CharField(max_length=250, null=True, blank=True, default="")
+    address = models.TextField(null=True, blank=True, default="")
+    region = models.CharField(max_length=100, null=True, blank=True, default="")
+    city = models.CharField(max_length=100, null=True, blank=True, default="")
+    landmarks_desc = models.TextField(null=True, blank=True, default="")
+    contact_number = models.CharField(max_length=100, null=True, blank=True, default="")
+    alt_contact_number = models.CharField(
+        max_length=100, null=True, blank=True, default=""
+    )
+    email_address = models.CharField(max_length=100, null=True, blank=True, default="")
+    website = models.CharField(max_length=100, null=True, blank=True, default="")
     social_media = models.JSONField(blank=True, null=True)
     services_offered = models.JSONField(default=get_default_services_offered)
     other_services = models.JSONField(blank=True, null=True)
@@ -140,6 +144,7 @@ class FacilityProperties(models.Model):
     class Meta:
         verbose_name = "Facility Properties"
         verbose_name_plural = "Facility Properties"
+        ordering = ["-osm_id"]
 
 
 # Create your models here.
