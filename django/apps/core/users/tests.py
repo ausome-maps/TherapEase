@@ -38,7 +38,6 @@ class UserAppTest(APITestCase):
     def test_user_profile_api(self):
         profile_url = "/users/api/profile/"
         response = self.client.get(profile_url, format="json")
-        print(response.json())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_email_function(self):
