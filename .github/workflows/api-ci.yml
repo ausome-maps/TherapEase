@@ -17,6 +17,8 @@ jobs:
         image: redis:6.0.20-alpine3.18
       db:
         image: postgres:15.4-alpine3.18
+        ports:
+          - 5432:5432
         env:
           POSTGRES_USER: therapease_user_dev
           POSTGRES_PASSWORD: therapease_devpass
