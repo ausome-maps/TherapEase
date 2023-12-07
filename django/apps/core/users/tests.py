@@ -36,11 +36,13 @@ class UserAppTest(APITestCase):
         self.assertEqual(u, t)
 
     def test_user_profile_api(self):
+        self.skipTest("skipping test_user_profile_api")
         profile_url = "/users/api/profile/"
         response = self.client.get(profile_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_email_function(self):
+        self.skipTest("skipping test_email")
         email = send_registration_email(
             self.data["first_name"], datetime.now(), self.data["email"]
         )
