@@ -16,25 +16,8 @@ services:
       - "24600:24600"
     depends_on:
       - django
-  # api:
-  #   container_name: therapease_api
-  #   build:
-  #     context: ./api/src
-  #     dockerfile: Dockerfile
-  #   command: uvicorn app.main:app --host 0.0.0.0 --port 9001 --reload
-  #   volumes:
-  #     - ./api/src:/usr/src/app
-  #   ports:
-  #     - "9001:9001"
-  #   env_file:
-  #     - ./.env.sample
-  #   depends_on:
-  #     - geocoding
-  #     - search
-  #     - cache
-  #     - db
   django:
-    container_name: therapease_django
+    container_name: therapease_api
     build:
       context: ./django
       dockerfile: Dockerfile

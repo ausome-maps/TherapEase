@@ -11,28 +11,11 @@ import json
 import requests
 
 # replace with location of data json
-data_path = "/Users/lkp/Dev/projects/ausomemaps/data/FINAL_PASP_PAOT_with_id.json"
+data_path = "path-to-data/FINAL_PASP_PAOT_with_id.json"
 api_url = "http://127.0.0.1:9001"
 
-secret_key = "thisisaverysecretkey12345"
-
-# force register user
-user_reg = {
-    "name": "admin_user",
-    "email": "sample@sample.com",
-    "password": "mypassword1234",
-    "passwordConfirm": "mypassword1234",
-}
-user_reg_resp = requests.post(
-    f"{api_url}/auth/register",
-    headers={"Content-type": "application/json"},
-    json=user_reg,
-)
-
 # authenticate user
-user = {"username": user_reg["email"], "password": user_reg["password"]}
-token = requests.post(f"{api_url}/auth/jwt/login", data=user)
-access_token = token.json()["access_token"]
+access_token = "my-access-token"  # retrieve from api admin
 
 # store to opensearch index
 with open(data_path, "r") as therap_file:
@@ -40,13 +23,17 @@ with open(data_path, "r") as therap_file:
     for d in therap_data["features"]:
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {access_token}",
+            "Authorization": f"Token {access_token}",
         }
-        d["key"] = secret_key
-        resp = requests.put(
+        d["properties"]["contact_number"] = d["properties"]["contact_number_landline"]
+        if len(d["properties"]["contact_number_mobile"]) > len(
+            d["properties"]["contact_number_landline"]
+        ):
+            d["properties"]["contact_number"] = d["properties"]["contact_number_mobile"]
+        d["properties"]["alt_contact_number"] = d["properties"]["alt_contact_numbers"]
+        resp = requests.post(
             f"{api_url}/facilities",
             headers=headers,
             json=d,
-            cookies={"key": secret_key},
         )
-        print(resp.text)
+        print(d["properties"]["id"], resp.status_code)
