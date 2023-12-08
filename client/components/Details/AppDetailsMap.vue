@@ -51,9 +51,6 @@ export default {
   computed: {
 
     mapCenter() {
-      console.log("Latitude:", this.latitude);
-      console.log("Longitude:", this.longitude);
-
       return [this.longitude, this.latitude];
     },
   },
