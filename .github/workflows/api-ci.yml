@@ -43,7 +43,7 @@ jobs:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
         run: |
-          cd django
+          cd api
           python manage.py test
       - name: "Login to GitHub Container Registry"
         uses: docker/login-action@v1
