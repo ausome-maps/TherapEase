@@ -160,16 +160,8 @@ export default {
 
       // Build the body of the request
       let bodyObj = {
-        query: {
-          bool: {
-            must: {
-              query_string: {
-                query: search
-              }
-            },
-            filter: this.filter
-          }
-        },
+        q: search,
+        filter: this.filter,
         from: startIndex,
         size: this.paginationSize
       };
