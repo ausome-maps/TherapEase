@@ -12,7 +12,7 @@ RUN apt -y update \
 
 # set work directory
 WORKDIR /home/app/web
-RUN addgroup -S app && adduser -S app -G app
+RUN groupadd -S app && useradd -S app -G app
 
 RUN pip install --upgrade pip
 COPY ./requirements.txt /home/app/web/requirements.txt
@@ -20,7 +20,7 @@ RUN pip install -r requirements.txt
 
 COPY . /home/app/web
 
-RUN mkdir -p /var/log/django-app /usr/src/app/static
+RUN mkdir -p /var/log/django-app /home/app/web/static
 
 # copy entrypoint-prod.sh
 COPY ./entrypoint.prod.sh $APP_HOME
