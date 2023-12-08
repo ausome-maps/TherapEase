@@ -57,5 +57,6 @@ jobs:
         if: github.ref == 'refs/heads/main'
         with:
           context: api # Set the build context to the root of the repository
+          file: api/Dockerfile.prod
           push: true # Push the built image to the registry
           tags: ghcr.io/ausome-maps/therapease-api:latest
