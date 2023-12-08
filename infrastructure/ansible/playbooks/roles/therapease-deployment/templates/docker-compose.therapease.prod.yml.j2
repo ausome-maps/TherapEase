@@ -56,31 +56,7 @@ services:
     networks:
       - internal
     labels:
-      - traefik.enable=false 
-  search:
-    container_name: therapease_search
-    image: opensearchproject/opensearch:2.9.0
-    environment:
-      - cluster.name=opensearch-cluster
-      - node.name=therapease_search # Name the node that will run in this container
-      - discovery.seed_hosts=therapease_search
-      - bootstrap.memory_lock=true # Disable JVM heap memory swapping
-      - "OPENSEARCH_JAVA_OPTS=-Xms256m -Xmx256m" # Set min and max JVM heap sizes to at least 50% of system RAM
-      - DISABLE_SECURITY_PLUGIN=true # this should be removed if SSL is configured
-      - discovery.type=single-node
-    ulimits:
-      memlock:
-        soft: -1 # Set memlock to unlimited (no soft or hard limit)
-        hard: -1
-      nofile:
-        soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
-        hard: 65536
-    volumes: 
-      - search_data:/usr/share/opensearch/data
-    networks:
-      - internal
-    labels:
-      - traefik.enable=false 
+      - traefik.enable=false
 
 volumes:
   postgres_data:
@@ -89,13 +65,6 @@ volumes:
       o: 'bind'
       device: /datadrive/postgres
       type: 'none'
-  search_data: 
-    driver: local
-    driver_opts:
-      o: 'bind'
-      device: /datadrive/search
-      type: 'none'
-
 
 networks:
   web:

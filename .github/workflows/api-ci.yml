@@ -5,14 +5,14 @@ jobs:
   test_build_push:
     runs-on: ubuntu-22.04
     services:
-      opensearch:
-        image: opensearchproject/opensearch:2.9.0
-        ports:
-          - 9200:9200
-        env:
-          cluster.name: opensearch-cluster
-          DISABLE_SECURITY_PLUGIN: true # this should be removed if SSL is configured
-          discovery.type: single-node
+      # opensearch:
+      #   image: opensearchproject/opensearch:2.9.0
+      #   ports:
+      #     - 9200:9200
+      #   env:
+      #     cluster.name: opensearch-cluster
+      #     DISABLE_SECURITY_PLUGIN: true # this should be removed if SSL is configured
+      #     discovery.type: single-node
       cache:
         image: redis:6.0.20-alpine3.18
       db:
@@ -35,7 +35,7 @@ jobs:
           pip install -r api/requirements.txt
       - name: Run Tests
         env:
-          SEARCH_URL: http://localhost:9200
+          # SEARCH_URL: http://localhost:9200
           REDIS_URL: redis://localhost:6379
           POSTGRES_USER: therapease_user_dev
           POSTGRES_PASSWORD: therapease_devpass
