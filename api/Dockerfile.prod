@@ -12,8 +12,8 @@ RUN apt -y update \
 
 # set work directory
 WORKDIR /home/app/web
-RUN groupadd -S app 
-RUN useradd -S app -G app
+RUN groupadd app 
+RUN useradd app -g app
 
 RUN pip install --upgrade pip
 COPY ./requirements.txt /home/app/web/requirements.txt
