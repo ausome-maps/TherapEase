@@ -33,7 +33,6 @@ services:
       - "traefik.http.routers.api.tls.certresolver=lets-encrypt"
       - "traefik.port=80"
     depends_on:
-      - search
       - cache
       - db
     networks:
