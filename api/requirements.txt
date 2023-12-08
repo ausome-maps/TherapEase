@@ -21,3 +21,4 @@ redis==4.4.0
 django-guardian==2.4.0
 django-extensions
 whitenoise==6.6.0
+drf-yasg==1.21.7

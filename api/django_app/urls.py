@@ -24,6 +24,23 @@ from rest_framework_simplejwt.views import (
 )
 from rest_framework import routers
 from apps.core.facilities.api import FacilitiesViewset
+from django.urls import re_path
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Therapease API",
+      default_version='v1',
+      description="The Therapease API",
+      terms_of_service="https://www.google.com/policies/terms/",
+      contact=openapi.Contact(email="info@ausomemaps.org"),
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)
 
 admin.site.site_header = "Therapease Admin"
 admin.site.site_title = "Therapease Admin Portal"
@@ -39,6 +56,8 @@ urlpatterns = [
     path("auth/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     path("auth/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
+   path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+
 ]
 urlpatterns += routers.urls
 

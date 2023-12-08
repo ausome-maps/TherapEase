@@ -15,15 +15,15 @@ services:
       - "9002:3000"
       - "24600:24600"
     depends_on:
-      - django
-  django:
+      - api
+  api:
     container_name: therapease_api
     build:
-      context: ./django
+      context: ./api
       dockerfile: Dockerfile
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./django:/usr/src/app
+      - ./api:/usr/src/app
     ports:
       - "9001:8000"
     env_file:
