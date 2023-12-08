@@ -8,7 +8,7 @@ ENV HOME=/home/app
 ENV APP_HOME=/home/app/web
 
 RUN apt -y update \
-    && apt install -y libpq-dev postgresql gcc python3-dev netcat
+    && apt install -y libpq-dev postgresql gcc python3-dev netcat-traditional
 
 # set work directory
 WORKDIR /home/app/web
