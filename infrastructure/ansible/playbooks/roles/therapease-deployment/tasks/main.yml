@@ -10,6 +10,6 @@
     group: "{{ ansible_user }}"
     state: directory
     recurse: yes
-- include: docker.yml
-- include: app.yml
-- include: start.yml
+- include_tasks: docker.yml
+- include_tasks: app.yml
+- include_tasks: start.yml
