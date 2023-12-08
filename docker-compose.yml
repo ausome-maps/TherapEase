@@ -19,20 +19,15 @@ services:
   api:
     container_name: therapease_api
     build:
-      context: ./api/src
+      context: ./api
       dockerfile: Dockerfile
-    command: uvicorn app.main:app --host 0.0.0.0 --port 9001 --reload
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./api/src:/usr/src/app
+      - ./api:/usr/src/app
     ports:
-      - "9001:9001"
+      - "9001:8000"
     env_file:
       - ./.env.sample
-    depends_on:
-      - geocoding
-      - search
-      - cache
-      - db
   db: 
     container_name: therapease_db
     image: postgres:15.4-alpine3.18
@@ -43,14 +38,14 @@ services:
   cache:
     container_name: therapease_cache
     image: redis:6.0.20-alpine3.18
-  geocoding:
-    container_name: therapease_geocoding
-    image: mediagis/nominatim:4.2
-    volumes:
-      - geocoding_data:/var/lib/postgresql/14/main
-    shm_size: '1gb'
-    env_file:
-      - ./.env.sample
+  # geocoding:
+  #   container_name: therapease_geocoding
+  #   image: mediagis/nominatim:4.2
+  #   volumes:
+  #     - geocoding_data:/var/lib/postgresql/14/main
+  #   shm_size: '1gb'
+  #   env_file:
+  #     - ./.env.sample
   search:
     container_name: therapease_search
     image: opensearchproject/opensearch:2.9.0
@@ -73,6 +68,6 @@ services:
       - search_data:/usr/share/opensearch/data
 
 volumes:
-  geocoding_data:
+  # geocoding_data:
   search_data:
   postgres_data:

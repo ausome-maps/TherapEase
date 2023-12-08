@@ -66,21 +66,21 @@
 // import data from '../components/facility-data.json'
 
 export default {
-data() {
-  return {
-    properties: null,
-    coordinates: null,
-    isMobile: false,
-    filteredData: null,
-    error: null,
-    isFetching: false,
-    id: null,
-    feedbackUrl: '',
-  };
-},
-beforeMount() {
-  this.id = this.$route.query.id;
-},
+  data() {
+    return {
+      properties: null,
+      coordinates: null,
+      isMobile: false,
+      filteredData: null,
+      error: null,
+      isFetching: false,
+      id: null,
+      feedbackUrl: '',
+    };
+  },
+  beforeMount() {
+    this.id = this.$route.query.id;
+  },
   beforeRouteUpdate(to, from, next) {
     if (to.query.id !== from.query.id) {
       this.handleSearch();
@@ -113,14 +113,14 @@ beforeMount() {
       try {
         this.properties = this.filteredData.features[0].properties;
         this.coordinates = this.filteredData.features[0].geometry.coordinates;
-        //console.log(this.coordinates);
+        console.log(this.coordinates[0], this.coordinates[1])
       } catch (error) {
         console.log("Error on HandleSearch");
       }
     },
     async fetchSearch() {
       // console.log(`endpoint, ${this.$config.apiURL}/facilities?q=${this.id}`);
-      const { data, error, isFetching } = await useFetch(`${this.$config.apiURL}/facilities?q=${this.id}`, {
+      const { data, error, isFetching } = await useFetch(`${this.$config.apiURL}/facilities/search?q=id:${this.id}`, {
         method: "GET"
       });
       this.filteredData = data;

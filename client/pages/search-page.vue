@@ -178,7 +178,7 @@ export default {
       //console.log(body)
       // Fetch the data
       try {
-        const response = await fetch(`${this.$config.apiURL}/facilities`, {
+        const response = await fetch(`${this.$config.apiURL}/facilities/search`, {
           body: body
           ,
           headers: {

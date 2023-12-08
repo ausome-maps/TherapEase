@@ -22,7 +22,7 @@ services:
   api:
     container_name: therapease_api
     image: ghcr.io/ausome-maps/therapease-api:latest
-    command: uvicorn app.main:app --host 0.0.0.0 --port 9001 --reload
+    command: gunicorn django_app.wsgi:application --limit-request-line 8190  --workers 2 --bind 0.0.0.0:9001 --timeout 30 --max-request 300
     expose:
       - 9001
     env_file:
