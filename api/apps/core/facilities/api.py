@@ -35,6 +35,7 @@ class FacilitiesViewset(LoggingMixin, viewsets.ModelViewSet):
             "query_string": {
                 "query": text_search,
                 "fields": [
+                    "properties.osm_id",
                     "properties.placename",
                     "properties.address",
                     "properties.city",

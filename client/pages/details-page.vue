@@ -119,14 +119,41 @@ export default {
       }
     },
     async fetchSearch() {
-      // console.log(`endpoint, ${this.$config.apiURL}/facilities?q=${this.id}`);
-      const { data, error, isFetching } = await useFetch(`${this.$config.apiURL}/facilities/search?q=id:${this.id}`, {
-        method: "GET"
-      });
-      this.filteredData = data;
-      this.error = error;
-      this.isFetching = isFetching;
-    },
+        this.isFetching = true;
+        // Build the body of the request
+        let bodyObj = {
+          q: `id:${this.id}`,
+          from: 0,
+          size: 1
+        };
+
+        let body = JSON.stringify(bodyObj);
+        console.log("body", body)
+        // Fetch the data
+        try {
+          // console.log("fetchSearchFunction", `${this.$config.apiURL}/facilities`);
+          const response = await fetch(`${this.$config.apiURL}/facilities/search`, {
+            body: body,
+            headers: {
+              "Content-Type": "application/json"
+            },
+            method: "POST"
+          });
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const data = await response.json();
+          this.filteredData = data;
+          this.isFetching = false;
+          this.error = null;
+
+        } catch (error) {
+          console.log("no response from search endpoint!")
+          this.filteredData = null;
+          this.error = error.message;
+          this.isFetching = false;
+        }
+      }
+    }
   }
-}
 </script>
