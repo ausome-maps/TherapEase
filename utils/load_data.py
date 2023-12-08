@@ -36,4 +36,4 @@ with open(data_path, "r") as therap_file:
             headers=headers,
             json=d,
         )
-        print(d["properties"]["id"], resp.status_code)
+        print(d["id"], resp.status_code)
