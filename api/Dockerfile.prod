@@ -20,7 +20,7 @@ RUN pip install -r requirements.txt
 
 COPY . /home/app/web
 
-RUN mkdir -p /var/log/django-app
+RUN mkdir -p /var/log/django-app /usr/src/app/static
 
 # copy entrypoint-prod.sh
 COPY ./entrypoint.prod.sh $APP_HOME
