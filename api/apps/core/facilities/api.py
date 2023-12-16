@@ -32,19 +32,6 @@ class FacilitiesViewset(LoggingMixin, viewsets.ModelViewSet):
         text_search = request.data.get("q", "*")
         start_from = int(request.data.get("start_from", 0))
         size = int(request.data.get("size", 50))
-        # q = {
-        #     "query_string": {
-        #         "query": text_search,
-        #         "fields": [
-        #             "properties.osm_id",
-        #             "properties.placename",
-        #             "properties.address",
-        #             "properties.city",
-        #             "properties.region",
-        #         ],
-        #     }
-        # }
-        # results = FacilitiesDocument.search().query(q)[start_from:size]
         if "id:" in text_search:
             text_search = text_search.replace("id:", "")
         results = Facilities.objects.annotate(
@@ -61,9 +48,7 @@ class FacilitiesViewset(LoggingMixin, viewsets.ModelViewSet):
         else:
             results = results.filter()
         results = results[start_from: start_from+size]
-        # res = self.serializer_class(results.to_queryset(), many=True).data
         res = self.serializer_class(results, many=True).data
         template["features"] = res
-        # template["total"] = results.execute().hits.total.to_dict()
         template["total"] = results.count()
         return JsonResponse(template)

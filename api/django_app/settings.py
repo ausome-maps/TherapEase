@@ -54,14 +54,6 @@ INSTALLED_APPS = [
     "guardian",
 ]
 
-# ELASTICSEARCH
-# INSTALLED_APPS += [
-#     "django_opensearch_dsl",
-# ]
-# OPENSEARCH_DSL = {
-#     "default": {"hosts": os.environ.get("SEARCH_URL", "localhost:9200")},
-# }
-
 CORE_APPS = [
     "apps.core.users",
     "apps.core.facilities",
