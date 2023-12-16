@@ -3,30 +3,46 @@
     <div class="grid gap-4">
       <!-- Column for Services -->
       <div class="">
-  <h2 class="text-2xl mb-2 text-red-400 font-semibold">{{ label }}</h2>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-    <ul v-for="(service, index) in services" :key="service.id" :class="{ 'col-span-2': index % 2 === 0 }">
-      <li>
-        
-          <h4 class="cursor-pointer font-bold">{{ service.label }}</h4>
-          <li v-for="(value, key) in service.mode" :key="key">
-            <span v-if="value !== 0">
-              <span class="list-item-bullet ml-4">&#8226;</span>
-              {{ formatSessionMode(key) }}: {{ getSessionType(value) }}
-            </span>
-          </li>
-   
-      </li>
-    </ul>
-  </div>
-</div>
+        <h2 class="text-2xl mb-2 text-red-400 font-semibold">{{ label }}</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <ul v-for="(service, index) in services" :key="service.id" :class="{ 'col-span-2': index % 2 === 0 }">
+            <li>
+
+              <h4 class="cursor-pointer font-bold">{{ service.label }}</h4>
+            <li v-for="(value, key) in service.mode" :key="key">
+              <span v-if="value !== 0">
+                <span class="list-item-bullet ml-4">&#8226;</span>
+                {{ formatSessionMode(key) }}: {{ getSessionType(value) }}
+              </span>
+            </li>
+
+            </li>
+          </ul>
+        </div>
+      </div>
 
       <div v-if="other_services" class="border-t border-gray-300 my-4 mr-4"></div>
-      <div v-if="other_services" class="">
-        <h2 class="text-2xl mb-2 text-red-400 font-semibold">Other Services</h2>
-        <ul class="gap-2">
+
+      <div>
+        <h2 v-if="other_services" class="text-2xl mb-2 text-red-400 font-semibold">Other Services</h2>
+        <div v-if="other_services" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <!-- <ul class="gap-2">
+          {{ other_services }}
           <li class="cursor-default font-bold " v-for="(service, index) in other_services.split(',')" :key="index">{{ service.trim() }}</li>
-        </ul>
+        </ul> -->
+          <ul v-for="(service, key, index) in other_services" :key="index">
+            <li>
+              <h4 class="cursor-pointer font-bold">{{ key }}</h4>
+            <li v-for="(value, key) in service" :key="key">
+              <span v-if="value !== 0">
+                <span class="list-item-bullet ml-4">&#8226;</span>
+                {{ formatSessionMode(key) }}: {{ getSessionType(value) }}
+              </span>
+            </li>
+
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="border-t border-gray-300 my-4 mr-4"></div>
     </div>
@@ -46,29 +62,29 @@ export default {
       required: true
     },
     other_services: {
-      type: String,
+      type: Object,
       required: true
     }
   },
   methods: {
-  getSessionType(value) {
-    switch(value) {
-      case 0: return "No Offering";
-      case 1: return "Individual Sessions";
-      case 2: return "Group Sessions";
-      case 3: return "Individual and Group Sessions";
-      default: return "";
-    }
-  },
-  formatSessionMode(value){
-    switch(value) {
-      case 'teletherapy': return "Teletherapy";
-      case 'onsite': return "Onsite";
-      case 'home_service': return "Home Service";
-      default: return "";
+    getSessionType(value) {
+      switch (value) {
+        case 0: return "No Offering";
+        case 1: return "Individual Sessions";
+        case 2: return "Group Sessions";
+        case 3: return "Individual and Group Sessions";
+        default: return "";
+      }
+    },
+    formatSessionMode(value) {
+      switch (value) {
+        case 'teletherapy': return "Teletherapy";
+        case 'onsite': return "Onsite";
+        case 'home_service': return "Home Service";
+        default: return "";
+      }
     }
   }
-}
 
 }
 </script>
