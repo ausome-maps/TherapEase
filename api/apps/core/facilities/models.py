@@ -138,7 +138,6 @@ class FacilityProperties(models.Model):
     caters_to = ArrayField(
         models.CharField(max_length=100, blank=True, null=True), null=True, blank=True
     )
-    old_images = ArrayField(models.JSONField(blank=True, null=True), null=True, blank=True)
     images = models.JSONField(blank=True, null=True)
     accreditation = models.JSONField(default=get_default_accredition)
 
