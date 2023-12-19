@@ -53,6 +53,11 @@ services:
       - "traefik.http.routers.storage.rule=Host(`{{therapease_storage_domain_name}}`)" # need to be configured in DNS registrar
       - "traefik.http.routers.storage.tls=true"
       - "traefik.http.routers.storage.tls.certresolver=lets-encrypt"
+      - "traefik.http.services.svc_storage.loadbalancer.server.port=9003"
+      - "traefik.http.routers.api_storage.rule=Host(`api.{{therapease_storage_domain_name}}`)" # need to be configured in DNS registrar
+      - "traefik.http.routers.api_storage.tls=true"
+      - "traefik.http.routers.api_storage.tls.certresolver=lets-encrypt"
+      - "traefik.http.services.svc_api_storage.loadbalancer.server.port=9000"
       - "traefik.port=80"
   db:
     container_name: therapease_db
