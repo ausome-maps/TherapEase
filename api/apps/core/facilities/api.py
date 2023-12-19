@@ -4,7 +4,7 @@ from rest_framework_tracking.mixins import LoggingMixin
 from django.http import JsonResponse
 from django.contrib.postgres.search import SearchVector
 from .permissions import FacilitiesPermissions
-from .serializers import Facilities, FacilitiesSerializer
+from .serializers import Facilities, FacilitiesSerializer, FacilityProperties, FacilitiesPropertiesSerializer
 
 SEARCH_RESPONSE_TEMPLATE = {
     "type": "FeatureCollection",
@@ -12,6 +12,14 @@ SEARCH_RESPONSE_TEMPLATE = {
     "features": [],
 }
 
+class FacilitiesPropertiesViewset(LoggingMixin, viewsets.ModelViewSet):
+    queryset = FacilityProperties.objects.all()
+    permission_classes = (FacilitiesPermissions,)
+    serializer_class = FacilitiesPropertiesSerializer
+
+    def should_log(self, request, response):
+        """Log only errors"""
+        return response.status_code >= 400
 
 class FacilitiesViewset(LoggingMixin, viewsets.ModelViewSet):
     queryset = Facilities.objects.all()
@@ -42,8 +50,8 @@ class FacilitiesViewset(LoggingMixin, viewsets.ModelViewSet):
             results = results.filter(search=text_search)
         else:
             results = results.filter()
+        SEARCH_RESPONSE_TEMPLATE["total"] = results.count()
         results = results[start_from : start_from + size]
         res = self.serializer_class(results, many=True).data
         SEARCH_RESPONSE_TEMPLATE["features"] = res
-        SEARCH_RESPONSE_TEMPLATE["total"] = results.count()
         return JsonResponse(SEARCH_RESPONSE_TEMPLATE)

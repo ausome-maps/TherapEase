@@ -32,7 +32,7 @@ with open(data_path, "r") as therap_file:
             d["properties"]["contact_number"] = d["properties"]["contact_number_mobile"]
         d["properties"]["alt_contact_number"] = d["properties"]["alt_contact_numbers"]
         resp = requests.post(
-            f"{api_url}/facilities",
+            f"{api_url}/facilities/",
             headers=headers,
             json=d,
         )

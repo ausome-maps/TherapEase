@@ -168,14 +168,13 @@ export default {
       try {
         await this.fetchSearch();
         this.data = this.filteredData.features;
-
-        this.totalResults = this.filteredData.total.value;
+        this.totalResults = this.filteredData.total;
         this.totalPages = Math.ceil(this.totalResults / this.paginationSize);
         this.currentPageResults = Math.min(this.paginationSize, this.data.length);
         // Set the coordinates array after the data has been fetched
         [this.coordinates, this.bounds, this.center] = await this.getMapCoordinates();
       } catch (error) {
-        console.log(error)
+        console.log("error", error)
         this.totalResults = 0;
         this.currentPageResults = 0;
 
@@ -204,7 +203,6 @@ export default {
 
       // Fetch the data
       try {
-        // console.log("fetchSearchFunction", `${this.$config.apiURL}/facilities`);
         const response = await fetch(`${this.$config.apiURL}/facilities/search`, {
           body: body,
           headers: {

@@ -27,7 +27,7 @@ class FacilitiesTestCase(TestCase):
     def test_create_facility(self):
         print(self.headers)
         response = self.client.post(
-            "/facilities", self.facility_data, headers=self.headers, format="json"
+            "/facilities/", self.facility_data, headers=self.headers, format="json"
         )
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Facilities.objects.count(), 1)
