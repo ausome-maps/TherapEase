@@ -35,13 +35,13 @@ class FacilitiesTestCase(TestCase):
 
     def test_update_facility(self):
         fp_id = str(uuid.uuid4())
-        properties = FacilityProperties.objects.create(
+        _ = FacilityProperties.objects.create(
             osm_id=fp_id,
             placename="Original Facility",
             address="123 Original Street",
             region="Original region",
         )
-        facility = Facilities.objects.create(id=fp_id, properties=properties)
+        facility = Facilities.objects.get(id=fp_id)
         updated_data = {
             "properties": {
                 "placename": "Updated Facility",
@@ -62,13 +62,13 @@ class FacilitiesTestCase(TestCase):
 
     def test_delete_facility(self):
         fp_id = str(uuid.uuid4())
-        properties = FacilityProperties.objects.create(
+        _ = FacilityProperties.objects.create(
             osm_id=fp_id,
             placename="Original Facility",
             address="123 Original Street",
             region="Original region",
         )
-        facility = Facilities.objects.create(id=fp_id, properties=properties)
+        facility = Facilities.objects.get(id=fp_id)
         response = self.client.delete(
             f"/facilities/{facility.id}", headers=self.headers
         )

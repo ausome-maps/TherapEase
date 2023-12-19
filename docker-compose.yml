@@ -38,6 +38,15 @@ services:
   cache:
     container_name: therapease_cache
     image: redis:6.0.20-alpine3.18
+  storage:
+    image: docker.io/bitnami/minio:2023
+    env_file:
+      - ./.env.sample
+    ports:
+      - '9000:9000'
+      - '9003:9001'
+    volumes:
+      - 'minio_data:/bitnami/minio/data'  
   # geocoding:
   #   container_name: therapease_geocoding
   #   image: mediagis/nominatim:4.2
@@ -50,3 +59,5 @@ services:
 volumes:
   # geocoding_data:
   postgres_data:
+  minio_data:
+    driver: local

@@ -21,9 +21,9 @@ class FacilitiesSerializer(serializers.ModelSerializer):
         property_data = validated_data.pop("properties")
         id = validated_data.pop("id", str(uuid.uuid4()))
         properties = FacilityProperties.objects.create(osm_id=id, **property_data)
-        facilities = Facilities.objects.create(
-            **validated_data, id=id, properties=properties
-        )
+        facilities = Facilities.objects.get(id=id)
+        facilities.properties = properties
+        facilities.save()
         return facilities
 
     def update(self, instance, validated_data):

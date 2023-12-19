@@ -1,4 +1,3 @@
-import json
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework_tracking.mixins import LoggingMixin
@@ -7,11 +6,7 @@ from django.contrib.postgres.search import SearchVector
 from .permissions import FacilitiesPermissions
 from .serializers import Facilities, FacilitiesSerializer
 
-# search
-# from apps.core.facilities.documents import FacilitiesDocument
-
-
-template = {
+SEARCH_RESPONSE_TEMPLATE = {
     "type": "FeatureCollection",
     "name": "Ausome Maps - Therapy Centers",
     "features": [],
@@ -47,8 +42,8 @@ class FacilitiesViewset(LoggingMixin, viewsets.ModelViewSet):
             results = results.filter(search=text_search)
         else:
             results = results.filter()
-        results = results[start_from: start_from+size]
+        results = results[start_from : start_from + size]
         res = self.serializer_class(results, many=True).data
-        template["features"] = res
-        template["total"] = results.count()
-        return JsonResponse(template)
+        SEARCH_RESPONSE_TEMPLATE["features"] = res
+        SEARCH_RESPONSE_TEMPLATE["total"] = results.count()
+        return JsonResponse(SEARCH_RESPONSE_TEMPLATE)

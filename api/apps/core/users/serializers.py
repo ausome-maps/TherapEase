@@ -62,13 +62,13 @@ class UserSerializer(serializers.ModelSerializer):
     active = serializers.BooleanField(source="is_active")
 
     def get_organization(self, obj):
-        return self.context["request"].user.profile.first().organization
+        return self.context["request"].user.profile.organization
 
     def get_login_count(self, obj):
-        return self.context["request"].user.profile.first().login_count
+        return self.context["request"].user.profile.login_count
 
     def get_account_expiry(self, obj):
-        return self.context["request"].user.profile.first().account_expiry
+        return self.context["request"].user.profile.account_expiry
 
     class Meta:
         model = User
