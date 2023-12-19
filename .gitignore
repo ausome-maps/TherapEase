@@ -13,3 +13,4 @@ env
 .mypy_cache
 .pytest_cache
 api/*.log
+api/backups/*.psql.bin

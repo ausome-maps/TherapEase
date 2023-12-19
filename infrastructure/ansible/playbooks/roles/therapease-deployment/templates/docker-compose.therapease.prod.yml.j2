@@ -27,6 +27,8 @@ services:
       - 9001
     env_file:
       - ./.env.therapease
+    volumes:
+      - backup_data:/home/app/web/backups
     labels:
       - "traefik.http.routers.api.rule=Host(`{{therapease_api_domain_name}}`)" # need to be configured in DNS registrar
       - "traefik.http.routers.api.tls=true"
@@ -38,6 +40,20 @@ services:
     networks:
       - internal
       - web
+  storage:
+    image: docker.io/bitnami/minio:2023
+    env_file:
+      - ./.env.therapease
+    ports:
+      - '9000:9000'
+      - '9003:9001'
+    volumes:
+      - 'minio_data:/bitnami/minio/data'
+    labels:
+      - "traefik.http.routers.storage.rule=Host(`{{therapease_storage_domain_name}}`)" # need to be configured in DNS registrar
+      - "traefik.http.routers.storage.tls=true"
+      - "traefik.http.routers.storage.tls.certresolver=lets-encrypt"
+      - "traefik.port=80"
   db:
     container_name: therapease_db
     image: postgres:15.4-alpine3.18
@@ -58,6 +74,18 @@ services:
       - traefik.enable=false
 
 volumes:
+  backup_data:
+    driver: local
+    driver_opts:
+      o: 'bind'
+      device: /datadrive/backups
+      type: 'none'
+  minio_data:
+    driver: local
+    driver_opts:
+      o: 'bind'
+      device: /datadrive/storage
+      type: 'none'
   postgres_data:
     driver: local
     driver_opts:
