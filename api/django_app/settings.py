@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "oauth2_provider",
     "corsheaders",
     "guardian",
+    "dbbackup"
 ]
 
 CORE_APPS = [
@@ -270,3 +271,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "files")
 MEDIA_URL = "/uploaded/"
 
 APPEND_SLASH = False
+
+
+# DATABASE BACKUP SETTINGS
+DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
+DBBACKUP_STORAGE_OPTIONS = {"location": os.path.join(BASE_DIR, "backups")}

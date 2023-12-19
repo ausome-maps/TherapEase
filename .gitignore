@@ -1,3 +1,4 @@
+.DS_Store
 client/node_modules
 client/*.log*
 client/.nuxt
@@ -12,3 +13,4 @@ env
 .mypy_cache
 .pytest_cache
 api/*.log
+api/backups/*.psql.bin

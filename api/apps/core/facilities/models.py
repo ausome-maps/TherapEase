@@ -138,7 +138,7 @@ class FacilityProperties(models.Model):
     caters_to = ArrayField(
         models.CharField(max_length=100, blank=True, null=True), null=True, blank=True
     )
-    images = models.JSONField(blank=True, null=True)
+    images = models.JSONField(blank=True, null=True, default=list)
     accreditation = models.JSONField(default=get_default_accredition)
 
     class Meta:
@@ -147,13 +147,15 @@ class FacilityProperties(models.Model):
         ordering = ["-osm_id"]
 
 
+def default_coordinates():
+    return {"type": "Point", "coordinates": [0, 0]}    
 # Create your models here.
 class Facilities(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     properties = models.OneToOneField(
         FacilityProperties, on_delete=models.CASCADE, related_name="facilities"
     )
-    geometry = models.JSONField(null=True, blank=True)
+    geometry = models.JSONField(null=True, blank=True, default=default_coordinates)
 
     class Meta:
         verbose_name = "Facilities"

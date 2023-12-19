@@ -12,6 +12,13 @@
     mode: 0777
     recurse: yes
 
+- name: Creates storage data directory
+  file:
+    path: /datadrive/storage
+    state: directory
+    mode: 0777
+    recurse: yes
+
 - name: Creates traefik directory
   file:
     path: "{{ apps_directory }}/traefik"

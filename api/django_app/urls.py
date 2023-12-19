@@ -47,10 +47,11 @@ admin.site.site_title = "Therapease Admin Portal"
 admin.site.index_title = "Welcome to Therapease API"
 
 routers = routers.SimpleRouter(trailing_slash=False)
-routers.register(r"facilities", FacilitiesViewset, basename="facilities")
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     # path('accounts/', include('django.contrib.auth.urls')),
+    path("facilities/", include("apps.core.facilities.urls")),
     path("users/", include("apps.core.users.urls")),
     path("auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("auth/token/verify/", TokenVerifyView.as_view(), name="token_verify"),

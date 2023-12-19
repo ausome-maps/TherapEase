@@ -8,3 +8,6 @@ postgres:
   password: tpassword
   host: t_db_host
   dbname: tdb
+minio:
+  root: t_minio
+  password: tpasswordminio
