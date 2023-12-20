@@ -56,7 +56,7 @@ services:
       - "traefik.http.routers.storage.tls.certresolver=lets-encrypt"
       - "traefik.http.routers.storage.service=storage"
       - "traefik.http.services.storage.loadbalancer.server.port=9001"
-      - "traefik.http.routers.console.rule=Host(`api{{therapease_storage_domain_name}}`)" # need to be configured in DNS registrar
+      - "traefik.http.routers.console.rule=Host(`{{therapease_api_storage_domain_name}}`)" # need to be configured in DNS registrar
       - "traefik.http.routers.console.tls=true"
       - "traefik.http.routers.console.service=console"
       - "traefik.http.routers.console.tls.certresolver=lets-encrypt"
