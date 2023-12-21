@@ -18,6 +18,8 @@
         name: htop
 
   roles:
+    - role: base
+      become: true
     - role: therapease-deployment
       become: true
       when: deploy_therapease

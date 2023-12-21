@@ -2,10 +2,6 @@
 
 - hosts: all
   tasks:
-    - name: stopping traefik and inbound traffic
-      docker_container:
-        name: traefik
-        state: absent  
     - name: stopping therapease
       become: yes
       docker_compose:
