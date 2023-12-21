@@ -1,6 +1,20 @@
 version: '3.7'
 
 services:
+  traefik:
+    image: traefik:v2.10.4
+    container_name: traefik
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik/traefik.prod.toml:/traefik.toml
+      - ./traefik/traefik_dynamic.toml:/traefik_dynamic.toml
+      - ./traefik/acme.json:/acme.json
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - internal
+      - web
   frontend:
     container_name: therapease_frontend
     image: ghcr.io/ausome-maps/therapease-ui:latest

@@ -33,12 +33,6 @@
     mode: 0777
     recurse: yes
 
-- name: configure traefik toml
-  become: yes
-  template:
-    src: roles/therapease-deployment/templates/traefik.prod.toml
-    dest: "{{ apps_directory }}/traefik/traefik_dynamic.toml"
-
 - name: configure docker environment
   become: yes
   template:

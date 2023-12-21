@@ -1,9 +1,9 @@
-- name: starting traefik
-  become: yes
-  shell: |
-    cd {{ apps_directory}}/traefik
-    docker run -d -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/traefik.prod.toml:/traefik.toml -v $PWD/traefik_dynamic.toml:/traefik_dynamic.toml -v $PWD/acme.json:/acme.json -p 80:80 -p 443:443 --network web --name traefik traefik:v2.10.4
-  ignore_errors: yes
+# - name: starting traefik
+#   become: yes
+#   shell: |
+#     cd {{ apps_directory}}/traefik
+#     docker run -d -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/traefik.prod.toml:/traefik.toml -v $PWD/traefik_dynamic.toml:/traefik_dynamic.toml -v $PWD/acme.json:/acme.json -p 80:80 -p 443:443 --network web --name traefik traefik:v2.10.4
+#   ignore_errors: yes
 
 - name: stopping therapease
   become: yes
@@ -19,3 +19,4 @@
     project_src: "{{apps_directory}}"
     files: "docker-compose.therapease.yml"
     state: present
+  ignore_errors: yes
