@@ -33,7 +33,7 @@ class FacilitiesViewset(LoggingMixin, viewsets.ModelViewSet):
     @action(detail=False, methods=["get", "post"], name="search")
     def search(self, request):
         text_search = request.data.get("q", "*")
-        start_from = int(request.data.get("start_from", 0))
+        start_from = int(request.data.get("from", 0))
         size = int(request.data.get("size", 50))
         if "id:" in text_search:
             text_search = text_search.replace("id:", "")
