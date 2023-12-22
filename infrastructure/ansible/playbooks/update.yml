@@ -1,0 +1,6 @@
+---
+- hosts: all
+  roles:
+    - role: therapease-deployment
+      become: true
+      when: deploy_therapease
