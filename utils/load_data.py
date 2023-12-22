@@ -1,7 +1,7 @@
 """
-This the loader script for the therapy centers data.
+The loader script for the therapy centers data.
 Requirements
-  - python requests
+  - requests
 Usage
   - replace the data_path variable with the location of the therapy_centers
   - python load_data.py

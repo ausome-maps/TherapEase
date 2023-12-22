@@ -1,16 +1,29 @@
+"""
+The loader script for uploading images to a minio bucket.
+Requirements
+  - minio
+Usage
+  - ensure that the following are available:
+    - MINIO: ACCESS_KEY, SECRET_KEY, MINIO_DOMAIN
+    - FILES: LOCAL_IMG_DIR
+      - the images should be in the format of /path-to-image-dir/folder-name/filename
+"""
+
 from minio import Minio
 from dotenv import load_dotenv
 import os
 import json
 
+load_dotenv()
 
 LOCAL_IMG_DIR = os.environ.get('LOCAL_IMG_DIR', 'images')
 
 ACCESS_KEY = os.environ.get('ACCESS_KEY')
 SECRET_KEY = os.environ.get('SECRET_KEY')
-MINIO_API_HOST = "http://localhost:9000" # replace with host of minio
+MINIO_DOMAIN = os.environ.get('MINIO_DOMAIN', "localhost:9000")
+MINIO_API_HOST = f"http://{MINIO_DOMAIN}"
 MINIO_CLIENT = Minio(
-    "localhost:9000", # replace with host of minio
+    MINIO_DOMAIN,
     access_key=ACCESS_KEY,
     secret_key=SECRET_KEY,
     secure=False # set to true
@@ -18,7 +31,6 @@ MINIO_CLIENT = Minio(
 
 def create_bucket(bucket_name):
     bucket_name = bucket_name.replace("/", "")
-    print("bucket_name", bucket_name)
     found = MINIO_CLIENT.bucket_exists(bucket_name)
     if not found:
         MINIO_CLIENT.make_bucket(bucket_name)

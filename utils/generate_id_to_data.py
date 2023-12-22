@@ -1,7 +1,18 @@
+"""
+This generates the id of the data in uuid format.
+
+Usage
+  - replace data path variable with the location of the json contianing the datasets.
+  - python generate_id_to_data.py
+
+Output
+  - the original json with the added ID in uuid format.
+"""
+
 import uuid
 import json
 
-data = "/Users/lkp/Downloads/FINAL_PASP_PAOT.json"
+data = "<path-to-json>.json"
 
 main_dict = {"type": "FeatureCollection", "name": "Ausome Maps", "features": []}
 
@@ -17,5 +28,5 @@ with open(data, "r") as facilities_data_file:
 
 main_dict["features"] = data_with_id
 
-with open("FINAL_PASP_PAOT.json", "w") as output_file:
+with open(f"{data}_with_id.json", "w") as output_file:
     json.dump(main_dict, output_file)
