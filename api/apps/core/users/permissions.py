@@ -23,7 +23,7 @@ class OrganizationPermissions(permissions.BasePermission):
         if view.action == "retrieve":
             return True
         elif view.action in ["update", "partial_update"]:
-            if OrganizationRole.objects.filter(organization=obj, user=request.user).exists():
+            if OrganizationRole.objects.filter(organization=obj, user=request.user).exists() or request.user.is_staff:
                 return True
             return False
         else:
