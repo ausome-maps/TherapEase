@@ -69,18 +69,31 @@ class Organization(models.Model):
     def add_facility(self, facility):
         return self.facilities.add(facility)
     
-        
+
+# this will be the list of all roles        
+class Roles(models.Model):
+    ROLE_TYPES = (
+        ('org', 'Organization'),
+        ('family', 'Family'),
+    )
+
+    name = models.CharField(default="member", max_length=50)
+    role_type = models.CharField(default="org", max_length=20, choices=ROLE_TYPES)
+    # the permissions here are focused on the management of organization
+    # if this is empty default to readonly mode
+    permissions = models.ManyToManyField(Permission)
+    
+    class Meta:
+        verbose_name_plural = "Roles"
+    
         
 # Organization Roles can only be configured by TherapEase administrators
 class OrganizationRole(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    role = models.CharField(default="member", max_length=50)
     create_date = models.DateTimeField(auto_now_add=True)
-    # the permissions here are focused on the management of organization
-    # if this is empty default to readonly mode
-    permission = models.ManyToManyField(Permission)
+    role = models.ForeignKey(Roles, on_delete=models.CASCADE)
     
     class Meta:
         verbose_name_plural = "OrganizationRoles"

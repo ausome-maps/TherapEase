@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Profile, Organization, OrganizationRole
+from .models import Profile, Organization, OrganizationRole, Roles
 
 
 # Register your models here.
@@ -37,6 +37,14 @@ class ProfileAdmin(admin.ModelAdmin):
         return obj.user.is_active
 
 
+class RoleAdmin(admin.ModelAdmin):
+    filter_horizontal = ("permissions",)
+    list_display = (
+        "id",
+        "name",
+        "role_type"
+    )
+
 class OrganizationAdmin(admin.ModelAdmin):
     filter_horizontal =("members", "facilities")
     list_display = (
@@ -57,5 +65,6 @@ class OrganizationRoleAdmin(admin.ModelAdmin):
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Profile, ProfileAdmin)
+admin.site.register(Roles, RoleAdmin)
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(OrganizationRole, OrganizationRoleAdmin)

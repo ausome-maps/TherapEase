@@ -14,7 +14,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         write_only=True, required=True, validators=[validate_password]
     )
     password2 = serializers.CharField(write_only=True, required=True)
-    organization = serializers.CharField(write_only=True, required=False)
 
     class Meta:
         model = User
@@ -25,7 +24,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             "email",
             "first_name",
             "last_name",
-            "organization",
         ]
         extra_kwargs = {
             "first_name": {"required": True},
@@ -51,19 +49,14 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data["password"])
         user.save()
         profile = Profile.objects.get(user=user)
-        profile.organization = validated_data["organization"]
         profile.save()
         return user
 
 
 class UserSerializer(serializers.ModelSerializer):
-    organization = serializers.SerializerMethodField(method_name="get_organization")
     login_count = serializers.SerializerMethodField(method_name="get_login_count")
     account_expiry = serializers.SerializerMethodField(method_name="get_account_expiry")
     active = serializers.BooleanField(source="is_active")
-
-    def get_organization(self, obj):
-        return self.context["request"].user.profile.organization
 
     def get_login_count(self, obj):
         return self.context["request"].user.profile.login_count
@@ -80,7 +73,6 @@ class UserSerializer(serializers.ModelSerializer):
             "email",
             "is_staff",
             "active",
-            "organization",
             "login_count",
             "account_expiry",
         ]
@@ -91,7 +83,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        exclude = ["organization", "login_count", "account_expiry"]
+        exclude = [ "login_count", "account_expiry"]
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
