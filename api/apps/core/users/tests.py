@@ -93,15 +93,27 @@ class UserAppTest(APITestCase):
         self.assertFalse(self.organization.is_member(self.user))
 
     def test_organization_permissions(self):
-        org_data = {"name": "updated organization name"}
+        updated_org_data = {"name": "updated organization name"}
         org_url = f"/users/organization/{self.organization.id}/"
-        response = self.client.put(org_url, format="json", data=org_data)
+        response = self.client.put(org_url, format="json", data=updated_org_data)
         self.assertEqual(response.status_code, 200)
         org = Organization.objects.get(id=self.organization.id)
-        self.assertEqual(org.name, org_data["name"])
+        self.assertEqual(org.name, updated_org_data["name"])
 
         # the result of this should be 403 since user 2 is not a member of the organization 1
         org_data_2 = {"name": "updated organization name 2"}
         org_url = f"/users/organization/{self.organization.id}/"
         response = self.client_2.put(org_url, format="json", data=org_data_2)
         self.assertEqual(response.status_code, 403)
+
+        # test org creation
+        create_org_url = "/users/organization/"
+        created_org_data = {
+            "name": "created organization name",
+            "other_metadata": {"contact_nos": "0912345678"},
+        }
+        response = self.client.post(
+            create_org_url, format="json", data=created_org_data
+        )
+        org_id = response.json()["data"]["id"]
+        self.assertEqual(str(Organization.objects.get(id=org_id).id), org_id)
