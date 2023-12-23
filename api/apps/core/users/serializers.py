@@ -92,3 +92,4 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Organization
+        fields = '__all__' 

@@ -86,15 +86,23 @@ class Roles(models.Model):
     class Meta:
         verbose_name_plural = "Roles"
     
+    def __str__(self):
+        return self.name
+    
         
 # Organization Roles can only be configured by TherapEase administrators
 class OrganizationRole(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    create_date = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_org_role")
     role = models.ForeignKey(Roles, on_delete=models.CASCADE)
-    
+    create_date = models.DateTimeField(auto_now_add=True)
+        
     class Meta:
         verbose_name_plural = "OrganizationRoles"
         ordering = ["-create_date"]
+
+    def save(self, *args, **kwargs):
+        if self.organization.is_member(self.user):
+            super(OrganizationRole, self).save(*args, **kwargs)
+        return False
