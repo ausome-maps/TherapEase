@@ -96,6 +96,7 @@ class OrganizationRole(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_org_role")
     role = models.ForeignKey(Roles, on_delete=models.CASCADE)
+    status= models.CharField(max_length=10, default="active")
     create_date = models.DateTimeField(auto_now_add=True)
         
     class Meta:

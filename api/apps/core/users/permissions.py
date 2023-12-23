@@ -3,6 +3,8 @@ from rest_framework import permissions
 from .models import OrganizationRole
 
 class OrganizationPermissions(permissions.BasePermission):
+
+    # can they access the module?
     def has_permission(self, request, view):
         if view.action in ["list", "retrieve", "search"]:
             return True
@@ -11,11 +13,12 @@ class OrganizationPermissions(permissions.BasePermission):
             "partial_update",
             "destroy",
             "create",
-        ]:
+        ]: 
             return request.user.user_org_role.filter(role__permissions__codename="manage_organization").exists() or request.user.is_staff
         else:
             return False
 
+    # can they edit the data?
     def has_object_permission(self, request, view, obj):
         if view.action == "retrieve":
             return True

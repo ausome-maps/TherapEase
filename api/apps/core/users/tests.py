@@ -55,9 +55,23 @@ class UserAppTest(APITestCase):
             user=self.user,
             role=self.role
         )
-        # create another user but don't assign to org
+        # create another user and organization
         self.user_2 = User.objects.create(**self.user_data_2)
-
+        self.client_2 = APIClient()
+        token_2 = Token.objects.get(user__email=self.user_data_2["username"])
+        self.client_2.credentials(HTTP_AUTHORIZATION=f"Token {token_2}")
+        self.organization_2 = Organization.objects.create(
+            name="Created Organization 2",
+            other_metadata={"contact_nos": "0912345678"}
+        )
+        self.organization_2.add_member(self.user_2)
+        self.org_role_2 = OrganizationRole.objects.create(
+            organization=self.organization_2,
+            user=self.user_2,
+            role=self.role
+        )
+        
+        
     def test_user_register_serializer(self):
         u = User.objects.filter().count()
         p = Profile.objects.filter().count()
@@ -79,7 +93,7 @@ class UserAppTest(APITestCase):
     
     def test_organization_model_rel(self):
         org_count = Organization.objects.filter().count()
-        self.assertEqual(org_count, 1)
+        self.assertEqual(org_count, 2)
         self.assertTrue(self.organization.is_member(self.user))
         # test is_member for non member
         self.assertFalse(self.organization.is_member(self.user_2))
@@ -92,6 +106,11 @@ class UserAppTest(APITestCase):
         org_url = f"/users/organization/{self.organization.id}/"
         response = self.client.put(org_url, format="json", data=org_data)
         self.assertEqual(response.status_code, 200)
-        org = Organization.objects.all()[0]
+        org = Organization.objects.get(id=self.organization.id)
         self.assertEqual(org.name, org_data["name"])
-        pass
+
+        # the result of this should be 403 since user 2 is not a member of the organization 1
+        org_data_2 = {"name": "updated organization name 2"}
+        org_url = f"/users/organization/{self.organization.id}/"
+        response = self.client_2.put(org_url, format="json", data=org_data_2)
+        self.assertEqual(response.status_code, 403)
