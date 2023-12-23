@@ -6,4 +6,4 @@ class FacilitiesConfig(AppConfig):
     name = "apps.core.facilities"
 
     def ready(self):
-        import apps.core.facilities.signals
+        pass

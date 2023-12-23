@@ -4,15 +4,14 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0007_remove_organizationrole_permission_roles_and_more'),
+        ("users", "0007_remove_organizationrole_permission_roles_and_more"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='roles',
-            old_name='role',
-            new_name='name',
+            model_name="roles",
+            old_name="role",
+            new_name="name",
         ),
     ]

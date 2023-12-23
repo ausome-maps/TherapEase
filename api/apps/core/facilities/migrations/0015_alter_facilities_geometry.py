@@ -5,15 +5,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('facilities', '0014_alter_facilityproperties_images'),
+        ("facilities", "0014_alter_facilityproperties_images"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='facilities',
-            name='geometry',
-            field=models.JSONField(blank=True, default=apps.core.facilities.models.default_coordinates, null=True),
+            model_name="facilities",
+            name="geometry",
+            field=models.JSONField(
+                blank=True,
+                default=apps.core.facilities.models.default_coordinates,
+                null=True,
+            ),
         ),
     ]

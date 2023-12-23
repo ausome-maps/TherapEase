@@ -16,18 +16,19 @@ import json
 
 load_dotenv()
 
-LOCAL_IMG_DIR = os.environ.get('LOCAL_IMG_DIR', 'images')
+LOCAL_IMG_DIR = os.environ.get("LOCAL_IMG_DIR", "images")
 
-ACCESS_KEY = os.environ.get('ACCESS_KEY')
-SECRET_KEY = os.environ.get('SECRET_KEY')
-MINIO_DOMAIN = os.environ.get('MINIO_DOMAIN', "localhost:9000")
+ACCESS_KEY = os.environ.get("ACCESS_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY")
+MINIO_DOMAIN = os.environ.get("MINIO_DOMAIN", "localhost:9000")
 MINIO_API_HOST = f"http://{MINIO_DOMAIN}"
 MINIO_CLIENT = Minio(
     MINIO_DOMAIN,
     access_key=ACCESS_KEY,
     secret_key=SECRET_KEY,
-    secure=False # set to true
+    secure=False,  # set to true
 )
+
 
 def create_bucket(bucket_name):
     bucket_name = bucket_name.replace("/", "")
@@ -56,18 +57,21 @@ def create_bucket(bucket_name):
     }
     MINIO_CLIENT.set_bucket_policy(bucket_name, json.dumps(bucket_policy))
 
+
 def upload_file(orig_path):
     bucket = orig_path.split("/")[1]
     filename = orig_path.split("/")[-1]
-    # print(bucket, filename)    
+    # print(bucket, filename)
     MINIO_CLIENT.fput_object(
-        bucket, filename, orig_path,
+        bucket,
+        filename,
+        orig_path,
     )
+
 
 if __name__ == "__main__":
     for root, dirs, files in os.walk(LOCAL_IMG_DIR):
-        for dir in dirs: 
+        for dir in dirs:
             create_bucket(dir)
         for file in files:
             upload_file(os.path.join(root, file))
-

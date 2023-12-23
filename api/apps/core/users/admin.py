@@ -39,28 +39,18 @@ class ProfileAdmin(admin.ModelAdmin):
 
 class RoleAdmin(admin.ModelAdmin):
     filter_horizontal = ("permissions",)
-    list_display = (
-        "id",
-        "name",
-        "role_type"
-    )
+    list_display = ("id", "name", "role_type")
+
 
 class OrganizationAdmin(admin.ModelAdmin):
-    filter_horizontal =("members", "facilities")
-    list_display = (
-        "id",
-        "name",
-        "update_date"
-    )
+    filter_horizontal = ("members", "facilities")
+    list_display = ("id", "name", "update_date")
+
 
 class OrganizationRoleAdmin(admin.ModelAdmin):
-    raw_id_fields=("user", "organization")
-    list_display = (
-        "id",
-        "organization",
-        "user",
-        "role"
-    )
+    raw_id_fields = ("user", "organization")
+    list_display = ("id", "organization", "user", "role")
+
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)

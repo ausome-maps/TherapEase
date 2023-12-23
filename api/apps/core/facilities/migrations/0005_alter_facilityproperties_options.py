@@ -4,14 +4,17 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('facilities', '0004_alter_facilityproperties_options_and_more'),
+        ("facilities", "0004_alter_facilityproperties_options_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='facilityproperties',
-            options={'ordering': ['-osm_id'], 'verbose_name': 'Facility Properties', 'verbose_name_plural': 'Facility Properties'},
+            name="facilityproperties",
+            options={
+                "ordering": ["-osm_id"],
+                "verbose_name": "Facility Properties",
+                "verbose_name_plural": "Facility Properties",
+            },
         ),
     ]

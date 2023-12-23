@@ -7,5 +7,3 @@ ENV PATH /code/node_modules/.bin:$PATH
 
 COPY . /code/app/
 WORKDIR /code/app/
-
-

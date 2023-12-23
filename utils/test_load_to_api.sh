@@ -1,6 +1,6 @@
 curl -X PUT -H 'content-type: application/json' http://localhost:9001/facilities -d '
  {
-            "id": 250510750, 
+            "id": 250510750,
             "type": "Feature",
             "geometry": {
                 "type": "Point",

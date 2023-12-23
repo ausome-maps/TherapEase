@@ -10,9 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
-from distutils import util
 from pathlib import Path
-from pickle import FALSE
 
 from .log_formatter import CustomisedJSONFormatter
 
@@ -31,7 +29,9 @@ DEBUG = int(os.environ.get("DEBUG", 1))
 ALLOWED_HOSTS = os.environ.get(
     "DJANGO_ALLOWED_HOSTS", "localhost 127.0.0.1 [::1] *"
 ).split(" ")
-CSRF_TRUSTED_ORIGINS = [os.environ.get("TRUSTED_DOMAINS", "http://127.0.0.1"),]
+CSRF_TRUSTED_ORIGINS = [
+    os.environ.get("TRUSTED_DOMAINS", "http://127.0.0.1"),
+]
 
 
 # Application definition
@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     "oauth2_provider",
     "corsheaders",
     "guardian",
-    "dbbackup"
+    "dbbackup",
 ]
 
 CORE_APPS = [

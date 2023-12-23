@@ -5,20 +5,25 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('facilities', '0003_alter_facilityproperties_caters_to'),
+        ("facilities", "0003_alter_facilityproperties_caters_to"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='facilityproperties',
-            options={'ordering': ['-date_updated'], 'verbose_name': 'Facility Properties', 'verbose_name_plural': 'Facility Properties'},
+            name="facilityproperties",
+            options={
+                "ordering": ["-date_updated"],
+                "verbose_name": "Facility Properties",
+                "verbose_name_plural": "Facility Properties",
+            },
         ),
         migrations.AddField(
-            model_name='facilityproperties',
-            name='date_updated',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            model_name="facilityproperties",
+            name="date_updated",
+            field=models.DateTimeField(
+                auto_now_add=True, default=django.utils.timezone.now
+            ),
             preserve_default=False,
         ),
     ]

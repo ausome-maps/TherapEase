@@ -48,8 +48,8 @@
     </div>
   </div>
 </template>
-  
-  
+
+
 <script>
 export default {
   props: {
@@ -88,7 +88,7 @@ export default {
 
 }
 </script>
-  
+
 <style>
 details>summary {
 
@@ -119,4 +119,3 @@ details[open] summary:after {
   margin: 5px 5px 3px 10px;
 }
 </style>
-  

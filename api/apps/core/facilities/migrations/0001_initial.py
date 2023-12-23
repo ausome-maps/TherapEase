@@ -8,50 +8,112 @@ import uuid
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='FacilityProperties',
+            name="FacilityProperties",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('info_src_name', models.CharField(blank=True, max_length=100, null=True)),
-                ('info_src_designation', models.CharField(blank=True, max_length=100, null=True)),
-                ('placename', models.CharField(blank=True, max_length=250, null=True)),
-                ('address', models.TextField(blank=True, null=True)),
-                ('region', models.CharField(blank=True, max_length=100, null=True)),
-                ('city', models.CharField(blank=True, max_length=100, null=True)),
-                ('landmarks_desc', models.TextField(blank=True, null=True)),
-                ('contact_number', models.CharField(blank=True, max_length=100, null=True)),
-                ('alt_contact_number', models.CharField(blank=True, max_length=100, null=True)),
-                ('email_address', models.CharField(blank=True, max_length=100, null=True)),
-                ('website', models.CharField(blank=True, max_length=100, null=True)),
-                ('social_media', models.JSONField(blank=True, null=True)),
-                ('services_offered', models.JSONField(default=apps.core.facilities.models.get_default_services_offered)),
-                ('other_services', models.JSONField(blank=True, null=True)),
-                ('caters_to', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=100, null=True), size=None)),
-                ('images', django.contrib.postgres.fields.ArrayField(base_field=models.JSONField(blank=True, null=True), blank=True, null=True, size=None)),
-                ('accreditation', models.JSONField(default=apps.core.facilities.models.get_default_accredition)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "info_src_name",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                (
+                    "info_src_designation",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                ("placename", models.CharField(blank=True, max_length=250, null=True)),
+                ("address", models.TextField(blank=True, null=True)),
+                ("region", models.CharField(blank=True, max_length=100, null=True)),
+                ("city", models.CharField(blank=True, max_length=100, null=True)),
+                ("landmarks_desc", models.TextField(blank=True, null=True)),
+                (
+                    "contact_number",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                (
+                    "alt_contact_number",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                (
+                    "email_address",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                ("website", models.CharField(blank=True, max_length=100, null=True)),
+                ("social_media", models.JSONField(blank=True, null=True)),
+                (
+                    "services_offered",
+                    models.JSONField(
+                        default=apps.core.facilities.models.get_default_services_offered
+                    ),
+                ),
+                ("other_services", models.JSONField(blank=True, null=True)),
+                (
+                    "caters_to",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.CharField(
+                            blank=True, max_length=100, null=True
+                        ),
+                        size=None,
+                    ),
+                ),
+                (
+                    "images",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.JSONField(blank=True, null=True),
+                        blank=True,
+                        null=True,
+                        size=None,
+                    ),
+                ),
+                (
+                    "accreditation",
+                    models.JSONField(
+                        default=apps.core.facilities.models.get_default_accredition
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Facility Properties',
-                'verbose_name_plural': 'Facility Properties',
+                "verbose_name": "Facility Properties",
+                "verbose_name_plural": "Facility Properties",
             },
         ),
         migrations.CreateModel(
-            name='Facilities',
+            name="Facilities",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('geometry', models.JSONField(blank=True, null=True)),
-                ('properties', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='facilities', to='facilities.facilityproperties')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("geometry", models.JSONField(blank=True, null=True)),
+                (
+                    "properties",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="facilities",
+                        to="facilities.facilityproperties",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Facilities',
-                'verbose_name_plural': 'Facilities',
+                "verbose_name": "Facilities",
+                "verbose_name_plural": "Facilities",
             },
         ),
     ]

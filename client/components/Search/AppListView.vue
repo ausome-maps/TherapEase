@@ -9,24 +9,24 @@
             </div>
         </div>
     </template>
-    
+
     <style scoped>
     .transition {
         transition: all .2s ease-in-out;
     }
-    
+
     .hover\:scale-110:hover {
         transform: scale(1.02);
     }
-    
-    
+
+
     .mb-2 {
         margin-bottom: 0.5rem;
     }
     </style>
-      
+
     <script>
-    
+
     export default {
         props: {
             facilities: {
@@ -36,4 +36,3 @@
         },
     };
     </script>
-    

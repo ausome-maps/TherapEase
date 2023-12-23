@@ -140,7 +140,7 @@ class FacilityProperties(models.Model):
     )
     images = models.JSONField(blank=True, null=True, default=list)
     accreditation = models.JSONField(default=get_default_accredition)
-    status= models.CharField(max_length=10, default="active")
+    status = models.CharField(max_length=10, default="active")
 
     class Meta:
         verbose_name = "Facility Properties"
@@ -150,6 +150,7 @@ class FacilityProperties(models.Model):
 
 def default_coordinates():
     return {"type": "Point", "coordinates": [0, 0]}
+
 
 # Create your models here.
 class Facilities(models.Model):
@@ -162,7 +163,6 @@ class Facilities(models.Model):
     class Meta:
         verbose_name = "Facilities"
         verbose_name_plural = "Facilities"
-    
+
     def __str__(self):
         return str(self.properties.placename)
-    

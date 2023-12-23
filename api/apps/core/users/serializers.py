@@ -83,7 +83,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        exclude = [ "login_count", "account_expiry"]
+        exclude = ["login_count", "account_expiry"]
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
@@ -92,4 +92,4 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Organization
-        fields = '__all__' 
+        fields = "__all__"

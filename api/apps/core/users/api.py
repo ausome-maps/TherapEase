@@ -6,7 +6,7 @@ from .serializers import (
     RegisterSerializer,
     UserSerializer,
     ProfileSerializer,
-    OrganizationSerializer
+    OrganizationSerializer,
 )
 from .permissions import OrganizationPermissions
 

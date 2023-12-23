@@ -18,7 +18,7 @@ python manage.py migrate
   python manage.py shell -c "from django.contrib.auth.models import User;
 if not User.objects.filter(email='admin@sample.com').exists(): User.objects.create_superuser('admin@sample.com', 'admin@sample.com', 'adminpassword012')" &>/dev/null
   echo "user admin@sample.com created with password adminpassword012"
-} || { 
+} || {
   echo "user admin@sample.com exists!"
 }
 exec "$@"

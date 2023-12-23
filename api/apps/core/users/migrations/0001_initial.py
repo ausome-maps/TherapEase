@@ -8,7 +8,6 @@ import uuid
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -17,19 +16,41 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Profile',
+            name="Profile",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('organization', models.CharField(default='My Organization', max_length=999)),
-                ('create_date', models.DateTimeField(auto_now_add=True)),
-                ('update_date', models.DateTimeField(auto_now=True)),
-                ('login_count', models.IntegerField(default=0)),
-                ('account_expiry', models.DateTimeField(default=apps.core.users.models.get_profile_expiry)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "organization",
+                    models.CharField(default="My Organization", max_length=999),
+                ),
+                ("create_date", models.DateTimeField(auto_now_add=True)),
+                ("update_date", models.DateTimeField(auto_now=True)),
+                ("login_count", models.IntegerField(default=0)),
+                (
+                    "account_expiry",
+                    models.DateTimeField(
+                        default=apps.core.users.models.get_profile_expiry
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Profiles',
-                'ordering': ['-create_date'],
+                "verbose_name_plural": "Profiles",
+                "ordering": ["-create_date"],
             },
         ),
     ]

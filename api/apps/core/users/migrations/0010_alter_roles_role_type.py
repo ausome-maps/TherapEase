@@ -4,15 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0009_rename_role_types_roles_role_type'),
+        ("users", "0009_rename_role_types_roles_role_type"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='roles',
-            name='role_type',
-            field=models.CharField(choices=[('org', 'Organization'), ('family', 'Family')], default='org', max_length=20),
+            model_name="roles",
+            name="role_type",
+            field=models.CharField(
+                choices=[("org", "Organization"), ("family", "Family")],
+                default="org",
+                max_length=20,
+            ),
         ),
     ]

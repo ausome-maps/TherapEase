@@ -26,7 +26,7 @@ services:
     depends_on:
       - api
     labels:
-      - traefik.http.routers.client.rule=Host(`{{therapease_ui_domain_name}}`) 
+      - traefik.http.routers.client.rule=Host(`{{therapease_ui_domain_name}}`)
       - traefik.http.routers.client.tls=true
       - traefik.http.routers.client.tls.certresolver=lets-encrypt
       - traefik.port=80

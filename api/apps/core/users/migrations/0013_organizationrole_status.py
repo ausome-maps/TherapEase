@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0012_alter_organizationrole_user'),
+        ("users", "0012_alter_organizationrole_user"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='organizationrole',
-            name='status',
-            field=models.CharField(default='active', max_length=10),
+            model_name="organizationrole",
+            name="status",
+            field=models.CharField(default="active", max_length=10),
         ),
     ]

@@ -7,32 +7,59 @@ import uuid
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('users', '0004_alter_profile_user'),
+        ("users", "0004_alter_profile_user"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Organization',
+            name="Organization",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('create_date', models.DateTimeField(auto_now_add=True)),
-                ('update_date', models.DateTimeField(auto_now=True)),
-                ('members', models.ManyToManyField(to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("create_date", models.DateTimeField(auto_now_add=True)),
+                ("update_date", models.DateTimeField(auto_now=True)),
+                ("members", models.ManyToManyField(to=settings.AUTH_USER_MODEL)),
             ],
             options={
-                'verbose_name_plural': 'Profiles',
-                'ordering': ['-create_date'],
+                "verbose_name_plural": "Profiles",
+                "ordering": ["-create_date"],
             },
         ),
         migrations.CreateModel(
-            name='OrganizationRoles',
+            name="OrganizationRoles",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('organization', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.organization')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "organization",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="users.organization",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

@@ -7,7 +7,7 @@
   </svg></span> <span v-if="!!facilityDetails.city && !!facilityDetails.province" class="text-xl"> {{ facilityDetails.city }}, {{facilityDetails.province}}</span><span v-if="facilityDetails.city=='' || !!facilityDetails.province" class="text-xl">{{facilityDetails.province}}</span>
 <span v-if="!!facilityDetails.city || facilityDetails.province==''" class="text-xl">{{facilityDetails.city}}</span>
       </div>
-     
+
       <AppAccBadge :accreditation="facilityDetails.accreditation"/>
     </div>
     <h1 class="text-4xl font-bold mb-4 text-red-400">
@@ -20,7 +20,7 @@
     <div class="border-t border-gray-300 my-4 mr-4"></div>
     <AppFeatures :services="filteredServices" :other_services="facilityDetails.other_services" label="Services" />
   </div>
-  
+
 </template>
 
 <style>
@@ -34,7 +34,7 @@
   }
 </style>
 
-  
+
   <script>
   export default {
     props: {

@@ -1,11 +1,9 @@
-from datetime import datetime
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import Permission
 from apps.core.users.models import User, Profile, Organization, OrganizationRole, Roles
 from apps.core.users.serializers import RegisterSerializer
-from .tasks import send_registration_email
 
 
 # Create your tests here.
@@ -34,7 +32,7 @@ class UserAppTest(APITestCase):
             role_type="org",
         )
         self.role.permissions.add(perm)
-        # create user 
+        # create user
         self.register_serializer = RegisterSerializer(data=self.user_data)
         self.register_serializer.is_valid()
         self.register_serializer.save()
@@ -45,15 +43,12 @@ class UserAppTest(APITestCase):
         # add user to created organization
         self.user = User.objects.get(email=self.user_data["email"])
         self.organization = Organization.objects.create(
-            name="Created Organization",
-            other_metadata={"contact_nos": "0912345678"}
+            name="Created Organization", other_metadata={"contact_nos": "0912345678"}
         )
         self.organization.add_member(self.user)
         # create organization role
         self.org_role = OrganizationRole.objects.create(
-            organization=self.organization,
-            user=self.user,
-            role=self.role
+            organization=self.organization, user=self.user, role=self.role
         )
         # create another user and organization
         self.user_2 = User.objects.create(**self.user_data_2)
@@ -61,17 +56,13 @@ class UserAppTest(APITestCase):
         token_2 = Token.objects.get(user__email=self.user_data_2["username"])
         self.client_2.credentials(HTTP_AUTHORIZATION=f"Token {token_2}")
         self.organization_2 = Organization.objects.create(
-            name="Created Organization 2",
-            other_metadata={"contact_nos": "0912345678"}
+            name="Created Organization 2", other_metadata={"contact_nos": "0912345678"}
         )
         self.organization_2.add_member(self.user_2)
         self.org_role_2 = OrganizationRole.objects.create(
-            organization=self.organization_2,
-            user=self.user_2,
-            role=self.role
+            organization=self.organization_2, user=self.user_2, role=self.role
         )
-        
-        
+
     def test_user_register_serializer(self):
         u = User.objects.filter().count()
         p = Profile.objects.filter().count()
@@ -90,7 +81,7 @@ class UserAppTest(APITestCase):
         profile_url = "/users/api/profile/"
         response = self.client.get(profile_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-    
+
     def test_organization_model_rel(self):
         org_count = Organization.objects.filter().count()
         self.assertEqual(org_count, 2)

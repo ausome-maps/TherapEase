@@ -1,7 +1,6 @@
-from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from .api import UserViewset,  ProfileViewset, OrganizationViewset
+from .api import UserViewset, ProfileViewset, OrganizationViewset
 
 router = DefaultRouter()
 router.register(r"api/list", UserViewset, basename="user-list")

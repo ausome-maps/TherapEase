@@ -56,14 +56,14 @@ export default {
     position: relative;
     outline: none;
     padding: 5px;
-    
+
 }
 
 .checkbox-input:checked {
     background-color: #000;
     border-color: #333;
     ;
-    
+
 }
 
 .checkbox-input:checked::after {
@@ -77,7 +77,7 @@ export default {
     transform: rotate(45deg);
     top: 10%;
     left: 35%;
-    
+
 }
 
 .checkbox-label {

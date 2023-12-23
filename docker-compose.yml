@@ -28,7 +28,7 @@ services:
       - "9001:8000"
     env_file:
       - ./.env.sample
-  db: 
+  db:
     container_name: therapease_db
     image: postgres:15.4-alpine3.18
     volumes:
@@ -46,7 +46,7 @@ services:
       - '9000:9000'
       - '9003:9001'
     volumes:
-      - 'minio_data:/bitnami/minio/data'  
+      - 'minio_data:/bitnami/minio/data'
   # geocoding:
   #   container_name: therapease_geocoding
   #   image: mediagis/nominatim:4.2

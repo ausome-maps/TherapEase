@@ -95,8 +95,8 @@ export default {
               this.boundsLocal = fallbackBounds;
               this.zoom = 9;
             }
-              
-            
+
+
           }, 3000);
         })
       })

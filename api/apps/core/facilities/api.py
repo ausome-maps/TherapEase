@@ -1,16 +1,22 @@
-from rest_framework import permissions, viewsets
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework_tracking.mixins import LoggingMixin
 from django.http import JsonResponse
 from django.contrib.postgres.search import SearchVector
 from .permissions import FacilitiesPermissions
-from .serializers import Facilities, FacilitiesSerializer, FacilityProperties, FacilitiesPropertiesSerializer
+from .serializers import (
+    Facilities,
+    FacilitiesSerializer,
+    FacilityProperties,
+    FacilitiesPropertiesSerializer,
+)
 
 SEARCH_RESPONSE_TEMPLATE = {
     "type": "FeatureCollection",
     "name": "Ausome Maps - Therapy Centers",
     "features": [],
 }
+
 
 class FacilitiesPropertiesViewset(LoggingMixin, viewsets.ModelViewSet):
     queryset = FacilityProperties.objects.exclude(status="inactive")
@@ -20,6 +26,7 @@ class FacilitiesPropertiesViewset(LoggingMixin, viewsets.ModelViewSet):
     def should_log(self, request, response):
         """Log only errors"""
         return response.status_code >= 400
+
 
 class FacilitiesViewset(LoggingMixin, viewsets.ModelViewSet):
     queryset = Facilities.objects.exclude(properties__status="inactive")
@@ -47,7 +54,9 @@ class FacilitiesViewset(LoggingMixin, viewsets.ModelViewSet):
             )
         )
         if text_search != "*":
-            results = results.filter(search=text_search).exclude(properties__status="inactive")
+            results = results.filter(search=text_search).exclude(
+                properties__status="inactive"
+            )
         else:
             results = results.exclude(properties__status="inactive")
         SEARCH_RESPONSE_TEMPLATE["total"] = results.count()
