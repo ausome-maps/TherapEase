@@ -160,3 +160,7 @@ class Facilities(models.Model):
     class Meta:
         verbose_name = "Facilities"
         verbose_name_plural = "Facilities"
+    
+    def __str__(self):
+        return str(self.properties.placename)
+    

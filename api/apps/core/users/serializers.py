@@ -2,7 +2,8 @@ from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from .models import Profile
+from apps.core.facilities.serializers import FacilitiesSerializer
+from .models import Profile, Organization
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -91,3 +92,11 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         exclude = ["organization", "login_count", "account_expiry"]
+
+
+class OrganizationSerializer(serializers.ModelSerializer):
+    members = UserSerializer(read_only=True, many=True)
+    facilities = FacilitiesSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Organization

@@ -46,3 +46,4 @@ class UserAppTest(APITestCase):
             self.data["first_name"], datetime.now(), self.data["email"]
         )
         self.assertEqual(email, self.data["email"])
+    
