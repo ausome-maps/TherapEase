@@ -15,3 +15,4 @@ env
 api/*.log
 api/backups/*.psql.bin
 *.bkp
+.ruff_cache
