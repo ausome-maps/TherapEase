@@ -90,7 +90,7 @@
     </div>
   </div>
 </template>
-  
+
 <script>
 export default {
   data() {
@@ -124,8 +124,7 @@ export default {
   },
 }
 </script>
-  
+
 <style scoped>
 /* Add your custom styles here if needed */
 </style>
-  

@@ -8,11 +8,11 @@ This data model describes a single feature in Ausome Maps, representing a therap
 2. **geometry**
 
    - **type (Point)**
-   
+
       The type of the feature, which is "Point" in this case, indicating that the data represents a geographic point location.
 
    - **coordinates (LatLng)**
-  
+
      Contains the geographical coordinates (longitude, latitude, and altitude) of the therapy center, represented as a "Point" type.
 
      ```
@@ -86,7 +86,7 @@ This data model describes a single feature in Ausome Maps, representing a therap
      ```
 
    - **placename (String)**
-     Name of the therapy center or official business name as registered. 
+     Name of the therapy center or official business name as registered.
      ```
       "properties": {
                  ...
@@ -94,7 +94,7 @@ This data model describes a single feature in Ausome Maps, representing a therap
                  ...
      }
      ```
-     
+
    - **desc_long (String)**
      A 2-3 sentence paragraph writeup about the therapy center
      ```
@@ -202,7 +202,7 @@ This data model describes a single feature in Ausome Maps, representing a therap
                  ...
      }
      ```
-     
+
    - **alt_ email_address (String)**
      Alternative email address of the therapy center.
      ```
@@ -227,7 +227,7 @@ This data model describes a single feature in Ausome Maps, representing a therap
      Social media accounts available/owned by the therapy center/school.
 
         *facebook* - Indicates if the therapy center has a presence on Facebook. Must be a working facebook page or account url.
-     
+
         *instagram* - Indicates if the therapy center has a presence on Instagram. Must be the Instagram handle of the therapy center or school.
 
      ```
@@ -253,7 +253,7 @@ This data model describes a single feature in Ausome Maps, representing a therap
 
    - **services_offered**
      The following attributes indicate the types of services offered by the therapy center, specifying whether they are provided to individuals, groups, or through teletherapy, as well as home service options.
-                   
+
       | Session Type         | Indicator |
       |----------------------|-----------|
       | No Offering          | 0         |
@@ -288,8 +288,8 @@ This data model describes a single feature in Ausome Maps, representing a therap
       | orthoses                | Orthoses (Splinting)            |
       | homeschoolfacilitation  | Homeschool Facilitation         |
       | rehabconsultation  | Rehab Consultation         |
-     
-   
+
+
 
      ```
       "properties": {
@@ -350,4 +350,3 @@ This data model describes a single feature in Ausome Maps, representing a therap
                  ...
      }
      ```
-

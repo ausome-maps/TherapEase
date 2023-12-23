@@ -1,12 +1,14 @@
 from django.contrib.auth.models import User
 from rest_framework import generics, permissions, viewsets
 from rest_framework_tracking.mixins import LoggingMixin
-from .models import Profile
+from .models import Profile, Organization
 from .serializers import (
     RegisterSerializer,
     UserSerializer,
     ProfileSerializer,
+    OrganizationSerializer,
 )
+from .permissions import OrganizationPermissions
 
 
 class RegisterView(LoggingMixin, generics.CreateAPIView):
@@ -40,3 +42,9 @@ class ProfileViewset(LoggingMixin, viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         return Profile.objects.filter(user=self.request.user)
+
+
+class OrganizationViewset(LoggingMixin, viewsets.ModelViewSet):
+    queryset = Organization.objects.all()
+    permission_classes = (OrganizationPermissions,)
+    serializer_class = OrganizationSerializer

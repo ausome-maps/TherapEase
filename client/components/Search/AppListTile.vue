@@ -179,7 +179,7 @@ export default {
       this.loading = false;
       console.log('Image loaded successfully.');
     },
-    
+
 },
   computed: {
     imageSource() {
@@ -344,7 +344,7 @@ mounted() {
 </style>
 
 
-  
+
 
 
 

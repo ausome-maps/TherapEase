@@ -12,7 +12,7 @@ RUN apt -y update \
 
 # set work directory
 WORKDIR /home/app/web
-RUN groupadd app 
+RUN groupadd app
 RUN useradd app -g app
 
 RUN pip install --upgrade pip

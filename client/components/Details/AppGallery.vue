@@ -4,7 +4,7 @@
       <div :class="['grid',
                     { 'grid-cols-3': images.length>2 },
                     { 'grid-cols-2': images.length==2 },
-                    { 'gap-3': images.length>1 }, 
+                    { 'gap-3': images.length>1 },
                     'pt-5'
       ]">
         <div v-for="(image, index) in images.slice(0, 3)" :key="index" class="cursor-pointer">
@@ -48,7 +48,7 @@
                   @click="openModal(index)" />
               </div>
             </div>
- 
+
 
         </div>
       </div>
@@ -56,9 +56,9 @@
   </div>
 </template>
 
-  
-  
-  
+
+
+
 <script>
 
 export default {
@@ -92,7 +92,7 @@ export default {
 
 };
 </script>
-  
+
 <style scoped>
 
 /* Works on Firefox */
@@ -103,17 +103,17 @@ export default {
 
 /* Works on Chrome, Edge, and Safari */
 .scrollable-element::-webkit-scrollbar {
-  width: 12px;       
+  width: 12px;
 }
 
 .scrollable-element::-webkit-scrollbar-track {
-  background: transparent;        
+  background: transparent;
 }
 
 .scrollable-element::-webkit-scrollbar-thumb {
-  background-color: transparent;    
-  border-radius: 20px;               
-  border: 3px solid transparent;  
+  background-color: transparent;
+  border-radius: 20px;
+  border: 3px solid transparent;
 }
 
 .ease-in-out {
@@ -140,4 +140,3 @@ export default {
   opacity: 1;
 }
 </style>
-  

@@ -13,7 +13,7 @@ module.exports = {
       spacing: {
         '8xl': '96rem',
       },
-      
+
     }
   },
   plugins: [

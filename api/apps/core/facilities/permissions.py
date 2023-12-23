@@ -6,7 +6,6 @@ class FacilitiesPermissions(permissions.BasePermission):
         if view.action in ["list", "retrieve", "search"]:
             return True
         elif view.action in [
-            "retrieve",
             "update",
             "partial_update",
             "destroy",

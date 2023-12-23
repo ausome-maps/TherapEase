@@ -11,7 +11,12 @@ class FacilityPropertiesAdmin(admin.ModelAdmin):
 class FacilitiesAdmin(admin.ModelAdmin):
     list_display = ("id", "placename", "city", "region")
     list_filter = ("properties__city", "properties__region")
-    search_fields = ("properties__city", "properties__placename", "properties__region", "properties__address")
+    search_fields = (
+        "properties__city",
+        "properties__placename",
+        "properties__region",
+        "properties__address",
+    )
 
     def placename(self, obj):
         return obj.properties.placename

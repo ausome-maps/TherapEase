@@ -14,3 +14,5 @@ env
 .pytest_cache
 api/*.log
 api/backups/*.psql.bin
+*.bkp
+.ruff_cache

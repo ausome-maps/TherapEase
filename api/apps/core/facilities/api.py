@@ -1,10 +1,15 @@
-from rest_framework import permissions, viewsets
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework_tracking.mixins import LoggingMixin
 from django.http import JsonResponse
 from django.contrib.postgres.search import SearchVector
 from .permissions import FacilitiesPermissions
-from .serializers import Facilities, FacilitiesSerializer, FacilityProperties, FacilitiesPropertiesSerializer
+from .serializers import (
+    Facilities,
+    FacilitiesSerializer,
+    FacilityProperties,
+    FacilitiesPropertiesSerializer,
+)
 
 SEARCH_RESPONSE_TEMPLATE = {
     "type": "FeatureCollection",
@@ -12,8 +17,9 @@ SEARCH_RESPONSE_TEMPLATE = {
     "features": [],
 }
 
+
 class FacilitiesPropertiesViewset(LoggingMixin, viewsets.ModelViewSet):
-    queryset = FacilityProperties.objects.all()
+    queryset = FacilityProperties.objects.exclude(status="inactive")
     permission_classes = (FacilitiesPermissions,)
     serializer_class = FacilitiesPropertiesSerializer
 
@@ -21,8 +27,9 @@ class FacilitiesPropertiesViewset(LoggingMixin, viewsets.ModelViewSet):
         """Log only errors"""
         return response.status_code >= 400
 
+
 class FacilitiesViewset(LoggingMixin, viewsets.ModelViewSet):
-    queryset = Facilities.objects.all()
+    queryset = Facilities.objects.exclude(properties__status="inactive")
     permission_classes = (FacilitiesPermissions,)
     serializer_class = FacilitiesSerializer
 
@@ -47,9 +54,11 @@ class FacilitiesViewset(LoggingMixin, viewsets.ModelViewSet):
             )
         )
         if text_search != "*":
-            results = results.filter(search=text_search)
+            results = results.filter(search=text_search).exclude(
+                properties__status="inactive"
+            )
         else:
-            results = results.filter()
+            results = results.exclude(properties__status="inactive")
         SEARCH_RESPONSE_TEMPLATE["total"] = results.count()
         results = results[start_from : start_from + size]
         res = self.serializer_class(results, many=True).data
