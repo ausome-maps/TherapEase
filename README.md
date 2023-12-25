@@ -33,16 +33,26 @@ The entire platform can be run using `Docker` using `docker compose`. Refer to t
 
 - **UI**: The main UI service contains the map and search interfaces. This is being developed using VueJS and NuxtJS.
 
+## Utils
+
+The `utils` directory contains a variety of scripts that are used to work with the application. Please be advised that these scripts maybe outdated or some of them have deprecated functionality.
+
 ## Development
 
 Development information can be found under the `docs` directory.
 
+### Pre-commit
+TherapEase requires to install the following:
+
+- [pre-commit](https://pre-commit.com/)
+- [ruff](https://docs.astral.sh/ruff/installation/)
+- [black](https://github.com/psf/black)
+
+Refer to the individual dependencies on how to install and set them up. These dependencies will validate the files at the commit stage `git commit -m`.
+
 ### Running Tests
 
-#### API
+- API: `python manage.py test`
 
-To run the test suite: `python manage.py test`
-
-## Utils
-
-The `utils` directory contains a variety of scripts that are used to work with the application. Please be advised that these scripts maybe outdated or some of them have deprecated functionality.
+### TODO
+- Setup a testing framework for the frontend.
