@@ -42,6 +42,9 @@ class UserAppTest(APITestCase):
 
         # add user to created organization
         self.user = User.objects.get(email=self.user_data["email"])
+        self.user.is_superuser = True
+        self.user.is_staff = True
+        self.user.save()
         self.organization = Organization.objects.create(
             name="Created Organization", other_metadata={"contact_nos": "0912345678"}
         )
@@ -117,3 +120,17 @@ class UserAppTest(APITestCase):
         )
         org_id = response.json()["data"]["id"]
         self.assertEqual(str(Organization.objects.get(id=org_id).id), org_id)
+
+    def test_simple_jwt_on_protected_api(self):
+        token_url = "/auth/token/"
+        credentials = {
+            "username": self.user_data["username"],
+            "password": self.user_data["password"],
+        }
+        response = self.client.post(token_url, data=credentials)
+        users_url = "/users/api/list/"
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Bearer {response.json()['data']['access']}"
+        )
+        response = self.client.get(users_url, format="json")
+        self.assertEqual(response.status_code, 200)

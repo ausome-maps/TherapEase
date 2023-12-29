@@ -23,3 +23,5 @@ django-extensions
 whitenoise==6.6.0
 drf-yasg==1.21.7
 django-dbbackup==4.0.2
+drf-social-oauth2==2.1.3
+

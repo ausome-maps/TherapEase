@@ -185,7 +185,13 @@ class FacilitiesTestCase(TestCase):
         self.assertEqual(response.status_code, 204)
         self.assertEqual(Facilities.objects.count(), 1)
 
-    def test_search_facility_with_extra_filters(self):
+    def test_search_facility(self):
+        search_with_hit = {"q": "Test Facility"}
+        response = self.client.post(
+            "/facilities/search", data=search_with_hit, format="json"
+        )
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, len(response.json()["features"]))
         extra_filters_with_hit = {
             "filters": {
                 "services_offered": [
