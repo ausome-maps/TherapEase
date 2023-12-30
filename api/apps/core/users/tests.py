@@ -7,22 +7,23 @@ from apps.core.users.models import User, Organization, OrganizationRole, Roles
 
 
 class UserAppTest(APITestCase):
-    def setUp(self):
-        self.user_data = {
-            "username": "hello@example.com",
-            "password": "testpassword811",
-            "email": "hello@example.com",
-            "first_name": "example first name",
-            "last_name": "example last name",
-        }
+    user_data = {
+        "username": "hello@example.com",
+        "password": "testpassword811",
+        "email": "hello@example.com",
+        "first_name": "example first name",
+        "last_name": "example last name",
+    }
 
-        self.user_data_2 = {
-            "username": "hello1@example.com",
-            "password": "testpassword8111",
-            "email": "hello1@example.com",
-            "first_name": "example first name2",
-            "last_name": "example last name2",
-        }
+    user_data_2 = {
+        "username": "hello1@example.com",
+        "password": "testpassword8111",
+        "email": "hello1@example.com",
+        "first_name": "example first name2",
+        "last_name": "example last name2",
+    }
+
+    def setUp(self):
         # configure org permissions
         perm = Permission.objects.get(codename="manage_organization")
         self.role = Roles.objects.create(
@@ -67,7 +68,7 @@ class UserAppTest(APITestCase):
         )
 
     def test_user_profile_api(self):
-        profile_url = "/users/api/profile/"
+        profile_url = "/users/profile/"
         response = self.client.get(profile_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
