@@ -39,7 +39,7 @@ The flow of authentication are the following
 
 1. User Registration
    ```bash
-   curl -X POST -H "Content-type: application/json" http://localhost:9001/auth/users/ -d '{"username":"sample@sample.com", "email": "sample@sample.com", "password": "mypassword1234", "first_name": "my-first-name", "last_name": "my-last-name"}'
+   curl -X POST -H "Content-type: application/json" http://localhost:9001/auth/users/ -d '{"username":"sample@sample.com", "email": "sample@sample.com", "password": "mypassword1234"}'
    ```
 
 2. User Activation
