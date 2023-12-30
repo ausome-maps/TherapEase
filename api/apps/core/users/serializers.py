@@ -39,6 +39,18 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         exclude = ["login_count", "account_expiry"]
 
+    def update(self, instance, validated_data):
+        user_data = validated_data.pop("user")
+        user = instance.user
+        user.first_name = user_data.get("first_name", user.first_name)
+        user.last_name = user_data.get("last_name", user.last_name)
+        instance.other_metadata = validated_data.get(
+            "other_metadata", instance.other_metadata
+        )
+        user.save()
+        instance.save()
+        return super().update(instance, validated_data)
+
 
 class OrganizationSerializer(serializers.ModelSerializer):
     members = UsersSerializer(read_only=True, many=True)

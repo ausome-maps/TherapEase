@@ -8,7 +8,7 @@ from .serializers import (
 from .permissions import OrganizationPermissions
 
 
-class ProfileViewset(LoggingMixin, viewsets.ReadOnlyModelViewSet):
+class ProfileViewset(LoggingMixin, viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = ProfileSerializer

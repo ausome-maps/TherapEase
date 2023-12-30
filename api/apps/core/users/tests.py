@@ -3,7 +3,7 @@ from rest_framework.test import APITestCase, APIClient
 from rest_framework.authtoken.models import Token
 from django.core import mail
 from django.contrib.auth.models import Permission
-from apps.core.users.models import User, Organization, OrganizationRole, Roles
+from apps.core.users.models import User, Organization, OrganizationRole, Roles, Profile
 
 
 class UserAppTest(APITestCase):
@@ -68,9 +68,23 @@ class UserAppTest(APITestCase):
         )
 
     def test_user_profile_api(self):
-        profile_url = "/users/profile/"
+        profile = Profile.objects.get(user=self.user)
+        profile_url = f"/users/profile/{str(profile.id)}/"
         response = self.client.get(profile_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        updated_profile = {
+            "user": {"first_name": "updated first name"},
+            "other_metadata": {"contact_nos": "01234567"},
+        }
+        response = self.client.patch(
+            profile_url, format="json", data=updated_profile
+        ).json()["data"]["attributes"]
+        user = response["user"]
+        self.assertEqual(updated_profile["user"]["first_name"], user["first_name"])
+        self.assertEqual(
+            updated_profile["other_metadata"]["contact_nos"],
+            response["other_metadata"]["contact_nos"],
+        )
 
     def test_organization_model_rel(self):
         org_count = Organization.objects.filter().count()
