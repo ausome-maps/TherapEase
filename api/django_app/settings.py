@@ -52,10 +52,10 @@ INSTALLED_APPS = [
     "rest_framework_tracking",
     "oauth2_provider",
     "social_django",
-    "drf_social_oauth2",
     "corsheaders",
     "guardian",
     "dbbackup",
+    "djoser",
 ]
 
 CORE_APPS = [
@@ -69,7 +69,6 @@ CUSTOM_APPS = []
 INSTALLED_APPS = INSTALLED_APPS + CORE_APPS + CUSTOM_APPS + PLUGIN_APPS
 
 AUTHENTICATION_BACKENDS = (
-    "drf_social_oauth2.backends.DjangoOAuth2",
     "django.contrib.auth.backends.ModelBackend",
     "guardian.backends.ObjectPermissionBackend",
 )
@@ -239,8 +238,6 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
-        "oauth2_provider.contrib.rest_framework.OAuth2Authentication",  # django-oauth-toolkit >= 1.0.0
-        "drf_social_oauth2.authentication.SocialAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_RENDERER_CLASSES": ("rest_framework_json_api.renderers.JSONRenderer",),
@@ -248,37 +245,53 @@ REST_FRAMEWORK = {
 }
 
 
-# SIMPLE JWT
+# Djoser
+DJOSER = {
+    "USER_ID_FIELD": "username",
+    "LOGIN_FIELD": "email",
+    "SEND_ACTIVATION_EMAIL": True,
+    "SEND_CONFIRMATION_EMAIL": True,
+    "SERIALIZERS": {
+        "token_create": "apps.core.users.serializers.CustomTokenCreateSerializer",
+    },
+    # The activation and reset URLs are based on the frontend. Where the frontend will fetch uid and token from the link.
+    # and send the uid and token to the backend.
+    # Refer to docs/auth.md for more details
+    "ACTIVATION_URL": "user/activate/{uid}/{token}",
+    "PASSWORD_RESET_CONFIRM_URL": "user/reset_password/{uid}/{token}",
+}
 
+DOMAIN = os.environ.get("UI_DOMAIN_NAME", "localhost:9002")
+
+# Email
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+else:
+    # EMAIL SETTINGS via Sendgrid
+    EMAIL_HOST = os.getenv("SENDGRID_HOST", "smtp.sendgrid.net")
+    EMAIL_REST_HOST = os.getenv(
+        "SENDGRID_REST_HOST", "https://api.sendgrid.com/v3/mail/send"
+    )
+    EMAIL_HOST_USER = os.getenv("SENDGRID_HOST_USER", "apikey")
+    EMAIL_HOST_PASSWORD = os.getenv("SENDGRID_HOST_PASSWORD", "")
+    EMAIL_PORT = os.getenv("SENDGRID_PORT", 465)
+    EMAIL_USE_TLS = False
+    EMAIL_USE_SSL = True
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    DEFAULT_FROM_EMAIL = os.getenv("ADMIN_EMAIL", "admin@sample.com")
+
+EMAIL_SEND = int(os.getenv("EMAIL_SEND", 0))
+
+# SITE_URL
+SITE_URL = "http://localhost:9001"
+SITE_NAME = "TherapEase"
+
+# SIMPLE JWT
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
-
-# EMAIL SETTINGS via Sendgrid
-EMAIL_HOST = os.getenv("SENDGRID_HOST", "smtp.sendgrid.net")
-EMAIL_REST_HOST = os.getenv(
-    "SENDGRID_REST_HOST", "https://api.sendgrid.com/v3/mail/send"
-)
-EMAIL_HOST_USER = os.getenv("SENDGRID_HOST_USER", "apikey")
-EMAIL_HOST_PASSWORD = os.getenv("SENDGRID_HOST_PASSWORD", "")
-EMAIL_PORT = os.getenv("SENDGRID_PORT", 465)
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-DEFAULT_FROM_EMAIL = os.getenv("ADMIN_EMAIL", "admin@sample.com")
-EMAIL_SEND = int(os.getenv("EMAIL_SEND", 0))
-
-# # REGISTRATION SETTINGS
-# EMAIL_REGISTRATION_TEMPLATE = "email/registration/registration_success"
-# EMAIL_REGISTRATION_SUBJECT = (
-#     f"User Registration: You have been registered to Django App"
-# )
-# EMAIL_REGISTRATION_BCC = ""
-
-# SITE_URL
-SITE_URL = "http://localhost:8000"
 
 # STORAGE MECHANISM
 DEFAULT_FILE_STORAGE = os.environ.get(

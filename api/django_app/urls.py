@@ -17,11 +17,6 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls import static
 from django.urls import path, include, re_path
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView,
-)
 from rest_framework import routers
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -45,22 +40,25 @@ admin.site.site_title = "Therapease Admin Portal"
 admin.site.index_title = "Welcome to Therapease API"
 
 routers = routers.SimpleRouter(trailing_slash=False)
+# routers.register("auth/users/", UserViewSet, basename="user-list")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     # path('accounts/', include('django.contrib.auth.urls')),
     path("facilities/", include("apps.core.facilities.urls")),
     path("users/", include("apps.core.users.urls")),
-    path("auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("auth/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
-    path("auth/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    # path("auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    # path("auth/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
+    # path("auth/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
     path(
         "docs/",
         schema_view.with_ui("swagger", cache_timeout=0),
         name="schema-swagger-ui",
     ),
-    re_path(r"^auth/", include("drf_social_oauth2.urls", namespace="drf")),
+    re_path(r"^auth/", include("djoser.urls")),
+    re_path(r"^auth/", include("djoser.urls.jwt")),
+    re_path(r"^auth/", include("djoser.urls.authtoken")),
 ]
 urlpatterns += routers.urls
 

@@ -26,7 +26,7 @@ The flow of authentication are the following
 3. Retrieve User Profile
 
    ```bash
-   curl -X GET -H "Content-type: application/json" -H "Authorization: Bearer {Bearer-Access-Token}" http://localhost:9001/users/me
+   curl -X GET -H "Content-type: application/json" -H "Authorization: Bearer {Bearer-Access-Token}" http://localhost:9001/auth/users/me
    ```
 
 4. Logout
@@ -37,8 +37,25 @@ The flow of authentication are the following
 
 ## Other Functions
 
-1. Registering/Creating a user
-
+1. User Registration
    ```bash
-   curl -X POST -H "Content-type: application/json" http://localhost:9001/auth/register -d '{"name":"sample name", "email": "sample@sample.com", "password": "mypassword1234", "passwordConfirm": "mypassword1234"}'
+   curl -X POST -H "Content-type: application/json" http://localhost:9001/auth/users/ -d '{"username":"sample@sample.com", "email": "sample@sample.com", "password": "mypassword1234"}'
    ```
+
+2. User Activation
+   ```bash
+   curl -X POST http://localhost:9001/auth/users/activation/ -d '{"uid": "<uid>", "token":"<token>"}'
+   ```
+   NOTE: There must be a page in the frontend with the same values with the `DJOSER - ACTIVATION_URL` since this parameter will be sent to the user via email to activate their account.
+
+3. Trigger the Password Reset Process
+   ```bash
+   curl -H "Content-type: application/json" -X POST http://localhost:9001/auth/users/reset_password/ -d '{"email": "sample@sample.com"}'
+   ```
+   NOTE: There must be a page in the frontend with the same values with the `DJOSER - PASSWORD_RESET_CONFIRM_URL` since this parameter will be sent to the user via email to reset their password. _If the user is not yet activated they will not receive an email._
+
+4. Finish the Password Reset Process
+   ```bash
+   curl -X POST http://localhost:9001/auth/users/reset_password_confirm/ -d '{"uid": "<uid>", "token":"<token>", "new_password": "user-new-password", "re_new_password": "user-new-password"}'
+   ```
+   NOTE: This is triggered in the frontend when the user submits their new password.

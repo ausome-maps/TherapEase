@@ -1,30 +1,29 @@
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 from rest_framework.authtoken.models import Token
+from django.core import mail
 from django.contrib.auth.models import Permission
-from apps.core.users.models import User, Profile, Organization, OrganizationRole, Roles
-from apps.core.users.serializers import RegisterSerializer
+from apps.core.users.models import User, Organization, OrganizationRole, Roles, Profile
 
 
-# Create your tests here.
 class UserAppTest(APITestCase):
-    def setUp(self):
-        self.user_data = {
-            "username": "hello@example.com",
-            "password": "testpassword811",
-            "password2": "testpassword811",
-            "email": "hello@example.com",
-            "first_name": "example first name",
-            "last_name": "example last name",
-        }
+    user_data = {
+        "username": "hello@example.com",
+        "password": "testpassword811",
+        "email": "hello@example.com",
+        "first_name": "example first name",
+        "last_name": "example last name",
+    }
 
-        self.user_data_2 = {
-            "username": "hello1@example.com",
-            "password": "testpassword8111",
-            "email": "hello1@example.com",
-            "first_name": "example first name2",
-            "last_name": "example last name2",
-        }
+    user_data_2 = {
+        "username": "hello1@example.com",
+        "password": "testpassword8111",
+        "email": "hello1@example.com",
+        "first_name": "example first name2",
+        "last_name": "example last name2",
+    }
+
+    def setUp(self):
         # configure org permissions
         perm = Permission.objects.get(codename="manage_organization")
         self.role = Roles.objects.create(
@@ -33,9 +32,10 @@ class UserAppTest(APITestCase):
         )
         self.role.permissions.add(perm)
         # create user
-        self.register_serializer = RegisterSerializer(data=self.user_data)
-        self.register_serializer.is_valid()
-        self.register_serializer.save()
+        password = self.user_data["password"]
+        u = User.objects.create(**self.user_data)
+        u.set_password(password)
+        u.save()
         token = Token.objects.get(user__email=self.user_data["username"])
         self.client = APIClient()
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {token}")
@@ -44,6 +44,7 @@ class UserAppTest(APITestCase):
         self.user = User.objects.get(email=self.user_data["email"])
         self.user.is_superuser = True
         self.user.is_staff = True
+        self.user.is_active = True
         self.user.save()
         self.organization = Organization.objects.create(
             name="Created Organization", other_metadata={"contact_nos": "0912345678"}
@@ -66,24 +67,24 @@ class UserAppTest(APITestCase):
             organization=self.organization_2, user=self.user_2, role=self.role
         )
 
-    def test_user_register_serializer(self):
-        u = User.objects.filter().count()
-        p = Profile.objects.filter().count()
-        t = Token.objects.filter().count()
-        # check if other entries are created by signals.py
-        self.assertEqual(u, p)
-        self.assertEqual(u, t)
-        # # test email function
-        # self.skipTest("skipping test_email")
-        # email = send_registration_email(
-        #     self.user_data["first_name"], datetime.now(), self.user_data["email"]
-        # )
-        # self.assertEqual(email, self.user_data["email"])
-
     def test_user_profile_api(self):
-        profile_url = "/users/api/profile/"
+        profile = Profile.objects.get(user=self.user)
+        profile_url = f"/users/profile/{str(profile.id)}/"
         response = self.client.get(profile_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        updated_profile = {
+            "user": {"first_name": "updated first name"},
+            "other_metadata": {"contact_nos": "01234567"},
+        }
+        response = self.client.patch(
+            profile_url, format="json", data=updated_profile
+        ).json()["data"]["attributes"]
+        user = response["user"]
+        self.assertEqual(updated_profile["user"]["first_name"], user["first_name"])
+        self.assertEqual(
+            updated_profile["other_metadata"]["contact_nos"],
+            response["other_metadata"]["contact_nos"],
+        )
 
     def test_organization_model_rel(self):
         org_count = Organization.objects.filter().count()
@@ -122,15 +123,75 @@ class UserAppTest(APITestCase):
         self.assertEqual(str(Organization.objects.get(id=org_id).id), org_id)
 
     def test_simple_jwt_on_protected_api(self):
-        token_url = "/auth/token/"
+        token_url = "/auth/jwt/create/"
         credentials = {
             "username": self.user_data["username"],
             "password": self.user_data["password"],
         }
-        response = self.client.post(token_url, data=credentials)
-        users_url = "/users/api/list/"
+        response = self.client.post(token_url, data=credentials, format="json")
+        users_url = "/auth/users/"
         self.client.credentials(
             HTTP_AUTHORIZATION=f"Bearer {response.json()['data']['access']}"
         )
         response = self.client.get(users_url, format="json")
         self.assertEqual(response.status_code, 200)
+
+
+class EmailVerificationTest(APITestCase):
+    # endpoints needed
+    register_url = "/auth/users/"
+    activate_url = "/auth/users/activation/"
+    login_url = "/auth/token/login/"
+    logout_url = "/auth/token/logout/"
+    user_details_url = "/auth/users/"
+    # user infofmation
+    user_data = {
+        "email": "test@example.com",
+        "username": "test@example.com",
+        "password": "verysecret",
+        "password2": "verysecret",
+        "first_name": "test",
+        "last_name": "user",
+    }
+    login_data = {"email": "test@example.com", "password": "verysecret"}
+
+    def test_register_with_email_verification(self):
+        response = self.client.post(self.register_url, self.user_data, format="json")
+        # expected response
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        # expected one email to be send
+        self.assertEqual(len(mail.outbox), 1)
+        # parse email to get uid and token
+        email_lines = mail.outbox[0].body.splitlines()
+        activation_link = [line for line in email_lines if "/activate/" in line][0]
+        uid, token = activation_link.split("/")[-2:]
+
+        # verify email
+        data = {"uid": uid, "token": token}
+        response = self.client.post(self.activate_url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # login to get the authentication token
+        response = self.client.post(self.login_url, self.login_data, format="json")
+        self.assertTrue("auth_token" in response.json()["data"]["attributes"])
+        token = response.json()["data"]["attributes"]["auth_token"]
+
+        # set token in the header
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
+        # get user details
+        response = self.client.get(self.user_details_url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()), 3)
+        self.assertEqual(
+            response.json()["data"][0]["attributes"]["email"], self.user_data["email"]
+        )
+        self.assertEqual(
+            response.json()["data"][0]["attributes"]["username"],
+            self.user_data["username"],
+        )
+
+        # logout the user
+        response = self.client.post(self.logout_url, format="json")
+        self.assertEqual(response.status_code, 204)
+        response = self.client.get(self.user_details_url, format="json")
+        self.assertEqual(response.status_code, 401)
