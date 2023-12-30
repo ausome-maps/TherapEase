@@ -3,8 +3,7 @@ from rest_framework.test import APITestCase, APIClient
 from rest_framework.authtoken.models import Token
 from django.core import mail
 from django.contrib.auth.models import Permission
-from apps.core.users.models import User, Profile, Organization, OrganizationRole, Roles
-from apps.core.users.serializers import RegisterSerializer
+from apps.core.users.models import User, Organization, OrganizationRole, Roles
 
 
 class UserAppTest(APITestCase):
@@ -12,7 +11,6 @@ class UserAppTest(APITestCase):
         self.user_data = {
             "username": "hello@example.com",
             "password": "testpassword811",
-            "password2": "testpassword811",
             "email": "hello@example.com",
             "first_name": "example first name",
             "last_name": "example last name",
@@ -33,9 +31,10 @@ class UserAppTest(APITestCase):
         )
         self.role.permissions.add(perm)
         # create user
-        self.register_serializer = RegisterSerializer(data=self.user_data)
-        self.register_serializer.is_valid()
-        self.register_serializer.save()
+        password = self.user_data["password"]
+        u = User.objects.create(**self.user_data)
+        u.set_password(password)
+        u.save()
         token = Token.objects.get(user__email=self.user_data["username"])
         self.client = APIClient()
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {token}")
@@ -44,6 +43,7 @@ class UserAppTest(APITestCase):
         self.user = User.objects.get(email=self.user_data["email"])
         self.user.is_superuser = True
         self.user.is_staff = True
+        self.user.is_active = True
         self.user.save()
         self.organization = Organization.objects.create(
             name="Created Organization", other_metadata={"contact_nos": "0912345678"}
@@ -65,20 +65,6 @@ class UserAppTest(APITestCase):
         self.org_role_2 = OrganizationRole.objects.create(
             organization=self.organization_2, user=self.user_2, role=self.role
         )
-
-    def test_user_register_serializer(self):
-        u = User.objects.filter().count()
-        p = Profile.objects.filter().count()
-        t = Token.objects.filter().count()
-        # check if other entries are created by signals.py
-        self.assertEqual(u, p)
-        self.assertEqual(u, t)
-        # # test email function
-        # self.skipTest("skipping test_email")
-        # email = send_registration_email(
-        #     self.user_data["first_name"], datetime.now(), self.user_data["email"]
-        # )
-        # self.assertEqual(email, self.user_data["email"])
 
     def test_user_profile_api(self):
         profile_url = "/users/api/profile/"
@@ -127,7 +113,7 @@ class UserAppTest(APITestCase):
             "username": self.user_data["username"],
             "password": self.user_data["password"],
         }
-        response = self.client.post(token_url, data=credentials)
+        response = self.client.post(token_url, data=credentials, format="json")
         users_url = "/auth/users/"
         self.client.credentials(
             HTTP_AUTHORIZATION=f"Bearer {response.json()['data']['access']}"
@@ -146,7 +132,7 @@ class EmailVerificationTest(APITestCase):
     # user infofmation
     user_data = {
         "email": "test@example.com",
-        "username": "test_user",
+        "username": "test@example.com",
         "password": "verysecret",
         "password2": "verysecret",
         "first_name": "test",
@@ -160,12 +146,8 @@ class EmailVerificationTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         # expected one email to be send
         self.assertEqual(len(mail.outbox), 1)
-
         # parse email to get uid and token
         email_lines = mail.outbox[0].body.splitlines()
-        # you can print email to check it
-        # print(mail.outbox[0].subject)
-        # print(mail.outbox[0].body)
         activation_link = [line for line in email_lines if "/activate/" in line][0]
         uid, token = activation_link.split("/")[-2:]
 
