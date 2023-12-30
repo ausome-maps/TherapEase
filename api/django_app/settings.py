@@ -52,10 +52,10 @@ INSTALLED_APPS = [
     "rest_framework_tracking",
     "oauth2_provider",
     "social_django",
-    "drf_social_oauth2",
     "corsheaders",
     "guardian",
     "dbbackup",
+    "djoser",
 ]
 
 CORE_APPS = [
@@ -69,7 +69,6 @@ CUSTOM_APPS = []
 INSTALLED_APPS = INSTALLED_APPS + CORE_APPS + CUSTOM_APPS + PLUGIN_APPS
 
 AUTHENTICATION_BACKENDS = (
-    "drf_social_oauth2.backends.DjangoOAuth2",
     "django.contrib.auth.backends.ModelBackend",
     "guardian.backends.ObjectPermissionBackend",
 )
@@ -240,7 +239,6 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
         "oauth2_provider.contrib.rest_framework.OAuth2Authentication",  # django-oauth-toolkit >= 1.0.0
-        "drf_social_oauth2.authentication.SocialAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_RENDERER_CLASSES": ("rest_framework_json_api.renderers.JSONRenderer",),
@@ -248,8 +246,21 @@ REST_FRAMEWORK = {
 }
 
 
-# SIMPLE JWT
+# configure Djoser
+DJOSER = {
+    "USER_ID_FIELD": "username",
+    "LOGIN_FIELD": "email",
+    "SEND_ACTIVATION_EMAIL": True,
+    "ACTIVATION_URL": "activate/{uid}/{token}",
+    "SERIALIZERS": {
+        "token_create": "apps.core.users.serializers.CustomTokenCreateSerializer",
+    },
+}
 
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+SITE_NAME = "TherapEase"
+
+# SIMPLE JWT
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
