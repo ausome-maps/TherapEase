@@ -11,3 +11,7 @@ postgres:
 minio:
   root: t_minio
   password: tpasswordminio
+
+sendgrid_api_key: api_key
+therapease_system_email: system@sample.com
+therapease_admin_email: admin@sample.com

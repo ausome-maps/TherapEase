@@ -266,7 +266,9 @@ DOMAIN = os.environ.get("UI_DOMAIN_NAME", "localhost:9002")
 # Email
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-else:
+
+DEV_EMAIL = int(os.environ.get("DEV_EMAIL", 0))
+if DEV_EMAIL or not DEBUG:
     # EMAIL SETTINGS via Sendgrid
     EMAIL_HOST = os.getenv("SENDGRID_HOST", "smtp.sendgrid.net")
     EMAIL_REST_HOST = os.getenv(
