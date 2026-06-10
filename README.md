@@ -29,9 +29,13 @@ The entire platform can be run using `Docker` using `docker compose`. Refer to t
 
 ## Services
 
-- **API**: The main API service handles the proxying of requests to the internal services like search. This also contains the data management and auth services. This developed using Django and Django Rest Framework.
+- **API**: The main API service handles the proxying of requests to the internal services like search. This also contains the data management and auth services. Built with Python 3.12, Django 5.2 LTS, and Django Rest Framework.
 
-- **UI**: The main UI service contains the map and search interfaces. This is being developed using VueJS and NuxtJS.
+- **UI**: The main UI service contains the map and search interfaces. Built with Node 22, Nuxt 4, Tailwind CSS v4, and Flowbite 4.
+
+- **Database**: PostgreSQL 15.
+- **Cache**: Redis 7.
+- **Storage**: MinIO (official `minio/minio` image).
 
 ## Utils
 
@@ -42,13 +46,18 @@ The `utils` directory contains a variety of scripts that are used to work with t
 Development information can be found under the `docs` directory.
 
 ### Pre-commit
-TherapEase requires to install the following:
+TherapEase uses the following pre-commit hooks (see `.pre-commit-config.yaml`):
 
 - [pre-commit](https://pre-commit.com/)
-- [ruff](https://docs.astral.sh/ruff/installation/)
-- [black](https://github.com/psf/black)
+- [ruff](https://docs.astral.sh/ruff/) v0.11
+- [black](https://github.com/psf/black) 25.1
 
-Refer to the individual dependencies on how to install and set them up. These dependencies will validate the files at the commit stage `git commit -m`.
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+These will validate files automatically at the commit stage (`git commit`).
 
 ### Running Tests
 

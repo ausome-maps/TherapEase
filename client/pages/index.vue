@@ -154,8 +154,7 @@ export default {
 
         let fGroup = L.featureGroup(markers);
         let bounds = fGroup.getBounds();
-
-
+        if (!bounds || !bounds.isValid()) return [[], this.bounds, this.center];
         let center = bounds.getCenter();
 
         return [coordinates, bounds, center]
@@ -203,7 +202,7 @@ export default {
 
       // Fetch the data
       try {
-        const response = await fetch(`${this.$config.apiURL}/facilities/search`, {
+        const response = await fetch(`${this.$config.public.apiURL}/facilities/search`, {
           body: body,
           headers: {
             "Content-Type": "application/json"

@@ -37,9 +37,9 @@ export default {
         //console.log("Initial value:", this.facilities)
     },
     watch: {
-        'facilities.hits': {
-            deep: true, // this is necessary if you want to watch nested properties
-            handler(newVal, oldVal) {
+        facilities: {
+            deep: true,
+            handler(newVal) {
                 console.log("Updated value:", newVal);
             }
         }

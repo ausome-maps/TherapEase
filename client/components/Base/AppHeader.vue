@@ -20,7 +20,7 @@ export default {
   },
   mounted(){
     let recaptchaScript = document.createElement('script')
-      recaptchaScript.setAttribute('src', this.$config.googleTagManager)
+      recaptchaScript.setAttribute('src', this.$config.public.googleTagManager)
       document.head.appendChild(recaptchaScript)
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -28,5 +28,5 @@ export default {
 
     gtag('config', 'G-E1HY2D8NC8');
   }
-      }
+}
 </script>

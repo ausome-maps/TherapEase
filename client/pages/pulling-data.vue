@@ -43,7 +43,7 @@ export default {
         }
     }, methods: {
         async fetchGeocode() {
-            const { data, error, isFetching } = useFetch(`${this.$config.geocodeURL}?q=${this.address}`)
+            const { data, error, isFetching } = useFetch(`${this.$config.public.geocodeURL}?q=${this.address}`)
             this.data = await data
             //console.log(this.data)
             this.error = error
@@ -65,7 +65,7 @@ export default {
                 //   }
             };
 
-            const { data, error, isFetching } = await useFetch(this.$config.search, {
+            const { data, error, isFetching } = await useFetch(this.$config.public.searchURL, {
                 query: queryParameters,
             });
             this.data = data;

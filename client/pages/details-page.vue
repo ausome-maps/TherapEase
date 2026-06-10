@@ -45,7 +45,7 @@
                 </div>
                 <div class="min-w-[34%] p-5 mr-2">
                   <AppContacts :facilityDetails="properties" />
-                  <AppShareSubmit :feedback-url="$config.feedbackURL" />
+                  <AppShareSubmit :feedback-url="$config.public.feedbackURL" />
                 </div>
               </div>
             </div>
@@ -131,7 +131,7 @@ export default {
         console.log("body", body)
         // Fetch the data
         try {
-          const response = await fetch(`${this.$config.apiURL}/facilities/search`, {
+          const response = await fetch(`${this.$config.public.apiURL}/facilities/search`, {
             body: body,
             headers: {
               "Content-Type": "application/json"
