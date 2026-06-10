@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "guardian",
     "dbbackup",
     "djoser",
+    "rest_framework_simplejwt",
 ]
 
 CORE_APPS = [
@@ -69,13 +70,15 @@ CUSTOM_APPS = []
 INSTALLED_APPS = INSTALLED_APPS + CORE_APPS + CUSTOM_APPS + PLUGIN_APPS
 
 AUTHENTICATION_BACKENDS = (
+    "social_core.backends.google.GoogleOAuth2",
+    "social_core.backends.facebook.FacebookOAuth2",
     "django.contrib.auth.backends.ModelBackend",
     "guardian.backends.ObjectPermissionBackend",
 )
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # new
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -83,6 +86,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "apps.core.users.debug_auth.AuthDebugMiddleware",
 ]
 
 ROOT_URLCONF = "django_app.urls"
@@ -240,7 +244,10 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
-    "DEFAULT_RENDERER_CLASSES": ("rest_framework_json_api.renderers.JSONRenderer",),
+    "DEFAULT_RENDERER_CLASSES": (
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework_json_api.renderers.JSONRenderer",
+    ),
     # 'DEFAULT_METADATA_CLASS': 'rest_framework_json_api.metadata.JSONAPIMetadata',
 }
 
@@ -262,6 +269,16 @@ DJOSER = {
 }
 
 DOMAIN = os.environ.get("UI_DOMAIN_NAME", "localhost:9002")
+
+EMAIL_REGISTRATION_BCC = os.environ.get(
+    "EMAIL_REGISTRATION_BCC", "admin@ausomemaps.org"
+)
+EMAIL_REGISTRATION_SUBJECT = os.environ.get(
+    "EMAIL_REGISTRATION_SUBJECT", "Welcome to TherapEase!"
+)
+EMAIL_REGISTRATION_TEMPLATE = os.environ.get(
+    "EMAIL_REGISTRATION_TEMPLATE", "email/registration"
+)
 
 # Email
 if DEBUG:
@@ -285,13 +302,20 @@ if DEV_EMAIL or not DEBUG:
 EMAIL_SEND = int(os.getenv("EMAIL_SEND", 0))
 
 # SITE_URL
-SITE_URL = "http://localhost:9001"
+SITE_URL = os.environ.get("UI_BASE_URL", "http://localhost:9002")
 SITE_NAME = "TherapEase"
 
 # SIMPLE JWT
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "TOKEN_OBTAIN_SERIALIZER": "apps.core.users.serializers.EmailTokenObtainPairSerializer",
+    "SIGNING_KEY": os.environ.get(
+        "JWT_SIGNING_KEY",
+        "therapease-jwt-signing-key-at-least-32-chars-long!!",
+    ),
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
 }
 
 
@@ -308,3 +332,27 @@ APPEND_SLASH = False
 # DATABASE BACKUP SETTINGS
 DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
 DBBACKUP_STORAGE_OPTIONS = {"location": os.path.join(BASE_DIR, "backups")}
+
+# Social Auth
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY", "")
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get(
+    "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET", ""
+)
+SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get("SOCIAL_AUTH_FACEBOOK_KEY", "")
+SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get("SOCIAL_AUTH_FACEBOOK_SECRET", "")
+
+SOCIAL_AUTH_PIPELINE = (
+    "social_core.pipeline.social_auth.social_details",
+    "social_core.pipeline.social_auth.social_uid",
+    "social_core.pipeline.social_auth.auth_allowed",
+    "social_core.pipeline.social_auth.social_user",
+    "social_core.pipeline.user.get_username",
+    "social_core.pipeline.user.create_user",
+    "social_core.pipeline.social_auth.associate_user",
+    "social_core.pipeline.social_auth.load_extra_data",
+    "social_core.pipeline.user.user_details",
+)
+
+SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/users/social/complete/"
+SOCIAL_AUTH_LOGIN_ERROR_URL = f"{SITE_URL}/login?error=social_auth_failed"

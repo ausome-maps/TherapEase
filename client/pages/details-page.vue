@@ -106,7 +106,7 @@ export default {
   methods: {
     checkIfMobile() {
       // Check if the viewport width is less than or equal to 768px (tablet width)
-      this.isMobile = window.visualViewport.width <= 769;
+      this.isMobile = window.visualViewport.width <= 768;
     },
     async handleSearch() {
       await this.fetchSearch();

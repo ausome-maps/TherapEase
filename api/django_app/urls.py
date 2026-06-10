@@ -44,13 +44,10 @@ routers = routers.SimpleRouter(trailing_slash=False)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # path('accounts/', include('django.contrib.auth.urls')),
     path("facilities/", include("apps.core.facilities.urls")),
     path("users/", include("apps.core.users.urls")),
-    # path("auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    # path("auth/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
-    # path("auth/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
+    path("social/", include("social_django.urls", namespace="social")),
     path(
         "docs/",
         schema_view.with_ui("swagger", cache_timeout=0),

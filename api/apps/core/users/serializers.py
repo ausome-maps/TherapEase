@@ -3,6 +3,8 @@ from djoser.serializers import TokenCreateSerializer
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 from apps.core.facilities.serializers import FacilitiesSerializer
 from .models import Profile, Organization
 
@@ -10,7 +12,7 @@ from .models import Profile, Organization
 class UsersSerializer(serializers.ModelSerializer):
     login_count = serializers.SerializerMethodField(method_name="get_login_count")
     account_expiry = serializers.SerializerMethodField(method_name="get_account_expiry")
-    active = serializers.BooleanField(source="is_active")
+    active = serializers.BooleanField(source="is_active", read_only=True)
 
     def get_login_count(self, obj):
         return self.context["request"].user.profile.login_count
@@ -30,6 +32,7 @@ class UsersSerializer(serializers.ModelSerializer):
             "login_count",
             "account_expiry",
         ]
+        read_only_fields = ["id", "email", "is_staff", "active", "login_count", "account_expiry"]
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -39,15 +42,21 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         exclude = ["login_count", "account_expiry"]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if kwargs.get("partial"):
+            self.fields["user"] = UsersSerializer(partial=True)
+
     def update(self, instance, validated_data):
-        user_data = validated_data.pop("user")
-        user = instance.user
-        user.first_name = user_data.get("first_name", user.first_name)
-        user.last_name = user_data.get("last_name", user.last_name)
+        user_data = validated_data.pop("user", None)
+        if user_data:
+            user = instance.user
+            user.first_name = user_data.get("first_name", user.first_name)
+            user.last_name = user_data.get("last_name", user.last_name)
+            user.save()
         instance.other_metadata = validated_data.get(
             "other_metadata", instance.other_metadata
         )
-        user.save()
         instance.save()
         return super().update(instance, validated_data)
 
@@ -73,7 +82,35 @@ class CustomTokenCreateSerializer(TokenCreateSerializer):
             self.user = User.objects.filter(**params).first()
             if self.user and not self.user.check_password(password):
                 self.fail("invalid_credentials")
-        # We changed only below line
-        if self.user:  # and self.user.is_active:
+        if self.user:
             return attrs
         self.fail("invalid_credentials")
+
+
+class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["email"] = serializers.CharField(write_only=True)
+        self.fields.pop("username", None)
+
+    def validate(self, attrs):
+        email = attrs.get("email")
+        password = attrs.get("password")
+
+        User = get_user_model()
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("No active account found with the given credentials")
+
+        if not user.check_password(password):
+            raise serializers.ValidationError("No active account found with the given credentials")
+
+        if not user.is_active:
+            raise serializers.ValidationError("No active account found with the given credentials")
+
+        refresh = RefreshToken.for_user(user)
+        return {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }

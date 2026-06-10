@@ -88,84 +88,43 @@ export default {
     },
 
     methods: {
-        generateElasticSearchQuery() {
-            const body = {
-                filter: []
-            };
+        generateFilterQuery() {
+            const filters = {};
 
-            // Checking for PAOT and PASP accreditations
-            if (this.isPASPChecked) {
-                body.filter.push({
-                    term: { "properties.accreditation.pasp": 1 }
-                });
+            const accreditation = {};
+            if (this.isPASPChecked) accreditation.pasp = 1;
+            if (this.isPAOTChecked) accreditation.paot = 1;
+            if (Object.keys(accreditation).length > 0) {
+                filters.accreditation = accreditation;
             }
 
-            if (this.isPAOTChecked) {
-                body.filter.push({
-                    term: { "properties.accreditation.paot": 1 }
-                });
+            const modes = [];
+            if (this.teletherapyChecked) modes.push("teletherapy");
+            if (this.onsiteChecked) modes.push("onsite");
+            if (this.homeserviceChecked) modes.push("home_service");
+            if (modes.length > 0) {
+                filters.mode = modes;
             }
 
-            // Checking for service modes
-            const serviceModes = {
-                teletherapy: this.teletherapyChecked,
-                onsite: this.onsiteChecked,
-                home_service: this.homeserviceChecked
-            };
+            const sessionTypes = [];
+            if (this.individualChecked) sessionTypes.push("individual");
+            if (this.groupChecked) sessionTypes.push("group");
+            if (sessionTypes.length > 0) {
+                filters.session_type = sessionTypes;
+            }
 
-            let modeSelected = this.teletherapyChecked || this.onsiteChecked || this.homeserviceChecked;
-            let sessionSelected = this.individualChecked || this.groupChecked;
-
-            for (const service in this.serviceCheckboxes) {
-                if (this.serviceCheckboxes[service]) { // If this service is checked
-                    const should = [];
-
-                    for (const mode in serviceModes) {
-                        if (serviceModes[mode]) { // If this mode is checked
-                            if (this.individualChecked && !this.groupChecked) {
-                                should.push({
-                                    term: { [`properties.services_offered.${service}.mode.${mode}`]: 1 }
-                                });
-                            }
-
-                            if (this.groupChecked && !this.individualChecked) {
-                                should.push({
-                                    term: { [`properties.services_offered.${service}.mode.${mode}`]: 2 }
-                                });
-                            }
-
-                            if (this.groupChecked && this.individualChecked) {
-                                should.push({
-                                    term: { [`properties.services_offered.${service}.mode.${mode}`]: 3 }
-                                });
-                            }
-                        }
-                    }
-
-                    // If neither mode nor session type is selected, but the service is checked
-                    if (!modeSelected && !sessionSelected) {
-                        for (const mode in serviceModes) {
-                            should.push({
-                                range: { [`properties.services_offered.${service}.mode.${mode}`]: { gt: 0 } }
-                            });
-                        }
-                    }
-
-                    // If any mode or existence condition is added for a service
-                    if (should.length > 0) {
-                        body.filter.push({
-                            bool: {
-                                should: should,
-                                minimum_should_match: 1
-                            }
-                        });
-                    }
+            const selectedServices = [];
+            for (const key in this.serviceCheckboxes) {
+                if (this.serviceCheckboxes[key]) {
+                    selectedServices.push(key);
                 }
             }
-            this.$emit('query-generated', body);
-            //console.log(JSON.stringify(body));
-        }
-        ,
+            if (selectedServices.length > 0) {
+                filters.services_offered = selectedServices;
+            }
+
+            this.$emit('query-generated', { filters, filter: filters });
+        },
         showValues() {
             console.log(isPAOTChecked);
         },
@@ -182,7 +141,7 @@ export default {
                 this.serviceCheckboxes[key] = false;
             }
 
-            this.$emit('query-generated', { filter: [] });
+            this.$emit('query-generated', { filters: {}, filter: {} });
         },
     }
 
@@ -202,6 +161,20 @@ export default {
 
 .content-body::-webkit-scrollbar-thumb {
     box-shadow: inset 0 0 0 10px;
+}
+
+@media (max-width: 640px) {
+    #modal > div {
+        margin: 0;
+        max-width: 100%;
+        height: 100%;
+    }
+    #modal > div > div {
+        border-radius: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
 }
 </style>
 
@@ -384,7 +357,7 @@ export default {
                         <button type="button" @click="clearAllFilters"
                             class="border px-4 py-2 bg-white hover:bg-gray-200 active:bg-gray-300 text-black rounded-lg">
                             Clear all filters</button>
-                        <button type="button" @click="generateElasticSearchQuery"
+                        <button type="button" @click="generateFilterQuery"
                             class="border px-4 py-2 bg-black active:bg-gray-700 text-white rounded-lg">
                             Apply filters</button>
                     </div>
