@@ -20,8 +20,12 @@
           </div>
 
           <!-- Listings View -->
-          <AppCardList v-if="viewMode === 'card'" :facilities="data" :filteredFacilities="data" />
-          <AppListView v-else-if="viewMode === 'list'" :facilities="data" :filteredFacilities="data" />
+          <AppCardList v-if="viewMode === 'card'" :facilities="data" :filteredFacilities="data"
+            @facility-hovered="hoveredFacilityId = $event"
+            @facility-unhovered="hoveredFacilityId = null" />
+          <AppListView v-else-if="viewMode === 'list'" :facilities="data" :filteredFacilities="data"
+            @facility-hovered="hoveredFacilityId = $event"
+            @facility-unhovered="hoveredFacilityId = null" />
 
           <!-- Pagination -->
           <div v-if="totalPages > 1" class="flex justify-center my-4">
@@ -43,7 +47,7 @@
 
       <!-- Map Section -->
       <div v-if="showMap" class="w-2/4 lg:flex-grow mr-4 h-[99vh] sticky top-5 z-10">
-        <AppMap :coordinates="coordinates" :bounds="bounds" :latitude="center.lat" :longitude="center.lng" />
+        <AppMap :coordinates="coordinates" :bounds="bounds" :latitude="center.lat" :longitude="center.lng" :hoveredFacilityId="hoveredFacilityId" />
       </div>
     </div>
   </div>
@@ -78,6 +82,7 @@ export default {
         "lat": 12.384994440877549,
         "lng": 121.67093979526709
       },
+      hoveredFacilityId: null,
     };
   },
 
@@ -170,6 +175,7 @@ export default {
         this.totalResults = this.filteredData.total;
         this.totalPages = Math.ceil(this.totalResults / this.paginationSize);
         this.currentPageResults = Math.min(this.paginationSize, this.data.length);
+        this.hoveredFacilityId = null;
         // Set the coordinates array after the data has been fetched
         [this.coordinates, this.bounds, this.center] = await this.getMapCoordinates();
       } catch (error) {

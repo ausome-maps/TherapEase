@@ -169,6 +169,21 @@ export default {
         showValues() {
             console.log(isPAOTChecked);
         },
+        clearAllFilters() {
+            this.isPASPChecked = false;
+            this.isPAOTChecked = false;
+            this.teletherapyChecked = false;
+            this.onsiteChecked = false;
+            this.homeserviceChecked = false;
+            this.individualChecked = false;
+            this.groupChecked = false;
+
+            for (const key in this.serviceCheckboxes) {
+                this.serviceCheckboxes[key] = false;
+            }
+
+            this.$emit('query-generated', { filter: [] });
+        },
     }
 
 
@@ -366,7 +381,8 @@ export default {
                     <!-- Modal footer -->
                     <div
                         class="flex items-center p-6 space-x-2 border-t justify-between border-gray-200 rounded-b dark:border-gray-600">
-                        <button type="button" class="">
+                        <button type="button" @click="clearAllFilters"
+                            class="border px-4 py-2 bg-white hover:bg-gray-200 active:bg-gray-300 text-black rounded-lg">
                             Clear all filters</button>
                         <button type="button" @click="generateElasticSearchQuery"
                             class="border px-4 py-2 bg-black active:bg-gray-700 text-white rounded-lg">

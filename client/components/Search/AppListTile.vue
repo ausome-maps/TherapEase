@@ -1,5 +1,7 @@
 <template>
-    <div class="tile flex overflow-ellipsis w-full py-2 overflow-hidden">
+    <div class="tile flex overflow-ellipsis w-full py-2 overflow-hidden"
+    @mouseenter="$emit('facility-hovered', facilityData.id)"
+    @mouseleave="$emit('facility-unhovered', facilityData.id)">
         <div class="w-[250px] h-[200px] relative">
             <NuxtLink :to="`/details-page?id=${facilityData.id}`">
                 <img class="tile-image object-cover rounded-[15px] h-full sm:min-w-[150px] md:min-w-[165px] lg:min-w-[230px] xl:min-w-[250px]"

@@ -5,7 +5,9 @@
             <div v-for="facility in facilities"
                 class="transition duration-500 ease-in-out p-2 transform hover:-translate-y-1 hover:scale-110">
                 <AppCard :facilityData="facility"
-                    class="relative max-h-[300px] rounded-lg hover:shadow-xl transition-shadow duration-300 ease-in-out" />
+                    class="relative max-h-[300px] rounded-lg hover:shadow-xl transition-shadow duration-300 ease-in-out"
+                    @facility-hovered="(id) => $emit('facility-hovered', id)"
+                    @facility-unhovered="(id) => $emit('facility-unhovered', id)" />
             </div>
         </div>
     </div>

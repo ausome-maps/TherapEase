@@ -1,5 +1,7 @@
 <template>
-  <div class="relative overflow-ellipsis w-full min-h-[180px] sm:min-h-[250px] max-w-[80vw] lg:min-h-[250px] ">
+  <div class="relative overflow-ellipsis w-full min-h-[180px] sm:min-h-[250px] max-w-[80vw] lg:min-h-[250px] "
+    @mouseenter="$emit('facility-hovered', facilityData.id)"
+    @mouseleave="$emit('facility-unhovered', facilityData.id)">
     <NuxtLink :to="`/details-page?id=${facilityData.id}`">
       <div v-if="loading">
         <!-- Skeleton -->
