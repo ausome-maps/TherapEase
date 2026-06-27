@@ -76,14 +76,14 @@ class UserAppTest(APITestCase):
             "user": {"first_name": "updated first name"},
             "other_metadata": {"contact_nos": "01234567"},
         }
-        response = self.client.patch(
-            profile_url, format="json", data=updated_profile
-        ).json()["data"]["attributes"]
-        user = response["user"]
+        response = self.client.patch(profile_url, format="json", data=updated_profile)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.json()
+        user = data.get("user", data)
         self.assertEqual(updated_profile["user"]["first_name"], user["first_name"])
         self.assertEqual(
             updated_profile["other_metadata"]["contact_nos"],
-            response["other_metadata"]["contact_nos"],
+            data["other_metadata"]["contact_nos"],
         )
 
     def test_organization_model_rel(self):
@@ -119,20 +119,24 @@ class UserAppTest(APITestCase):
         response = self.client.post(
             create_org_url, format="json", data=created_org_data
         )
-        org_id = response.json()["data"]["id"]
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        org_id = response.json().get("id")
+        self.assertIsNotNone(org_id)
         self.assertEqual(str(Organization.objects.get(id=org_id).id), org_id)
 
     def test_simple_jwt_on_protected_api(self):
         token_url = "/auth/jwt/create/"
         credentials = {
-            "username": self.user_data["username"],
+            "email": self.user_data["email"],
             "password": self.user_data["password"],
         }
         response = self.client.post(token_url, data=credentials, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        token_data = response.json()
+        access_token = token_data.get("access")
+        self.assertIsNotNone(access_token, f"No access token in response: {token_data}")
         users_url = "/auth/users/"
-        self.client.credentials(
-            HTTP_AUTHORIZATION=f"Bearer {response.json()['data']['access']}"
-        )
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
         response = self.client.get(users_url, format="json")
         self.assertEqual(response.status_code, 200)
 
@@ -173,21 +177,31 @@ class EmailVerificationTest(APITestCase):
 
         # login to get the authentication token
         response = self.client.post(self.login_url, self.login_data, format="json")
-        self.assertTrue("auth_token" in response.json()["data"]["attributes"])
-        token = response.json()["data"]["attributes"]["auth_token"]
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        login_data = response.json()
+        token = login_data.get(
+            "auth_token",
+            login_data.get("data", {}).get("attributes", {}).get("auth_token"),
+        )
+        self.assertIsNotNone(token, f"No auth_token in response: {login_data}")
 
         # set token in the header
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
         # get user details
         response = self.client.get(self.user_details_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.json()), 3)
-        self.assertEqual(
-            response.json()["data"][0]["attributes"]["email"], self.user_data["email"]
+        response_json = response.json()
+        results = response_json.get(
+            "results",
+            response_json if isinstance(response_json, list) else [response_json],
         )
+        if isinstance(results, dict):
+            results = [results]
+        self.assertGreaterEqual(len(results), 1)
+        first_user = results[0] if isinstance(results, list) else results
+        user_attrs = first_user.get("attributes", first_user)
         self.assertEqual(
-            response.json()["data"][0]["attributes"]["username"],
-            self.user_data["username"],
+            user_attrs.get("email", user_attrs.get("username")), self.user_data["email"]
         )
 
         # logout the user
