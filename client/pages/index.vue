@@ -146,6 +146,8 @@ export default {
 
     handleQueryPassed(queryBody) {
       this.filter = queryBody.filters;
+      this.currentPage = 1;
+      this.handleSearch();
     },
 
     async getMapCoordinates() {

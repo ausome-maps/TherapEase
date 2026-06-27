@@ -17,16 +17,30 @@ class ProfileViewset(LoggingMixin, viewsets.ModelViewSet):
 
     def initial(self, request, *args, **kwargs):
         import sys
-        from django.conf import settings as dj_settings
-        print(f"DEBUG_INITIAL: auth={request.META.get('HTTP_AUTHORIZATION', 'NONE')[:50]}", file=sys.stderr, flush=True)
+
+        print(
+            f"DEBUG_INITIAL: auth={request.META.get('HTTP_AUTHORIZATION', 'NONE')[:50]}",
+            file=sys.stderr,
+            flush=True,
+        )
         from rest_framework_simplejwt.settings import api_settings
-        print(f"DEBUG_INITIAL: sign_key={api_settings.SIGNING_KEY[:15]} algo={api_settings.ALGORITHM}", file=sys.stderr, flush=True)
+
+        print(
+            f"DEBUG_INITIAL: sign_key={api_settings.SIGNING_KEY[:15]} algo={api_settings.ALGORITHM}",
+            file=sys.stderr,
+            flush=True,
+        )
         try:
             from rest_framework_simplejwt.tokens import AccessToken
-            t = request.META.get('HTTP_AUTHORIZATION', '').replace('Bearer ', '')
+
+            t = request.META.get("HTTP_AUTHORIZATION", "").replace("Bearer ", "")
             if t:
                 tok = AccessToken(t)
-                print(f"DEBUG_INITIAL: manual_decode=OK user_id={tok.get('user_id')}", file=sys.stderr, flush=True)
+                print(
+                    f"DEBUG_INITIAL: manual_decode=OK user_id={tok.get('user_id')}",
+                    file=sys.stderr,
+                    flush=True,
+                )
         except Exception as e:
             print(f"DEBUG_INITIAL: manual_decode=FAIL {e}", file=sys.stderr, flush=True)
         return super().initial(request, *args, **kwargs)
@@ -42,13 +56,27 @@ class ProfileViewset(LoggingMixin, viewsets.ModelViewSet):
     def me(self, request):
         import sys
         from django.conf import settings as dj_settings
-        print(f"DEBUG_ME: auth_header={request.META.get('HTTP_AUTHORIZATION', 'NONE')[:80]}", file=sys.stderr, flush=True)
-        print(f"DEBUG_ME: secret_key={dj_settings.SECRET_KEY[:10]}... sign_key={dj_settings.SIMPLE_JWT.get('SIGNING_KEY', 'NOT SET')[:10]}...", file=sys.stderr, flush=True)
+
+        print(
+            f"DEBUG_ME: auth_header={request.META.get('HTTP_AUTHORIZATION', 'NONE')[:80]}",
+            file=sys.stderr,
+            flush=True,
+        )
+        print(
+            f"DEBUG_ME: secret_key={dj_settings.SECRET_KEY[:10]}... sign_key={dj_settings.SIMPLE_JWT.get('SIGNING_KEY', 'NOT SET')[:10]}...",
+            file=sys.stderr,
+            flush=True,
+        )
         try:
             from rest_framework_simplejwt.tokens import AccessToken
-            t = request.META.get('HTTP_AUTHORIZATION', '').replace('Bearer ', '')
+
+            t = request.META.get("HTTP_AUTHORIZATION", "").replace("Bearer ", "")
             token = AccessToken(t)
-            print(f"DEBUG_ME: token_valid=True user_id={token.get('user_id')}", file=sys.stderr, flush=True)
+            print(
+                f"DEBUG_ME: token_valid=True user_id={token.get('user_id')}",
+                file=sys.stderr,
+                flush=True,
+            )
         except Exception as e:
             print(f"DEBUG_ME: token_valid=False error={e}", file=sys.stderr, flush=True)
 

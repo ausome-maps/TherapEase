@@ -18,14 +18,18 @@ def social_auth_jwt(request):
     access_token = request.data.get("access_token")
 
     if not provider or not access_token:
-        return JsonResponse({"detail": "provider and access_token are required"}, status=400)
+        return JsonResponse(
+            {"detail": "provider and access_token are required"}, status=400
+        )
 
     try:
         if provider == "google-oauth2":
             from social_core.backends.google import GoogleOAuth2
+
             backend = GoogleOAuth2()
         elif provider == "facebook":
             from social_core.backends.facebook import FacebookOAuth2
+
             backend = FacebookOAuth2()
         else:
             return JsonResponse({"detail": "unsupported provider"}, status=400)
@@ -42,7 +46,9 @@ def social_auth_jwt(request):
 
 def social_auth_complete_redirect(request):
     if not request.user or not request.user.is_authenticated:
-        return HttpResponseRedirect(f"{settings.SITE_URL}/login?error=social_auth_failed")
+        return HttpResponseRedirect(
+            f"{settings.SITE_URL}/login?error=social_auth_failed"
+        )
 
     tokens = get_tokens_for_user(request.user)
     return HttpResponseRedirect(

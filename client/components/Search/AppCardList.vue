@@ -1,50 +1,74 @@
 <template>
-    <div class="flex justify-center w-full">
-        <div
-            class="bg-transparent grid mx-autogrid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg: xl:grid-cols-3 2xl:grid-cols-4 gap-1 sm:gap-1 p-4">
-            <div v-for="facility in facilities"
-                class="transition duration-500 ease-in-out p-2 transform hover:-translate-y-1 hover:scale-110">
-                <AppCard :facilityData="facility"
-                    class="relative max-h-[300px] rounded-lg hover:shadow-xl transition-shadow duration-300 ease-in-out"
-                    @facility-hovered="(id) => $emit('facility-hovered', id)"
-                    @facility-unhovered="(id) => $emit('facility-unhovered', id)" />
-            </div>
+  <div class="flex justify-center w-full">
+    <div v-if="loading" class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 p-4 w-full">
+      <div v-for="n in skeletonCount" :key="n" class="p-2">
+        <div class="rounded-xl overflow-hidden bg-gray-100 animate-pulse">
+          <div class="h-[220px] bg-gray-200" />
+          <div class="px-4 pb-4 pt-3 space-y-2">
+            <div class="h-5 bg-gray-200 rounded w-3/4" />
+            <div class="h-3 bg-gray-200 rounded w-1/2" />
+            <div class="h-3 bg-gray-200 rounded w-1/3" />
+          </div>
         </div>
+      </div>
     </div>
+
+    <div v-else-if="error" class="text-center py-10 w-full">
+      <p class="text-gray-500 mb-2">Failed to load facilities.</p>
+      <button
+        class="px-4 py-2 bg-red-400 text-white rounded-lg hover:bg-red-500 text-sm"
+        @click="emit('retry')"
+      >
+        Retry
+      </button>
+    </div>
+
+    <div v-else-if="!facilities || facilities.length === 0" class="text-center py-10 w-full">
+      <h2 class="text-xl font-semibold text-gray-700">No facilities found</h2>
+      <p class="text-gray-500 mt-1">Try adjusting your search or filter criteria.</p>
+    </div>
+
+    <div
+      v-else
+      class="bg-transparent grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 p-4 w-full"
+    >
+      <div
+        v-for="facility in facilities"
+        :key="facility.id"
+        class="transition duration-200 ease-in-out p-2 transform hover:-translate-y-1"
+      >
+        <AppCard
+          :facilityData="facility"
+          @facility-hovered="(id) => emit('facility-hovered', id)"
+          @facility-unhovered="(id) => emit('facility-unhovered', id)"
+        />
+      </div>
+    </div>
+  </div>
 </template>
 
-<style scoped>
-.transition {
-    transition: all .2s ease-in-out;
-}
+<script setup>
+import { computed } from 'vue'
 
-.hover\:scale-110:hover {
-    transform: scale(1.02);
-}
+const props = defineProps({
+  facilities: {
+    type: Array,
+    default: () => [],
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+  error: {
+    type: Boolean,
+    default: false,
+  },
+})
 
-.hover\:shadow-xl:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-</style>
+const emit = defineEmits(['facility-hovered', 'facility-unhovered', 'retry'])
 
-<script>
-export default {
-    props: {
-        facilities: {
-            type: Object,
-            required: true
-        }
-    },
-    mounted() {
-        //console.log("Initial value:", this.facilities)
-    },
-    watch: {
-        facilities: {
-            deep: true,
-            handler(newVal) {
-                console.log("Updated value:", newVal);
-            }
-        }
-    }
-};
+const skeletonCount = computed(() => {
+  const count = Array.isArray(props.facilities) ? props.facilities.length : 0
+  return Math.max(count, 8)
+})
 </script>

@@ -42,9 +42,7 @@ def send_registration_email(
 @shared_task
 def check_expiry():
     cutoff = datetime.now(timezone.utc) - timedelta(days=1)
-    inactive_users = User.objects.filter(
-        is_active=False, date_joined__lt=cutoff
-    )
+    inactive_users = User.objects.filter(is_active=False, date_joined__lt=cutoff)
     count = inactive_users.count()
     inactive_users.delete()
     logger.info(f"Deleted {count} non-activated accounts older than 1 day")

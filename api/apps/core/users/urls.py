@@ -10,6 +10,8 @@ router.register(r"organization", OrganizationViewset, basename="organization")
 
 urlpatterns = [
     path("social/jwt/", social_auth_jwt, name="social-auth-jwt"),
-    path("social/complete/", social_auth_complete_redirect, name="social-auth-complete"),
+    path(
+        "social/complete/", social_auth_complete_redirect, name="social-auth-complete"
+    ),
 ]
 urlpatterns = urlpatterns + router.urls

@@ -20,6 +20,34 @@ SEARCH_RESPONSE_TEMPLATE = {
     "total": 0,
 }
 
+SERVICE_KEYS = [
+    "speechlanguagetherapy",
+    "speechlanguagepathology",
+    "occupationaltherapy",
+    "behavioraltherapy",
+    "physicaltherapy",
+    "lifeskillstraining",
+    "socialskillstraining",
+    "integration",
+    "integrationprogram",
+    "jobcoaching",
+    "specialeducation",
+    "spedtutorials",
+    "parentcoaching",
+    "educationsessionforfamilies",
+    "feeding",
+    "counseling",
+    "psychotherapy",
+    "abatherapy",
+    "mnri",
+    "sensoryintegration",
+    "playschool",
+    "dysphagiamanagement",
+    "orthoses",
+    "homeschoolfacilitation",
+    "rehabconsultation",
+]
+
 
 class FacilitiesPropertiesViewset(LoggingMixin, viewsets.ModelViewSet):
     queryset = FacilityProperties.objects.exclude(status="inactive")
@@ -56,8 +84,14 @@ class FacilitiesViewset(LoggingMixin, viewsets.ModelViewSet):
 
     def _build_services_offered_query(self, services_offered):
         query = Q()
+        delivery_modes = ["teletherapy", "onsite", "home_service"]
         for service in services_offered:
-            query |= Q(properties__services_offered__contains=service)
+            svc_query = Q()
+            for dm in delivery_modes:
+                svc_query |= Q(
+                    **{f"properties__services_offered__{service}__mode__{dm}__gt": 0}
+                )
+            query |= svc_query
         return query
 
     def _build_accreditation_query(self, accreditation):
@@ -70,30 +104,24 @@ class FacilitiesViewset(LoggingMixin, viewsets.ModelViewSet):
     def _build_mode_query(self, modes):
         query = Q()
         for mode in modes:
-            query |= Q(properties__services_offered__contains=f'"mode":{{"{mode}":')
+            for svc_key in SERVICE_KEYS:
+                query |= Q(
+                    **{f"properties__services_offered__{svc_key}__mode__{mode}__gt": 0}
+                )
         return query
 
     def _build_session_type_query(self, session_types):
         query = Q()
+        delivery_modes = ["teletherapy", "onsite", "home_service"]
         for st in session_types:
-            if st == "individual":
-                query |= (
-                    Q(properties__services_offered__contains='"teletherapy": 1')
-                    | Q(properties__services_offered__contains='"onsite": 1')
-                    | Q(properties__services_offered__contains='"home_service": 1')
-                    | Q(properties__services_offered__contains='"teletherapy": 3')
-                    | Q(properties__services_offered__contains='"onsite": 3')
-                    | Q(properties__services_offered__contains='"home_service": 3')
-                )
-            elif st == "group":
-                query |= (
-                    Q(properties__services_offered__contains='"teletherapy": 2')
-                    | Q(properties__services_offered__contains='"onsite": 2')
-                    | Q(properties__services_offered__contains='"home_service": 2')
-                    | Q(properties__services_offered__contains='"teletherapy": 3')
-                    | Q(properties__services_offered__contains='"onsite": 3')
-                    | Q(properties__services_offered__contains='"home_service": 3')
-                )
+            lookup_vals = [1, 3] if st == "individual" else [2, 3]
+            for svc_key in SERVICE_KEYS:
+                for dm in delivery_modes:
+                    query |= Q(
+                        **{
+                            f"properties__services_offered__{svc_key}__mode__{dm}__in": lookup_vals
+                        }
+                    )
         return query
 
     def _build_caters_to_query(self, caters_to):

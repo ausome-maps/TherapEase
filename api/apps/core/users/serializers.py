@@ -32,7 +32,14 @@ class UsersSerializer(serializers.ModelSerializer):
             "login_count",
             "account_expiry",
         ]
-        read_only_fields = ["id", "email", "is_staff", "active", "login_count", "account_expiry"]
+        read_only_fields = [
+            "id",
+            "email",
+            "is_staff",
+            "active",
+            "login_count",
+            "account_expiry",
+        ]
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -101,13 +108,19 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            raise serializers.ValidationError("No active account found with the given credentials")
+            raise serializers.ValidationError(
+                "No active account found with the given credentials"
+            )
 
         if not user.check_password(password):
-            raise serializers.ValidationError("No active account found with the given credentials")
+            raise serializers.ValidationError(
+                "No active account found with the given credentials"
+            )
 
         if not user.is_active:
-            raise serializers.ValidationError("No active account found with the given credentials")
+            raise serializers.ValidationError(
+                "No active account found with the given credentials"
+            )
 
         refresh = RefreshToken.for_user(user)
         return {
