@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 from rest_framework.authtoken.models import Token
 from django.core import mail
+from django.test import override_settings
 from django.contrib.auth.models import Permission
 from apps.core.users.models import User, Organization, OrganizationRole, Roles, Profile
 
@@ -209,3 +210,78 @@ class EmailVerificationTest(APITestCase):
         self.assertEqual(response.status_code, 204)
         response = self.client.get(self.user_details_url, format="json")
         self.assertEqual(response.status_code, 401)
+
+    def test_register_with_email_and_password_only(self):
+        """Frontend registers with only email + password; username is auto-generated."""
+        payload = {
+            "email": "frontend@example.com",
+            "password": "frontendpass123",
+        }
+        response = self.client.post(self.register_url, payload, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        user = User.objects.get(email=payload["email"])
+        self.assertTrue(user.username)
+        self.assertEqual(len(mail.outbox), 1)
+
+    def test_register_weak_password_returns_field_error(self):
+        """Weak password should return a field-level error the frontend can display."""
+        payload = {
+            "email": "weakpass@example.com",
+            "password": "password",
+        }
+        response = self.client.post(self.register_url, payload, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        data = response.json()
+        # JSON:API renderer returns a list of error objects.
+        errors = (
+            data
+            if isinstance(data, list)
+            else data.get("errors", []) if isinstance(data, dict) else []
+        )
+        self.assertTrue(
+            any("password" in e.get("source", {}).get("pointer", "") for e in errors)
+            or any("password" in str(e.get("detail", "")).lower() for e in errors)
+        )
+
+
+class AuthFeatureFlagTest(APITestCase):
+    register_url = "/auth/users/"
+    login_url = "/auth/jwt/create/"
+    refresh_url = "/auth/jwt/refresh/"
+
+    def test_register_blocked_when_disabled(self):
+        with override_settings(FEATURE_AUTH_ENABLED=0):
+            response = self.client.post(
+                self.register_url,
+                {"email": "disabled@example.com", "password": "testpass123"},
+                format="json",
+            )
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+            self.assertIn("disabled", response.json()["detail"])
+
+    def test_login_blocked_when_disabled(self):
+        with override_settings(FEATURE_AUTH_ENABLED=0):
+            response = self.client.post(
+                self.login_url,
+                {"email": "disabled@example.com", "password": "testpass123"},
+                format="json",
+            )
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_register_succeeds_when_enabled(self):
+        with override_settings(FEATURE_AUTH_ENABLED=1):
+            response = self.client.post(
+                self.register_url,
+                {"email": "enabled@example.com", "password": "testpass123"},
+                format="json",
+            )
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_facility_search_still_works_when_disabled(self):
+        with override_settings(FEATURE_AUTH_ENABLED=0):
+            response = self.client.post(
+                "/facilities/search",
+                {"filters": {}},
+                format="json",
+            )
+            self.assertIn(response.status_code, [200, 400])

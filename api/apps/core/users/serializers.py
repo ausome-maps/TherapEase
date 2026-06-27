@@ -1,5 +1,7 @@
+import uuid
+
 from djoser.conf import settings
-from djoser.serializers import TokenCreateSerializer
+from djoser.serializers import TokenCreateSerializer, UserCreateSerializer
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import User
 from rest_framework import serializers
@@ -7,6 +9,22 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from apps.core.facilities.serializers import FacilitiesSerializer
 from .models import Profile, Organization
+
+
+class CustomUserCreateSerializer(UserCreateSerializer):
+    """Auto-generate a username so the frontend can register with email + password only."""
+
+    class Meta(UserCreateSerializer.Meta):
+        fields = ("email", "username", "password")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["username"].required = False
+
+    def validate(self, attrs):
+        if not attrs.get("username"):
+            attrs["username"] = str(uuid.uuid4())
+        return super().validate(attrs)
 
 
 class UsersSerializer(serializers.ModelSerializer):

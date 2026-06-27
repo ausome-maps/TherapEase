@@ -28,6 +28,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "mysecret-key-1234")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get("DEBUG", 1))
+FEATURE_AUTH_ENABLED = int(os.environ.get("FEATURE_AUTH_ENABLED", 1))
 ALLOWED_HOSTS = os.environ.get(
     "DJANGO_ALLOWED_HOSTS", "localhost 127.0.0.1 [::1] *"
 ).split(" ")
@@ -88,6 +89,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "apps.core.users.debug_auth.AuthDebugMiddleware",
+    "apps.core.users.auth_feature_middleware.AuthFeatureFlagMiddleware",
 ]
 
 ROOT_URLCONF = "django_app.urls"
@@ -261,6 +263,7 @@ DJOSER = {
     "SEND_CONFIRMATION_EMAIL": True,
     "SERIALIZERS": {
         "token_create": "apps.core.users.serializers.CustomTokenCreateSerializer",
+        "user_create": "apps.core.users.serializers.CustomUserCreateSerializer",
     },
     # The activation and reset URLs are based on the frontend. Where the frontend will fetch uid and token from the link.
     # and send the uid and token to the backend.
