@@ -205,13 +205,28 @@ class FacilitiesTestCase(TestCase):
             "/facilities/search", data=extra_filters_without_hit, format="json"
         )
         self.assertEqual(0, len(response.json()["features"]))
-        extra_filters_not_implemented = {"filters": {"caters_to": ["pediatric"]}}
-        response = self.client.post(
-            "/facilities/search", data=extra_filters_not_implemented, format="json"
+
+    def test_search_with_caters_to_filter(self):
+        fp_id = str(uuid.uuid4())
+        FacilityProperties.objects.create(
+            osm_id=fp_id,
+            placename="Pediatric Facility",
+            address="123 Kids Ave",
+            region="Pediatric region",
+            caters_to=["pediatric"],
         )
-        self.assertEqual(0, len(response.json()["features"]))
+        Facilities.objects.get(id=fp_id)
+        response = self.client.post(
+            "/facilities/search",
+            data={"filters": {"caters_to": ["pediatric"]}},
+            format="json",
+        )
+        self.assertEqual(200, response.status_code)
+        data = response.json()
+        self.assertEqual(1, len(data["features"]))
         self.assertEqual(
-            "One of your filters is not yet implemented.", response.json()["message"]
+            "Pediatric Facility",
+            data["features"][0]["properties"]["placename"],
         )
 
     def test_search_pagination(self):
