@@ -339,5 +339,24 @@ export default {
 .badge {
     border-radius: 35px 0px 0px 35px;
 }
+
+@media screen and (max-width: 639px) {
+    .tile {
+        flex-direction: column;
+    }
+    .tile > div:first-of-type {
+        width: 100%;
+        height: 180px;
+    }
+    .tile-image {
+        border-radius: 15px 15px 0 0;
+    }
+    .ml-5 {
+        margin-left: 0;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        padding-top: 0.5rem;
+    }
+}
 </style>
 

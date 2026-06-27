@@ -1,8 +1,8 @@
 <template>
-  <div class="justify center top-5 px-10">
+  <div class="justify center top-5 px-2 sm:px-10">
     <div class="flex justify-left pt-5">
       <NuxtLink to="/">
-        <p class="w-44 inline-block"><svg class="w-5 h-5 text-gray-800 dark:text-white inline-block" aria-hidden="true"
+        <p class="w-44 inline-block text-sm sm:text-base"><svg class="w-5 h-5 text-gray-800 dark:text-white inline-block" aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M7 1 1.3 6.326a.91.91 0 0 0 0 1.348L7 13" />
@@ -10,7 +10,7 @@
       </NuxtLink>
     </div>
     <div class="flex justify-center">
-      <div class="w-[1440px]">
+      <div class="w-full max-w-[1440px]">
 
         <!-- Loading State -->
         <template v-if="!properties">
@@ -22,17 +22,17 @@
         <!-- Data Loaded State -->
         <template v-else>
           <template v-if="isMobile">
-            <div class="rounded-xl mx-[20px]">
+            <div class="rounded-xl mx-0 sm:mx-[20px]">
               <AppGalleryMobile :images="properties.images" />
             </div>
-            <div class="mx-auto pl-8 pt-4">
+            <div class="mx-auto px-3 sm:pl-8 pt-4">
               <AppDetails :facilityDetails="properties" />
             </div>
-            <div class="sidebar mx-auto mb-[50px] pt-4 w-[90%]">
+            <div class="sidebar mx-auto mb-[50px] pt-4 w-full px-3 sm:w-[90%]">
               <AppContacts :facilityDetails="properties" />
               <AppShareSubmit />
             </div>
-            <div class="pb-[100px]"></div>
+            <div class="pb-[80px]"></div>
           </template>
           <template v-else>
             <div class="relative z-[1]">

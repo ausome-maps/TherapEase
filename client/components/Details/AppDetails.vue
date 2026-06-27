@@ -10,10 +10,10 @@
 
       <AppAccBadge :accreditation="facilityDetails.accreditation"/>
     </div>
-    <h1 class="text-4xl font-bold mb-4 text-red-400">
+    <h1 class="text-2xl sm:text-4xl font-bold mb-4 text-red-400">
       {{ facilityDetails.placename }}
     </h1>
-    <div class="pr-12">
+    <div class="pr-0 sm:pr-12 text-sm sm:text-base">
       {{ facilityDetails.desc_long }}
     </div>
     <!-- Insert a thick h line-->

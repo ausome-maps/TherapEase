@@ -261,15 +261,22 @@ DJOSER = {
     "LOGIN_FIELD": "email",
     "SEND_ACTIVATION_EMAIL": True,
     "SEND_CONFIRMATION_EMAIL": True,
+    "SET_PASSWORD_RETYPE": True,
+    "PERMISSIONS": {
+        "user_list": ["rest_framework.permissions.IsAdminUser"],
+        "user": ["djoser.permissions.CurrentUserOrAdmin"],
+        "user_delete": ["djoser.permissions.CurrentUserOrAdmin"],
+    },
     "SERIALIZERS": {
         "token_create": "apps.core.users.serializers.CustomTokenCreateSerializer",
         "user_create": "apps.core.users.serializers.CustomUserCreateSerializer",
+        "user": "apps.core.users.serializers.UserDetailSerializer",
     },
     # The activation and reset URLs are based on the frontend. Where the frontend will fetch uid and token from the link.
     # and send the uid and token to the backend.
     # Refer to docs/auth.md for more details
     "ACTIVATION_URL": "user/activate/{uid}/{token}",
-    "PASSWORD_RESET_CONFIRM_URL": "user/reset_password/{uid}/{token}",
+    "PASSWORD_RESET_CONFIRM_URL": "user/reset-password/{uid}/{token}",
 }
 
 DOMAIN = os.environ.get("UI_DOMAIN_NAME", "localhost:9002")

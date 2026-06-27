@@ -1,15 +1,11 @@
 <template>
-    <div class="flex justify-between px-4">
-        <div class="items-center flex justify-center">
-            Showing {{ filteredFacilitiesLength }} of {{ facilitiesLength }} results
+    <div class="flex justify-between px-2 sm:px-4">
+        <div class="items-center flex justify-center text-xs sm:text-sm text-gray-600">
+            Showing {{ filteredFacilitiesLength }} of {{ facilitiesLength }}
         </div>
-        <!-- <div class="w-50%">
-            <AppDropdown class="dropdown" :dropdownItems="sortByItems" :dropdownButtonId="sortByButton"
-                :dropdownMenuId="sortByMenu" />
-        </div> -->
 
-        <div class="justify-center flex max-w-100 gap-4">
-            <div class="items-center flex justify-center gap-4">
+        <div class="justify-center flex items-center gap-2 sm:gap-4">
+            <div class="items-center flex justify-center gap-2 sm:gap-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"
                     v-if="viewMode == 'list'" @click="changeViewMode('card')">
                     <rect width="9" height="9" rx="2" fill="#D48180" />
@@ -41,7 +37,7 @@
                     <rect x="7" y="13" width="15" height="3" rx="1.5" fill="#D48180" />
                 </svg>
             </div>
-            <button @click="$emit(showMap ? 'hide-map' : 'show-map')">
+            <button @click="$emit(showMap ? 'hide-map' : 'show-map')" class="hidden sm:inline-block text-sm text-gray-600 hover:text-gray-900">
                 {{ showMap ? 'Hide Map' : 'Show Map' }}
             </button>
         </div>

@@ -1,16 +1,22 @@
 <template>
   <div class="relative z-1 w-full flex top-5 flex-col justify-center rounded">
     <!-- Mobile Tab Switcher -->
-    <div v-if="isMobile" class="fixed top-[52px] left-0 right-0 z-40 bg-white border-b shadow-sm">
+    <div v-if="isMobile" class="fixed top-0 left-0 right-0 z-40 bg-white border-b shadow-sm" style="top: 52px;">
       <div class="flex">
         <button @click="mobileTab = 'list'"
           :class="mobileTab === 'list' ? 'border-b-2 border-red-400 text-red-400' : 'text-gray-500'"
           class="flex-1 py-3 text-sm font-medium text-center">
+          <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+          </svg>
           Facilities
         </button>
         <button @click="mobileTab = 'map'"
           :class="mobileTab === 'map' ? 'border-b-2 border-red-400 text-red-400' : 'text-gray-500'"
           class="flex-1 py-3 text-sm font-medium text-center">
+          <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+          </svg>
           Map
         </button>
       </div>
@@ -22,7 +28,7 @@
       <!-- Content Section (hidden when map tab active on mobile) -->
       <div v-show="!isMobile || mobileTab === 'list'" class="w-full lg:max-w-[850px] xl:max-w-[1100px] flex-grow">
         <ClientOnly>
-          <div class="px-3 sm:px-5 pb-4 sticky top-0 z-50 bg-white" :class="isMobile ? 'top-[96px]' : ''">
+          <div class="px-3 sm:px-5 pb-4 sticky z-50 bg-white" :style="isMobile ? 'top: 96px;' : 'top: 0;'">
             <AppSearchAndFilter @update-search="handleSearch" @query-passed="handleQueryPassed" />
             <AppListingHeader :show-map="showMap" @hide-map="showMap = false" @show-map="showMap = true"
               :view-mode="viewMode" @change-view-mode="handleChangeViewMode" :facilitiesLength="totalResults"
@@ -41,28 +47,28 @@
             @facility-hovered="hoveredFacilityId = $event"
             @facility-unhovered="hoveredFacilityId = null" />
 
-          <div v-if="totalPages > 1" class="flex justify-center my-4">
+          <div v-if="totalPages > 1" class="flex justify-center my-4 flex-wrap gap-1">
             <button @click="prevPage" :disabled="currentPage === 1"
-              class="px-4 py-2 bg-gray-200 text-gray-700 border rounded-l-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed mr-2">Previous</button>
+              class="px-3 py-2 text-sm bg-gray-200 text-gray-700 border rounded-l-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">Prev</button>
 
-            <template v-for="page in totalPages">
-              <button v-if="page === currentPage" class="px-4 py-2 bg-gray-300 text-gray-700 border mx-1">{{ page }}</button>
+            <template v-for="page in totalPages" :key="page">
+              <button v-if="page === currentPage" class="px-3 py-2 text-sm bg-gray-300 text-gray-700 border">{{ page }}</button>
               <button v-else @click="goToPage(page)"
-                class="px-4 py-2 bg-gray-200 text-gray-700 border hover:bg-red-300 mx-1">{{ page }}</button>
+                class="px-3 py-2 text-sm bg-gray-200 text-gray-700 border hover:bg-red-300">{{ page }}</button>
             </template>
 
             <button @click="nextPage" :disabled="currentPage === totalPages"
-              class="px-4 py-2 bg-gray-200 text-gray-700 border rounded-r-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed ml-2">Next</button>
+              class="px-3 py-2 text-sm bg-gray-200 text-gray-700 border rounded-r-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">Next</button>
           </div>
         </ClientOnly>
       </div>
 
       <!-- Map Section (hidden when list tab active on mobile) -->
-      <div v-show="!isMobile || mobileTab === 'map'" :class="isMobile ? 'fixed inset-0 top-[96px] z-30' : (showMap ? 'w-2/4 lg:flex-grow mr-4 h-[99vh] sticky top-5 z-10' : '')">
-        <AppMap v-if="showMap || isMobile" :coordinates="coordinates" :bounds="bounds" :latitude="center.lat" :longitude="center.lng" :hoveredFacilityId="hoveredFacilityId" />
+      <div v-show="!isMobile || mobileTab === 'map'" :class="isMobile ? 'fixed inset-0 z-30' : (showMap ? 'w-2/4 lg:flex-grow mr-4 h-[99vh] sticky top-5 z-10' : '')" :style="isMobile ? 'top: 96px;' : ''">
+        <AppMap v-if="showMap || isMobile" :key="isMobile ? mobileTab : 'map'" :coordinates="coordinates" :bounds="bounds" :latitude="center.lat" :longitude="center.lng" :hoveredFacilityId="hoveredFacilityId" />
       </div>
     </div>
-    <div class="h-[100px]"></div>
+    <div class="h-[80px]"></div>
   </div>
 </template>
 

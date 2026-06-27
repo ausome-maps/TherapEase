@@ -64,7 +64,10 @@
         </div>
       </form>
 
-      <div class="text-center">
+      <div class="text-center space-y-2">
+        <p class="text-sm text-gray-600">
+          <NuxtLink to="/user/reset-password" class="font-medium text-red-400 hover:text-red-500">Forgot your password?</NuxtLink>
+        </p>
         <p class="text-sm text-gray-600">
           Don't have an account?
           <NuxtLink to="/register" class="font-medium text-red-400 hover:text-red-500">Register here</NuxtLink>
@@ -85,15 +88,25 @@ const successMessage = ref('')
 const router = useRouter()
 const route = useRoute()
 
-const { login } = useAuth()
+const { login, currentUser, initAuth } = useAuth()
 const config = useRuntimeConfig()
 const googleLoginUrl = `${config.public.apiURL}/social/login/google-oauth2/?next=/users/social/complete/`
 const facebookLoginUrl = `${config.public.apiURL}/social/login/facebook/?next=/users/social/complete/`
 
-onMounted(() => {
+const getRedirectTarget = () => {
+  const user = currentUser.value
+  if (user && user.first_name && user.last_name) {
+    return '/'
+  }
+  return '/complete-profile'
+}
+
+onMounted(async () => {
   const token = localStorage.getItem('access_token')
   if (token) {
-    router.push('/complete-profile')
+    await initAuth()
+    router.push(getRedirectTarget())
+    return
   }
   if (route.query.activated) {
     successMessage.value = 'Your account has been activated! Please sign in.'
@@ -105,7 +118,8 @@ const handleSubmit = async () => {
   loading.value = true
   try {
     await login(email.value, password.value)
-    router.push('/complete-profile')
+    await new Promise((r) => setTimeout(r, 300))
+    router.push(getRedirectTarget())
   } catch (e) {
     error.value = e.message
   } finally {
