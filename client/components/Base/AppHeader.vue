@@ -5,7 +5,7 @@
         <img class="h-5" :src="image_placeholder" alt="">
       </a>
       <div class="flex items-center gap-2">
-        <template v-if="mounted">
+        <template v-if="mounted && authEnabled">
           <template v-if="isLoggedIn">
             <span class="text-sm text-gray-600 hidden sm:inline">{{ userEmail }}</span>
             <button type="button" @click="handleLogout" class="text-sm text-red-400 hover:text-red-600 border border-red-400 px-3 py-1 rounded-full hover:bg-red-50 cursor-pointer">
@@ -25,50 +25,49 @@
     </div>
   </nav>
 </template>
-<script>
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import placeholder from "assets/images/logo_horizontal_1.png"
 
-export default {
-  data() {
-    return {
-      image_placeholder: placeholder,
-      mounted: false,
-      isLoggedIn: false,
-      userEmail: '',
-    }
-  },
-  mounted() {
-    this.mounted = true
-    this.checkAuth()
-    window.addEventListener('storage', this.checkAuth)
+const config = useRuntimeConfig()
+const authEnabled = computed(() => config.public.authEnabled)
+const image_placeholder = placeholder
+const mounted = ref(false)
+const isLoggedIn = ref(false)
+const userEmail = ref('')
 
-    let recaptchaScript = document.createElement('script')
-    recaptchaScript.setAttribute('src', this.$config.public.googleTagManager)
-    document.head.appendChild(recaptchaScript)
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-E1HY2D8NC8');
-  },
-  beforeUnmount() {
-    window.removeEventListener('storage', this.checkAuth)
-  },
-  methods: {
-    checkAuth() {
-      const token = localStorage.getItem('access_token')
-      this.isLoggedIn = !!token
-      if (token) {
-        this.userEmail = localStorage.getItem('user_email') || ''
-      }
-    },
-    handleLogout() {
-      localStorage.removeItem('access_token')
-      localStorage.removeItem('refresh_token')
-      localStorage.removeItem('user_email')
-      this.isLoggedIn = false
-      this.userEmail = ''
-      window.location.href = '/'
-    },
+const checkAuth = () => {
+  const token = localStorage.getItem('access_token')
+  isLoggedIn.value = !!token
+  if (token) {
+    userEmail.value = localStorage.getItem('user_email') || ''
   }
 }
+
+const handleLogout = () => {
+  localStorage.removeItem('access_token')
+  localStorage.removeItem('refresh_token')
+  localStorage.removeItem('user_email')
+  isLoggedIn.value = false
+  userEmail.value = ''
+  window.location.href = '/'
+}
+
+onMounted(() => {
+  mounted.value = true
+  checkAuth()
+  window.addEventListener('storage', checkAuth)
+
+  let recaptchaScript = document.createElement('script')
+  recaptchaScript.setAttribute('src', config.public.googleTagManager)
+  document.head.appendChild(recaptchaScript)
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){(window.dataLayer as any[]).push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-E1HY2D8NC8');
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('storage', checkAuth)
+})
 </script>

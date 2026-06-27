@@ -22,6 +22,28 @@ const state = ref<AuthState>({
   user: null,
 })
 
+const formatApiError = (err: unknown, fallback = 'Request failed'): string => {
+  if (!err) return fallback
+  if (typeof err === 'string') return err
+  if (err instanceof Error) return err.message
+  const obj = err as Record<string, unknown>
+  if (obj.detail) {
+    if (typeof obj.detail === 'string') return obj.detail
+    if (Array.isArray(obj.detail)) return obj.detail.map((e) => formatApiError(e, fallback)).join(', ')
+    return formatApiError(obj.detail, fallback)
+  }
+  if (Array.isArray(obj)) return obj.map((e) => formatApiError(e, fallback)).join(', ')
+  const messages = Object.entries(obj).flatMap(([key, value]) => {
+    if (key === 'status_code' || key === 'code') return []
+    if (Array.isArray(value)) {
+      return value.map((v) => (typeof v === 'string' ? v : `${key}: ${formatApiError(v, fallback)}`))
+    }
+    if (typeof value === 'string') return [`${key}: ${value}`]
+    return [`${key}: ${formatApiError(value, fallback)}`]
+  })
+  return messages.join(', ') || fallback
+}
+
 export const useAuth = () => {
   const config = useRuntimeConfig()
 
@@ -51,7 +73,7 @@ export const useAuth = () => {
     })
     if (!res.ok) {
       const err = await res.json()
-      throw new Error(err.detail || 'Login failed')
+      throw new Error(formatApiError(err, 'Login failed'))
     }
     const raw = await res.json()
     const data = raw.data?.attributes || raw
@@ -72,9 +94,7 @@ export const useAuth = () => {
     })
     if (!res.ok) {
       const err = await res.json()
-      throw new Error(
-        Array.isArray(err) ? Object.values(err).flat().join(', ') : (err.detail || 'Registration failed')
-      )
+      throw new Error(formatApiError(err, 'Registration failed'))
     }
     return res.json()
   }
@@ -87,7 +107,7 @@ export const useAuth = () => {
     })
     if (!res.ok) {
       const err = await res.json()
-      throw new Error(err.detail || 'Activation failed')
+      throw new Error(formatApiError(err, 'Activation failed'))
     }
     return res.json()
   }
@@ -192,7 +212,7 @@ export const useAuth = () => {
     })
     if (!res.ok) {
       const err = await res.json()
-      throw new Error(err.detail || 'Social login failed')
+      throw new Error(formatApiError(err, 'Social login failed'))
     }
     const raw = await res.json()
     const data = raw.data?.attributes || raw
