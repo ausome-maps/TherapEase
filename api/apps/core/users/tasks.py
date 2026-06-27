@@ -1,5 +1,6 @@
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.template.loader import get_template
 from celery import shared_task
 from celery.utils.log import get_task_logger
@@ -36,6 +37,16 @@ def send_registration_email(
         bcc_email,
     )
     return user_email
+
+
+@shared_task
+def check_expiry():
+    cutoff = datetime.now(timezone.utc) - timedelta(days=1)
+    inactive_users = User.objects.filter(is_active=False, date_joined__lt=cutoff)
+    count = inactive_users.count()
+    inactive_users.delete()
+    logger.info(f"Deleted {count} non-activated accounts older than 1 day")
+    return count
 
 
 @shared_task

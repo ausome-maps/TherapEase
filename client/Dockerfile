@@ -1,9 +1,8 @@
-FROM node:16.20.1-slim
+FROM node:22-slim
 
-WORKDIR /code
-COPY package.json /code/package.json
+WORKDIR /code/app
+COPY package.json /code/app/package.json
 RUN npm install --unsafe-perm=true --allow-root
-ENV PATH /code/node_modules/.bin:$PATH
+ENV PATH /code/app/node_modules/.bin:$PATH
 
 COPY . /code/app/
-WORKDIR /code/app/

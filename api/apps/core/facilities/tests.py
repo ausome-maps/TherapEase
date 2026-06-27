@@ -193,41 +193,221 @@ class FacilitiesTestCase(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual(1, len(response.json()["features"]))
         extra_filters_with_hit = {
-            "filters": {
-                "services_offered": [
-                    {
-                        "orthoses": {
-                            "mode": {"onsite": 0, "teletherapy": 0, "home_service": 0}
-                        }
-                    }
-                ]
-            }
+            "filters": {"services_offered": ["occupationaltherapy"]}
         }
         response = self.client.post(
             "/facilities/search", data=extra_filters_with_hit, format="json"
         )
         self.assertEqual(200, response.status_code)
         self.assertEqual(1, len(response.json()["features"]))
-        extra_filters_without_hit = {
-            "filters": {
-                "services_offered": [
-                    {
-                        "orthoses": {
-                            "mode": {"onsite": 1, "teletherapy": 0, "home_service": 0}
-                        }
-                    }
-                ]
-            }
-        }
+        extra_filters_without_hit = {"filters": {"services_offered": ["orthoses"]}}
         response = self.client.post(
             "/facilities/search", data=extra_filters_without_hit, format="json"
         )
         self.assertEqual(0, len(response.json()["features"]))
-        extra_filters_not_implemented = {"filters": {"caters_to": ["pediatric"]}}
+
+    def test_search_with_caters_to_filter(self):
+        fp_id = str(uuid.uuid4())
+        FacilityProperties.objects.create(
+            osm_id=fp_id,
+            placename="Pediatric Facility",
+            address="123 Kids Ave",
+            region="Pediatric region",
+            caters_to=["pediatric"],
+        )
+        Facilities.objects.get(id=fp_id)
         response = self.client.post(
-            "/facilities/search", data=extra_filters_not_implemented, format="json"
+            "/facilities/search",
+            data={"filters": {"caters_to": ["pediatric"]}},
+            format="json",
         )
-        self.assertEqual(0, len(response.json()["features"]))
+        self.assertEqual(200, response.status_code)
+        data = response.json()
+        self.assertEqual(1, len(data["features"]))
         self.assertEqual(
-            "One of your filters is not yet implemented.", response.json()["message"]
+            "Pediatric Facility",
+            data["features"][0]["properties"]["placename"],
         )
+
+    def test_search_pagination(self):
+        fp_id = str(uuid.uuid4())
+        _ = FacilityProperties.objects.create(
+            osm_id=fp_id,
+            placename="Second Facility",
+            address="456 Second Avenue",
+            region="Second region",
+        )
+        _ = Facilities.objects.get(id=fp_id)
+        response = self.client.post(
+            "/facilities/search",
+            data={"q": "*", "size": 1, "from": 0},
+            format="json",
+        )
+        self.assertEqual(200, response.status_code)
+        data = response.json()
+        self.assertEqual(2, data["total"])
+        self.assertEqual(1, len(data["features"]))
+
+    def test_search_with_service_name_filter(self):
+        response = self.client.post(
+            "/facilities/search",
+            data={"filters": {"services_offered": ["occupationaltherapy"]}},
+            format="json",
+        )
+        self.assertEqual(200, response.status_code)
+        data = response.json()
+        self.assertEqual(1, len(data["features"]))
+
+    def test_search_with_mode_filter_teletherapy(self):
+        response = self.client.post(
+            "/facilities/search",
+            data={"filters": {"mode": ["teletherapy"]}},
+            format="json",
+        )
+        self.assertEqual(200, response.status_code)
+        data = response.json()
+        self.assertEqual(1, len(data["features"]))
+
+    def test_search_with_mode_filter_onsite(self):
+        response = self.client.post(
+            "/facilities/search",
+            data={"filters": {"mode": ["onsite"]}},
+            format="json",
+        )
+        self.assertEqual(200, response.status_code)
+        data = response.json()
+        self.assertEqual(1, len(data["features"]))
+
+    def test_search_with_accreditation_filter(self):
+        fp_id = str(uuid.uuid4())
+        FacilityProperties.objects.create(
+            osm_id=fp_id,
+            placename="Accredited Facility",
+            address="789 Accredited Ave",
+            region="Accredited region",
+            accreditation={"paot": 1, "pasp": 0},
+        )
+        _ = Facilities.objects.get(id=fp_id)
+        response = self.client.post(
+            "/facilities/search",
+            data={"filters": {"accreditation": {"paot": 1}}},
+            format="json",
+        )
+        self.assertEqual(200, response.status_code)
+        data = response.json()
+        self.assertEqual(1, len(data["features"]))
+        self.assertEqual(
+            "Accredited Facility",
+            data["features"][0]["properties"]["placename"],
+        )
+
+    def test_search_with_session_type_individual(self):
+        response = self.client.post(
+            "/facilities/search",
+            data={"filters": {"session_type": ["individual"]}},
+            format="json",
+        )
+        self.assertEqual(200, response.status_code)
+        data = response.json()
+        self.assertEqual(1, len(data["features"]))
+        self.assertEqual(
+            "Test Facility",
+            data["features"][0]["properties"]["placename"],
+        )
+
+    def test_search_with_session_type_group(self):
+        response = self.client.post(
+            "/facilities/search",
+            data={"filters": {"session_type": ["group"]}},
+            format="json",
+        )
+        self.assertEqual(200, response.status_code)
+        data = response.json()
+        self.assertEqual(1, len(data["features"]))
+
+    def test_search_combined_filters(self):
+        response = self.client.post(
+            "/facilities/search",
+            data={
+                "q": "Test Facility",
+                "filters": {
+                    "services_offered": ["occupationaltherapy"],
+                    "mode": ["teletherapy"],
+                },
+            },
+            format="json",
+        )
+        self.assertEqual(200, response.status_code)
+        data = response.json()
+        self.assertEqual(1, len(data["features"]))
+
+    def test_search_no_results(self):
+        response = self.client.post(
+            "/facilities/search",
+            data={"q": "NonExistentFacility12345"},
+            format="json",
+        )
+        self.assertEqual(200, response.status_code)
+        data = response.json()
+        self.assertEqual(0, len(data["features"]))
+        self.assertEqual(0, data["total"])
+
+    def test_search_wildcard_returns_all(self):
+        fp_id = str(uuid.uuid4())
+        _ = FacilityProperties.objects.create(
+            osm_id=fp_id,
+            placename="All Results Facility",
+            address="100 All Ave",
+            region="All region",
+        )
+        _ = Facilities.objects.get(id=fp_id)
+        response = self.client.post(
+            "/facilities/search",
+            data={"q": "*"},
+            format="json",
+        )
+        self.assertEqual(200, response.status_code)
+        data = response.json()
+        self.assertEqual(2, data["total"])
+
+    def test_search_by_placename_partial(self):
+        response = self.client.post(
+            "/facilities/search",
+            data={"q": "Test"},
+            format="json",
+        )
+        self.assertEqual(200, response.status_code)
+        data = response.json()
+        self.assertGreaterEqual(len(data["features"]), 1)
+        feature_names = [f["properties"]["placename"] for f in data["features"]]
+        self.assertIn("Test Facility", feature_names)
+
+    def test_search_by_region(self):
+        response = self.client.post(
+            "/facilities/search",
+            data={"q": "Test Region"},
+            format="json",
+        )
+        self.assertEqual(200, response.status_code)
+        data = response.json()
+        self.assertGreaterEqual(len(data["features"]), 1)
+
+    def test_search_by_city(self):
+        response = self.client.post(
+            "/facilities/search",
+            data={"q": "Test City"},
+            format="json",
+        )
+        self.assertEqual(200, response.status_code)
+        data = response.json()
+        self.assertGreaterEqual(len(data["features"]), 1)
+
+    def test_search_empty_filters_returns_all(self):
+        response = self.client.post(
+            "/facilities/search",
+            data={"filters": {}},
+            format="json",
+        )
+        self.assertEqual(200, response.status_code)
+        data = response.json()
+        self.assertGreaterEqual(len(data["features"]), 1)

@@ -1,36 +1,52 @@
 <template>
   <div class="relative z-1 w-full flex top-5 flex-col justify-center rounded">
-    <div :class="{ 'justify-center': !showMap }" class="flex flex-col sm:flex-row h-[100%] min-h-[800px] gap-4">
+    <!-- Mobile Tab Switcher -->
+    <div v-if="isMobile" class="fixed top-[52px] left-0 right-0 z-40 bg-white border-b shadow-sm">
+      <div class="flex">
+        <button @click="mobileTab = 'list'"
+          :class="mobileTab === 'list' ? 'border-b-2 border-red-400 text-red-400' : 'text-gray-500'"
+          class="flex-1 py-3 text-sm font-medium text-center">
+          Facilities
+        </button>
+        <button @click="mobileTab = 'map'"
+          :class="mobileTab === 'map' ? 'border-b-2 border-red-400 text-red-400' : 'text-gray-500'"
+          class="flex-1 py-3 text-sm font-medium text-center">
+          Map
+        </button>
+      </div>
+    </div>
 
-      <!-- Content Section -->
-      <div class="w-full lg:max-w-[850px] xl:max-w-[1100px] flex-grow">
+    <div :class="{ 'justify-center': !showMap && !isMobile }" class="flex flex-col sm:flex-row h-[100%] min-h-[800px] gap-4"
+      :style="isMobile ? 'margin-top: 44px;' : ''">
+
+      <!-- Content Section (hidden when map tab active on mobile) -->
+      <div v-show="!isMobile || mobileTab === 'list'" class="w-full lg:max-w-[850px] xl:max-w-[1100px] flex-grow">
         <ClientOnly>
-          <!-- Search and Header Section -->
-          <div class="px-5 pb-4 sticky top-0 z-50 bg-white">
+          <div class="px-3 sm:px-5 pb-4 sticky top-0 z-50 bg-white" :class="isMobile ? 'top-[96px]' : ''">
             <AppSearchAndFilter @update-search="handleSearch" @query-passed="handleQueryPassed" />
             <AppListingHeader :show-map="showMap" @hide-map="showMap = false" @show-map="showMap = true"
               :view-mode="viewMode" @change-view-mode="handleChangeViewMode" :facilitiesLength="totalResults"
               :filteredFacilitiesLength="currentPageResults" />
           </div>
 
-          <!-- No Results Section -->
           <div v-if="currentPageResults === 0" class="w-full text-center py-10">
             <h2 class="text-xl font-semibold">No results found</h2>
             <p>Try adjusting your search or filter criteria.</p>
           </div>
 
-          <!-- Listings View -->
-          <AppCardList v-if="viewMode === 'card'" :facilities="data" :filteredFacilities="data" />
-          <AppListView v-else-if="viewMode === 'list'" :facilities="data" :filteredFacilities="data" />
+          <AppCardList v-if="viewMode === 'card'" :facilities="data" :filteredFacilities="data"
+            @facility-hovered="hoveredFacilityId = $event"
+            @facility-unhovered="hoveredFacilityId = null" />
+          <AppListView v-else-if="viewMode === 'list'" :facilities="data" :filteredFacilities="data"
+            @facility-hovered="hoveredFacilityId = $event"
+            @facility-unhovered="hoveredFacilityId = null" />
 
-          <!-- Pagination -->
           <div v-if="totalPages > 1" class="flex justify-center my-4">
             <button @click="prevPage" :disabled="currentPage === 1"
               class="px-4 py-2 bg-gray-200 text-gray-700 border rounded-l-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed mr-2">Previous</button>
 
             <template v-for="page in totalPages">
-              <button v-if="page === currentPage" class="px-4 py-2 bg-gray-300 text-gray-700 border mx-1">{{ page
-              }}</button>
+              <button v-if="page === currentPage" class="px-4 py-2 bg-gray-300 text-gray-700 border mx-1">{{ page }}</button>
               <button v-else @click="goToPage(page)"
                 class="px-4 py-2 bg-gray-200 text-gray-700 border hover:bg-red-300 mx-1">{{ page }}</button>
             </template>
@@ -41,13 +57,13 @@
         </ClientOnly>
       </div>
 
-      <!-- Map Section -->
-      <div v-if="showMap" class="w-2/4 lg:flex-grow mr-4 h-[99vh] sticky top-5 z-10">
-        <AppMap :coordinates="coordinates" :bounds="bounds" :latitude="center.lat" :longitude="center.lng" />
+      <!-- Map Section (hidden when list tab active on mobile) -->
+      <div v-show="!isMobile || mobileTab === 'map'" :class="isMobile ? 'fixed inset-0 top-[96px] z-30' : (showMap ? 'w-2/4 lg:flex-grow mr-4 h-[99vh] sticky top-5 z-10' : '')">
+        <AppMap v-if="showMap || isMobile" :coordinates="coordinates" :bounds="bounds" :latitude="center.lat" :longitude="center.lng" :hoveredFacilityId="hoveredFacilityId" />
       </div>
     </div>
+    <div class="h-[100px]"></div>
   </div>
-  <div class="h-[100px]"></div>
 </template>
 
 <script>
@@ -62,6 +78,7 @@ export default {
       viewMode: 'card',
       showMap: true,
       isMobile: false,
+      mobileTab: 'list',
       filteredData: [],
       error: null,
       isFetching: false,
@@ -70,22 +87,30 @@ export default {
       currentPageResults: 0,
       currentPage: 1,
       totalPages: Math.ceil(this.totalResults / this.paginationSize),
-      coordinates: [],  // New coordinates array
+      coordinates: [],
       selectedService: 'orthoses',
-      filter: [],
+      filter: {},
       bounds: L.latLngBounds(L.latLng(5.458624890542083, 116.51879773556522), L.latLng(19.215291042674977, 127.04232194261539)),
       center: {
         "lat": 12.384994440877549,
         "lng": 121.67093979526709
       },
+      hoveredFacilityId: null,
     };
   },
 
   async mounted() {
     this.checkIfMobile();
 
+    const access = this.$route.query.access
+    const refresh = this.$route.query.refresh
+    if (access && refresh) {
+      localStorage.setItem('access_token', access)
+      localStorage.setItem('refresh_token', refresh)
+      this.$router.replace({ query: {} })
+    }
+
     window.addEventListener('resize', this.checkIfMobile);
-    await this.$nextTick();
     await this.$nextTick();
     this.searchQuery = this.$route.query.search || '*';
     this.currentPage = Number(this.$route.query.page) || 1;
@@ -106,6 +131,9 @@ export default {
   methods: {
     checkIfMobile() {
       this.isMobile = window.visualViewport.width <= 768;
+      if (!this.isMobile) {
+        this.mobileTab = 'list';
+      }
     },
 
     updateURL() {
@@ -117,25 +145,22 @@ export default {
     },
 
     handleQueryPassed(queryBody) {
-      this.filter = queryBody.filter;
+      this.filter = queryBody.filters;
+      this.currentPage = 1;
+      this.handleSearch();
     },
 
     async getMapCoordinates() {
       if (this.data && Array.isArray(this.data)) {
-
         let coordinates = this.data.map(facility => {
-
           const name = facility.properties.placename
           const coords = facility.geometry.coordinates;
           const id = facility.id;
-
           if (coords[1] < -180 && coords[0] < -180) {
             console.log(coords[0], coords[1]);
           }
-
           let row = [coords[1], coords[0], name, id.toString()];
-
-          return row; // returns [latitude, longitude]
+          return row;
         });
         coordinates = coordinates.filter(el => {
           return el[0] != "" && el[1] != "";
@@ -145,19 +170,15 @@ export default {
 
         let features = coordinates;
         let markers = [];
-
         for (let i = 0; i < features.length; i++) {
           let el = features[i];
           let m = L.marker([el[0], el[1]]);
           markers.push(m);
         }
-
         let fGroup = L.featureGroup(markers);
         let bounds = fGroup.getBounds();
-
-
+        if (!bounds || !bounds.isValid()) return [[], this.bounds, this.center];
         let center = bounds.getCenter();
-
         return [coordinates, bounds, center]
       }
       return [];
@@ -171,39 +192,36 @@ export default {
         this.totalResults = this.filteredData.total;
         this.totalPages = Math.ceil(this.totalResults / this.paginationSize);
         this.currentPageResults = Math.min(this.paginationSize, this.data.length);
-        // Set the coordinates array after the data has been fetched
+        this.hoveredFacilityId = null;
         [this.coordinates, this.bounds, this.center] = await this.getMapCoordinates();
       } catch (error) {
         console.log("error", error)
         this.totalResults = 0;
         this.currentPageResults = 0;
-
-        // Reset the coordinates if there's an error
         this.coordinates = [];
       }
     },
+
     async fetchSearch() {
       const startIndex = (this.currentPage - 1) * this.paginationSize;
       this.isFetching = true;
       let search = this.searchQuery;
 
-      // If the search query is empty, set it to a wildcard
       if (search === '*') {
         search = '*';
       }
-      // Build the body of the request
+
       let bodyObj = {
         q: search,
-        filter: this.filter,
+        filters: this.filter,
         from: startIndex,
         size: this.paginationSize
       };
 
       let body = JSON.stringify(bodyObj);
 
-      // Fetch the data
       try {
-        const response = await fetch(`${this.$config.apiURL}/facilities/search`, {
+        const response = await fetch(`${this.$config.public.apiURL}/facilities/search`, {
           body: body,
           headers: {
             "Content-Type": "application/json"
@@ -211,25 +229,21 @@ export default {
           method: "POST"
         });
 
-
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-
         this.filteredData = data;
         this.isFetching = false;
         this.error = null;
-
       } catch (error) {
         console.log("no response from search endpoint!")
         this.filteredData = null;
         this.error = error.message;
         this.isFetching = false;
       }
-    }
+    },
 
-    ,
     goToPage(pageNumber) {
       this.currentPage = pageNumber;
       this.handleSearch();

@@ -1,4 +1,3 @@
-version: '3.7'
 
 services:
   frontend:
@@ -9,6 +8,7 @@ services:
     command: npm run dev
     volumes:
       - ./client:/code/app
+      - /code/app/node_modules
     env_file:
       - ./.env.sample
     ports:
@@ -30,23 +30,24 @@ services:
       - ./.env.sample
   db:
     container_name: therapease_db
-    image: postgres:15.4-alpine3.18
+    image: postgres:15-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./.env.sample
   cache:
     container_name: therapease_cache
-    image: redis:6.0.20-alpine3.18
+    image: redis:7-alpine
   storage:
-    image: docker.io/bitnami/minio:2023
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
     env_file:
       - ./.env.sample
     ports:
       - '9000:9000'
       - '9003:9001'
     volumes:
-      - 'minio_data:/bitnami/minio/data'
+      - 'minio_data:/data'
   # geocoding:
   #   container_name: therapease_geocoding
   #   image: mediagis/nominatim:4.2

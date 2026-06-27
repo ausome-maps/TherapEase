@@ -4,7 +4,9 @@
                 <div v-for="facility in facilities" :key="facility.id"
                     class="transition duration-100 ease-in-out transform hover:-translate-y-1">
                     <AppListTile :facilityData="facility"
-                        class="relative max-h-[300px] mb-2" />
+                        class="relative max-h-[300px] mb-2"
+                        @facility-hovered="(id) => $emit('facility-hovered', id)"
+                        @facility-unhovered="(id) => $emit('facility-unhovered', id)" />
                 </div>
             </div>
         </div>
