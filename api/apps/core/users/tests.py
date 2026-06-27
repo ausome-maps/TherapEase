@@ -148,13 +148,13 @@ class EmailVerificationTest(APITestCase):
     activate_url = "/auth/users/activation/"
     login_url = "/auth/token/login/"
     logout_url = "/auth/token/logout/"
-    user_details_url = "/auth/users/"
+    user_details_url = "/auth/users/me/"
     # user infofmation
     user_data = {
         "email": "test@example.com",
         "username": "test@example.com",
         "password": "verysecret",
-        "password2": "verysecret",
+        "re_password": "verysecret",
         "first_name": "test",
         "last_name": "user",
     }
@@ -192,15 +192,9 @@ class EmailVerificationTest(APITestCase):
         response = self.client.get(self.user_details_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response_json = response.json()
-        results = response_json.get(
-            "results",
-            response_json if isinstance(response_json, list) else [response_json],
-        )
-        if isinstance(results, dict):
-            results = [results]
-        self.assertGreaterEqual(len(results), 1)
-        first_user = results[0] if isinstance(results, list) else results
-        user_attrs = first_user.get("attributes", first_user)
+        # /auth/users/me/ returns a single user object
+        user_data = response_json.get("data", response_json)
+        user_attrs = user_data.get("attributes", user_data)
         self.assertEqual(
             user_attrs.get("email", user_attrs.get("username")), self.user_data["email"]
         )
@@ -212,10 +206,11 @@ class EmailVerificationTest(APITestCase):
         self.assertEqual(response.status_code, 401)
 
     def test_register_with_email_and_password_only(self):
-        """Frontend registers with only email + password; username is auto-generated."""
+        """Frontend registers with only email + password and password confirmation."""
         payload = {
             "email": "frontend@example.com",
             "password": "frontendpass123",
+            "re_password": "frontendpass123",
         }
         response = self.client.post(self.register_url, payload, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -228,6 +223,7 @@ class EmailVerificationTest(APITestCase):
         payload = {
             "email": "weakpass@example.com",
             "password": "password",
+            "re_password": "password",
         }
         response = self.client.post(self.register_url, payload, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -272,7 +268,7 @@ class AuthFeatureFlagTest(APITestCase):
         with override_settings(FEATURE_AUTH_ENABLED=1):
             response = self.client.post(
                 self.register_url,
-                {"email": "enabled@example.com", "password": "testpass123"},
+                {"email": "enabled@example.com", "password": "testpass123", "re_password": "testpass123"},
                 format="json",
             )
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
