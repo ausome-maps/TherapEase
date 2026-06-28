@@ -1,22 +1,13 @@
 <template>
     <footer
-        class="fixed bottom-0 h-[10px] left-0 z-20 w-full p-4 bg-white border-t border-gray-200 shadow md:flex md:items-center md:justify-between dark:bg-gray-800 dark:border-gray-600">
-        <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2023 <a href="https://ausomemaps.org/"
+        class="fixed bottom-0 left-0 z-20 w-full px-3 py-3 sm:px-4 sm:py-3 bg-white border-t border-gray-200 shadow dark:bg-gray-800 dark:border-gray-600 flex flex-col sm:flex-row items-center justify-between gap-1">
+        <span class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">&copy; 2023 <a href="https://ausomemaps.org/"
                 class="hover:underline">Ausome Maps</a>
         </span>
-        <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
+        <ul class="flex flex-wrap items-center text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">
             <li>
-                <a href="https://ausomemaps.org/#page-0" class="mr-4 hover:underline md:mr-6">About</a>
+                <a href="https://ausomemaps.org/#page-0" class="hover:underline">About</a>
             </li>
-            <!-- <li>
-                <a href="#" class="mr-4 hover:underline md:mr-6">Privacy Policy</a>
-            </li>
-            <li>
-                <a href="#" class="mr-4 hover:underline md:mr-6">Licensing</a>
-            </li> -->
-            <!-- <li>
-                <a href="#" class="hover:underline">Contact</a>
-            </li> -->
         </ul>
     </footer>
 </template>

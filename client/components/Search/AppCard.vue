@@ -1,6 +1,6 @@
 <template>
   <article
-    class="relative overflow-hidden w-full min-h-[180px] sm:min-h-[250px] max-w-[80vw] lg:min-h-[250px] bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300"
+    class="relative overflow-hidden w-full min-h-[180px] sm:min-h-[250px] bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300"
     role="article"
     :aria-label="facilityData.properties.placename"
     @mouseenter="emit('facility-hovered', facilityData.id)"

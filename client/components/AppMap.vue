@@ -161,6 +161,8 @@ export default {
 <style scoped>
 .leaflet-container {
   border-radius: 15px;
+  height: 100% !important;
+  width: 100% !important;
 }
 
 .info-card {

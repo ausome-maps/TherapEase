@@ -1,12 +1,12 @@
 <template>
-  <div class="flex h-[fit-content] justify-center pb-[25px] w-[100%] border shadow-lg rounded-3xl">
+  <div class="flex h-[fit-content] justify-center pb-[25px] w-[100%] border shadow-lg rounded-2xl sm:rounded-3xl">
     <!-- Sidebar -->
-    <div class="">
-      <div class="pt-4 pb-2 px-8">
-        <h1 class="text-2xl text-left font-light">Contact Details</h1>
+    <div class="w-full">
+      <div class="pt-4 pb-2 px-4 sm:px-8">
+        <h1 class="text-xl sm:text-2xl text-left font-light">Contact Details</h1>
       </div>
       <ul>
-        <li class="px-4">
+        <li class="px-2 sm:px-4">
           <div class="flex">
             <div class="mr-2">
               <span class="icon">
@@ -17,13 +17,13 @@
                 </svg>
               </span>
             </div>
-            <div class="truncate">
+            <div class="truncate text-sm sm:text-base">
               <a :href="malitoLink">Email: {{ facilityDetails.email_address }}</a>
             </div>
 
           </div>
         </li>
-        <li class="px-4">
+        <li class="px-2 sm:px-4">
           <div class="flex">
             <div class="mr-2">
               <span class="icon">
@@ -34,12 +34,12 @@
                 </svg>
               </span>
             </div>
-            <div>
+            <div class="text-sm sm:text-base">
               <a :href="contactNumber">Contact: {{ facilityDetails.contact_number }} </a>
             </div>
           </div>
         </li>
-        <li class="px-4">
+        <li class="px-2 sm:px-4">
           <div class="flex">
             <div class="mr-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -48,17 +48,14 @@
                 <path d="M4 12H20" stroke="#D48180" stroke-width="2" stroke-linecap="round" />
               </svg>
             </div>
-            <div>
-              <!-- <a :href="facilityDetails.facilityWebsite" target="_blank">
-                Website: {{ facilityDetails.website }}
-              </a> -->
+            <div class="text-sm sm:text-base truncate">
               <span>Website: </span><span><a :href="websiteLink"
                   class="font-medium text-blue-600 dark:text-blue-500 hover:underline" target="_blank"
                   rel="noopener noreferrer">{{ facilityDetails.website }}</a></span>
             </div>
           </div>
         </li>
-        <li class="px-4">
+        <li class="px-2 sm:px-4">
           <div class="flex">
             <div class="mr-2">
               <span class="icon">
@@ -69,23 +66,19 @@
                 </svg>
               </span>
             </div>Address:
-            <div class="text-left pl-2">
+            <div class="text-left pl-2 text-sm sm:text-base">
               <span>{{ facilityDetails.address }}</span>
             </div>
           </div>
         </li>
       </ul>
 
-      <div class="border-t border-black mx-8 my-6"></div>
-      <div class="text-left px-8">
+      <div class="border-t border-black mx-4 sm:mx-8 my-4 sm:my-6"></div>
+      <div class="text-left px-4 sm:px-8 text-sm sm:text-base">
         Contact person:
       </div>
-      <!-- <div class="text-left px-8">
-        <span class="font-bold">{{ facilityDetails.info_src_name }} </span> on <span class="font-bold">{{
-          getDateFromTimestamp(facilityDetails.start) }}</span>
-      </div> -->
-      <div class="text-left px-8">
-        <span class="font-bold">{{ facilityDetails.info_src_name }} </span>
+      <div class="text-left px-4 sm:px-8">
+        <span class="font-bold text-sm sm:text-base">{{ facilityDetails.info_src_name }} </span>
       </div>
     </div>
   </div>

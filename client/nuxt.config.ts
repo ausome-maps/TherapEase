@@ -15,6 +15,7 @@ export default defineNuxtConfig({
       googleTagManager: process.env.GOOGLE_TAG_MANAGER || "https://www.googletagmanager.com/gtag/js?id=G-E1HY2D8NC8",
       authURL: process.env.NUXT_PUBLIC_API_URL + "/auth" || "http://localhost:9001/auth",
       authEnabled: process.env.FEATURE_AUTH_ENABLED !== '0',
+      registrationEnabled: process.env.FEATURE_REGISTRATION_ENABLED !== '0',
     }
   },
   routeRules: {

@@ -148,13 +148,13 @@ class EmailVerificationTest(APITestCase):
     activate_url = "/auth/users/activation/"
     login_url = "/auth/token/login/"
     logout_url = "/auth/token/logout/"
-    user_details_url = "/auth/users/"
+    user_details_url = "/auth/users/me/"
     # user infofmation
     user_data = {
         "email": "test@example.com",
         "username": "test@example.com",
         "password": "verysecret",
-        "password2": "verysecret",
+        "re_password": "verysecret",
         "first_name": "test",
         "last_name": "user",
     }
@@ -192,15 +192,9 @@ class EmailVerificationTest(APITestCase):
         response = self.client.get(self.user_details_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response_json = response.json()
-        results = response_json.get(
-            "results",
-            response_json if isinstance(response_json, list) else [response_json],
-        )
-        if isinstance(results, dict):
-            results = [results]
-        self.assertGreaterEqual(len(results), 1)
-        first_user = results[0] if isinstance(results, list) else results
-        user_attrs = first_user.get("attributes", first_user)
+        # /auth/users/me/ returns a single user object
+        user_data = response_json.get("data", response_json)
+        user_attrs = user_data.get("attributes", user_data)
         self.assertEqual(
             user_attrs.get("email", user_attrs.get("username")), self.user_data["email"]
         )
@@ -212,10 +206,11 @@ class EmailVerificationTest(APITestCase):
         self.assertEqual(response.status_code, 401)
 
     def test_register_with_email_and_password_only(self):
-        """Frontend registers with only email + password; username is auto-generated."""
+        """Frontend registers with only email + password and password confirmation."""
         payload = {
             "email": "frontend@example.com",
             "password": "frontendpass123",
+            "re_password": "frontendpass123",
         }
         response = self.client.post(self.register_url, payload, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -228,6 +223,7 @@ class EmailVerificationTest(APITestCase):
         payload = {
             "email": "weakpass@example.com",
             "password": "password",
+            "re_password": "password",
         }
         response = self.client.post(self.register_url, payload, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -236,7 +232,9 @@ class EmailVerificationTest(APITestCase):
         errors = (
             data
             if isinstance(data, list)
-            else data.get("errors", []) if isinstance(data, dict) else []
+            else data.get("errors", [])
+            if isinstance(data, dict)
+            else []
         )
         self.assertTrue(
             any("password" in e.get("source", {}).get("pointer", "") for e in errors)
@@ -272,7 +270,11 @@ class AuthFeatureFlagTest(APITestCase):
         with override_settings(FEATURE_AUTH_ENABLED=1):
             response = self.client.post(
                 self.register_url,
-                {"email": "enabled@example.com", "password": "testpass123"},
+                {
+                    "email": "enabled@example.com",
+                    "password": "testpass123",
+                    "re_password": "testpass123",
+                },
                 format="json",
             )
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -285,3 +287,109 @@ class AuthFeatureFlagTest(APITestCase):
                 format="json",
             )
             self.assertIn(response.status_code, [200, 400])
+
+    def test_register_blocked_when_registration_disabled(self):
+        with override_settings(FEATURE_REGISTRATION_ENABLED=0):
+            response = self.client.post(
+                self.register_url,
+                {
+                    "email": "reg-off@example.com",
+                    "password": "testpass123",
+                    "re_password": "testpass123",
+                },
+                format="json",
+            )
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+            self.assertIn("disabled", response.json()["detail"])
+
+    def test_social_auth_blocked_when_registration_disabled(self):
+        with override_settings(FEATURE_REGISTRATION_ENABLED=0):
+            response = self.client.post(
+                "/users/social/jwt/",
+                {"provider": "google-oauth2", "access_token": "fake"},
+                format="json",
+            )
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_login_works_when_registration_disabled(self):
+        with override_settings(FEATURE_REGISTRATION_ENABLED=0):
+            response = self.client.post(
+                self.login_url,
+                {"email": "nonexistent@example.com", "password": "testpass123"},
+                format="json",
+            )
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_password_reset_works_when_registration_disabled(self):
+        with override_settings(FEATURE_REGISTRATION_ENABLED=0):
+            response = self.client.post(
+                "/auth/users/reset_password/",
+                {"email": "nonexistent@example.com"},
+                format="json",
+            )
+            self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+
+class AdminStatsTest(APITestCase):
+    staff_data = {
+        "username": "staff@example.com",
+        "password": "staffpass123",
+        "email": "staff@example.com",
+    }
+    user_data = {
+        "username": "regular@example.com",
+        "password": "regularpass123",
+        "email": "regular@example.com",
+    }
+
+    def setUp(self):
+        self.staff = User.objects.create(**self.staff_data)
+        self.staff.set_password(self.staff_data["password"])
+        self.staff.is_staff = True
+        self.staff.is_active = True
+        self.staff.save()
+
+        self.regular = User.objects.create(**self.user_data)
+        self.regular.set_password(self.user_data["password"])
+        self.regular.is_active = True
+        self.regular.save()
+
+        self.stats_url = "/users/admin/stats/"
+
+    def _get_jwt(self, email, password):
+        response = self.client.post(
+            "/auth/jwt/create/",
+            {"email": email, "password": password},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        return response.json()["access"]
+
+    def test_staff_can_access_stats(self):
+        token = self._get_jwt(self.staff_data["email"], self.staff_data["password"])
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+        response = self.client.get(self.stats_url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.json()
+        self.assertIn("users", data)
+        self.assertIn("organizations", data)
+        self.assertIsInstance(data["users"]["total"], int)
+
+    def test_superuser_can_access_stats(self):
+        self.staff.is_superuser = True
+        self.staff.is_staff = False
+        self.staff.save()
+        token = self._get_jwt(self.staff_data["email"], self.staff_data["password"])
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+        response = self.client.get(self.stats_url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_non_staff_denied(self):
+        token = self._get_jwt(self.user_data["email"], self.user_data["password"])
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+        response = self.client.get(self.stats_url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_unauthenticated_denied(self):
+        response = self.client.get(self.stats_url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

@@ -24,14 +24,14 @@ function handleQueryGenerated(queryBody) {
 </script>
 
 <template>
-  <div class="flex justify-between items-center pb-5">
-    <div class="relative flex items-center w-full">
+  <div class="flex items-stretch gap-2 pb-3 sm:pb-5">
+    <div class="relative flex items-center flex-1">
       <input
         type="text"
         placeholder="Search..."
         v-model="searchInput"
         @keyup.enter="emitSearchQuery"
-        class="shadow appearance-none border rounded-3xl py-2 px-3 pr-24 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-full"
+        class="shadow appearance-none border rounded-3xl py-2 px-3 pr-24 sm:pr-24 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-full text-sm sm:text-base"
       />
 
       <button
@@ -57,11 +57,13 @@ function handleQueryGenerated(queryBody) {
 
       <button
         @click="emitSearchQuery"
-        class="absolute inset-y-0 right-0 px-4 py-2 bg-red-400 hover:bg-white hover:text-red-400 border-l text-white font-bold rounded-r-3xl"
+        class="absolute inset-y-0 right-0 px-4 py-2 bg-red-400 hover:bg-white hover:text-red-400 border-l text-white font-bold rounded-r-3xl text-sm sm:text-base"
       >
         Search
       </button>
     </div>
-    <AppFilter @query-generated="handleQueryGenerated" />
+    <div class="flex-shrink-0">
+      <AppFilter @query-generated="handleQueryGenerated" />
+    </div>
   </div>
 </template>

@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="text-red-400 p-4 text-3xl ">
+    <div class="text-red-400 p-2 sm:p-4 text-2xl sm:text-3xl">
       Where to Find Us
     </div>
-    <div class="h-[400px] rounded-xl mx-4">
+    <div class="h-[300px] sm:h-[400px] rounded-xl mx-2 sm:mx-4">
       <l-map ref="map" v-model:zoom="zoom" :center="mapCenter" :use-global-leaflet="false">
         <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base"
           name="OpenStreetMap"></l-tile-layer>

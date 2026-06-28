@@ -8,22 +8,21 @@
             </span>
         </div> -->
         <div class="flex justify-center">
-            <a :href="feedbackUrl" target="_blank" rel="noopener noreferrer" class="shadow-xl text-red-400 h-[40px] w-[100%] flex items-center justify-center bg-white rounded-3xl transition-colors duration-300 hover:bg-red-400 hover:text-white cursor-pointer">
+            <NuxtLink :to="{ path: '/feedback', query: { facility_id: facilityId } }"
+               class="shadow-xl text-red-400 h-[40px] w-[100%] flex items-center justify-center bg-white rounded-3xl transition-colors duration-300 hover:bg-red-400 hover:text-white cursor-pointer">
                 Submit Feedback
-        </a>
+        </NuxtLink>
         </div>
     </div>
 </template>
 <script>
 export default {
     props: {
-    feedbackUrl: {
+    facilityId: {
       type: String,
       required: true,
     },
   },
-  async mounted() {
-    //console.log(this);
-  }
+  async mounted() {}
 }
 </script>

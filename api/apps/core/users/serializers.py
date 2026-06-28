@@ -2,7 +2,7 @@ import uuid
 
 from djoser.conf import settings
 from djoser.serializers import TokenCreateSerializer, UserCreateSerializer
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import authenticate, get_user_model, password_validation
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -93,6 +93,22 @@ class OrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
         fields = "__all__"
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "email",
+            "first_name",
+            "last_name",
+            "is_active",
+            "is_staff",
+            "is_superuser",
+            "date_joined",
+        ]
+        read_only_fields = ["id", "date_joined"]
 
 
 class CustomTokenCreateSerializer(TokenCreateSerializer):

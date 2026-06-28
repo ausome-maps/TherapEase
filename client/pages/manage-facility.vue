@@ -1,10 +1,10 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <div class="max-w-4xl mx-auto px-4 py-8">
-      <div class="flex items-center justify-between mb-8">
+      <div class="flex items-center justify-between mb-8 flex-col sm:flex-row gap-2 sm:gap-0">
         <div>
-          <h1 class="text-2xl font-bold text-gray-900">{{ isEditing ? 'Edit Facility' : 'Add New Facility' }}</h1>
-          <p class="text-gray-600 mt-1">{{ isEditing ? 'Update facility information' : 'Register a new facility in the database' }}</p>
+          <h1 class="text-xl sm:text-2xl font-bold text-gray-900">{{ isEditing ? 'Edit Facility' : 'Add New Facility' }}</h1>
+          <p class="text-gray-600 mt-1 text-sm sm:text-base">{{ isEditing ? 'Update facility information' : 'Register a new facility in the database' }}</p>
         </div>
         <NuxtLink to="/" class="text-sm text-gray-500 hover:text-gray-700">
           &larr; Back to search
@@ -89,34 +89,34 @@
         <div class="bg-white rounded-lg shadow-sm p-6 space-y-4">
           <h2 class="text-lg font-semibold text-gray-900">Services Offered</h2>
           <p class="text-sm text-gray-500">Check services and set mode values (1=Individual, 2=Group, 3=Both)</p>
-          <div class="space-y-3 max-h-96 overflow-y-auto">
-            <div v-for="(service, key) in form.services_offered" :key="key" class="flex items-center gap-4 border-b pb-2">
-              <label class="flex items-center gap-2 cursor-pointer">
+          <div class="space-y-2 max-h-96 overflow-y-auto">
+            <div v-for="(service, key) in form.services_offered" :key="key" class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 border-b pb-2">
+              <label class="flex items-center gap-2 cursor-pointer min-w-[180px]">
                 <input type="checkbox" :checked="serviceActive(key)" class="rounded" />
-                <span class="text-sm w-48">{{ form.services_offered[key].label }}</span>
+                <span class="text-xs sm:text-sm">{{ form.services_offered[key].label }}</span>
               </label>
-              <div class="flex gap-2">
-                <label class="text-xs">
-                  <span class="text-gray-500">Teletherapy:</span>
-                  <select v-model.number="form.services_offered[key].mode.teletherapy" class="ml-1 border rounded text-xs px-1 py-0.5">
+              <div class="flex flex-wrap gap-2 sm:gap-3">
+                <label class="text-xs flex items-center gap-1">
+                  <span class="text-gray-500 whitespace-nowrap">Tele:</span>
+                  <select v-model.number="form.services_offered[key].mode.teletherapy" class="border rounded text-xs px-1 py-0.5">
                     <option :value="0">Off</option>
                     <option :value="1">1:1</option>
                     <option :value="2">Group</option>
                     <option :value="3">Both</option>
                   </select>
                 </label>
-                <label class="text-xs">
-                  <span class="text-gray-500">Onsite:</span>
-                  <select v-model.number="form.services_offered[key].mode.onsite" class="ml-1 border rounded text-xs px-1 py-0.5">
+                <label class="text-xs flex items-center gap-1">
+                  <span class="text-gray-500 whitespace-nowrap">Onsite:</span>
+                  <select v-model.number="form.services_offered[key].mode.onsite" class="border rounded text-xs px-1 py-0.5">
                     <option :value="0">Off</option>
                     <option :value="1">1:1</option>
                     <option :value="2">Group</option>
                     <option :value="3">Both</option>
                   </select>
                 </label>
-                <label class="text-xs">
-                  <span class="text-gray-500">Home:</span>
-                  <select v-model.number="form.services_offered[key].mode.home_service" class="ml-1 border rounded text-xs px-1 py-0.5">
+                <label class="text-xs flex items-center gap-1">
+                  <span class="text-gray-500 whitespace-nowrap">Home:</span>
+                  <select v-model.number="form.services_offered[key].mode.home_service" class="border rounded text-xs px-1 py-0.5">
                     <option :value="0">Off</option>
                     <option :value="1">1:1</option>
                     <option :value="2">Group</option>
@@ -142,12 +142,12 @@
           </div>
         </div>
 
-        <div class="flex gap-4">
+        <div class="flex flex-col sm:flex-row gap-4">
           <button type="submit" :disabled="loading"
-            class="px-6 py-2 bg-red-400 text-white rounded-lg hover:bg-red-500 disabled:opacity-50">
+            class="px-6 py-2 bg-red-400 text-white rounded-lg hover:bg-red-500 disabled:opacity-50 text-sm">
             {{ loading ? 'Saving...' : (isEditing ? 'Update Facility' : 'Create Facility') }}
           </button>
-          <NuxtLink to="/" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Cancel</NuxtLink>
+          <NuxtLink to="/" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm text-center">Cancel</NuxtLink>
         </div>
       </form>
     </div>

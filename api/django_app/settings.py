@@ -29,6 +29,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "mysecret-key-1234")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get("DEBUG", 1))
 FEATURE_AUTH_ENABLED = int(os.environ.get("FEATURE_AUTH_ENABLED", 1))
+FEATURE_REGISTRATION_ENABLED = int(os.environ.get("FEATURE_REGISTRATION_ENABLED", 1))
 ALLOWED_HOSTS = os.environ.get(
     "DJANGO_ALLOWED_HOSTS", "localhost 127.0.0.1 [::1] *"
 ).split(" ")
@@ -64,6 +65,7 @@ INSTALLED_APPS = [
 CORE_APPS = [
     "apps.core.users",
     "apps.core.facilities",
+    "apps.core.feedback",
 ]
 
 PLUGIN_APPS = []
@@ -261,15 +263,23 @@ DJOSER = {
     "LOGIN_FIELD": "email",
     "SEND_ACTIVATION_EMAIL": True,
     "SEND_CONFIRMATION_EMAIL": True,
+    "SET_PASSWORD_RETYPE": True,
+    "PERMISSIONS": {
+        "user_list": ["rest_framework.permissions.IsAdminUser"],
+        "user": ["djoser.permissions.CurrentUserOrAdmin"],
+        "user_delete": ["djoser.permissions.CurrentUserOrAdmin"],
+    },
     "SERIALIZERS": {
         "token_create": "apps.core.users.serializers.CustomTokenCreateSerializer",
         "user_create": "apps.core.users.serializers.CustomUserCreateSerializer",
+        "user": "apps.core.users.serializers.UserDetailSerializer",
+        "current_user": "apps.core.users.serializers.UserDetailSerializer",
     },
     # The activation and reset URLs are based on the frontend. Where the frontend will fetch uid and token from the link.
     # and send the uid and token to the backend.
     # Refer to docs/auth.md for more details
     "ACTIVATION_URL": "user/activate/{uid}/{token}",
-    "PASSWORD_RESET_CONFIRM_URL": "user/reset_password/{uid}/{token}",
+    "PASSWORD_RESET_CONFIRM_URL": "user/reset-password/{uid}/{token}",
 }
 
 DOMAIN = os.environ.get("UI_DOMAIN_NAME", "localhost:9002")

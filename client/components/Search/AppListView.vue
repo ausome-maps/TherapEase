@@ -1,6 +1,6 @@
 <template>
         <div class="w-full">
-            <div class="bg-transparent mx-auto p-2 sm:p-4 md:p-6 xl:p-2">
+            <div class="bg-transparent mx-auto p-1 sm:p-4 md:p-6 xl:p-2">
                 <div v-for="facility in facilities" :key="facility.id"
                     class="transition duration-100 ease-in-out transform hover:-translate-y-1">
                     <AppListTile :facilityData="facility"

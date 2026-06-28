@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from .api import ProfileViewset, OrganizationViewset
+from .api import ProfileViewset, OrganizationViewset, AdminStatsView
 from .social import social_auth_jwt, social_auth_complete_redirect
 
 router = DefaultRouter()
@@ -13,5 +13,6 @@ urlpatterns = [
     path(
         "social/complete/", social_auth_complete_redirect, name="social-auth-complete"
     ),
+    path("admin/stats/", AdminStatsView.as_view(), name="admin-stats"),
 ]
 urlpatterns = urlpatterns + router.urls
