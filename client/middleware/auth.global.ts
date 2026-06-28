@@ -15,9 +15,14 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   const config = useRuntimeConfig()
   const authEnabled = config.public.authEnabled
+  const registrationEnabled = config.public.registrationEnabled
 
   if (!authEnabled && authPages.some((p) => to.path.startsWith(p))) {
     return navigateTo('/')
+  }
+
+  if (!registrationEnabled && to.path.startsWith('/register')) {
+    return navigateTo('/login?registrationDisabled=true')
   }
 
   const hasToken = !!localStorage.getItem('access_token')

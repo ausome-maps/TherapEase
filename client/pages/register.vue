@@ -11,6 +11,11 @@
         </p>
       </div>
 
+      <div v-if="!registrationEnabled" class="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg text-sm text-center">
+        Registration is currently disabled. Please contact an administrator if you need an account.<br>
+        <NuxtLink to="/login" class="font-medium underline mt-2 inline-block">Sign in with an existing account</NuxtLink>
+      </div>
+
       <div v-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
         {{ error }}
       </div>
@@ -19,7 +24,7 @@
         Registration successful! Please check your email to activate your account.
       </div>
 
-      <form v-if="!success" class="mt-8 space-y-6" @submit.prevent="handleSubmit">
+      <form v-if="!success && registrationEnabled" class="mt-8 space-y-6" @submit.prevent="handleSubmit">
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
           <input id="email" v-model="email" type="email" required
@@ -42,7 +47,7 @@
           {{ loading ? 'Creating account...' : 'Create account' }}
         </button>
 
-        <div class="relative my-4">
+        <div v-if="registrationEnabled" class="relative my-4">
           <div class="absolute inset-0 flex items-center">
             <div class="w-full border-t border-gray-300"></div>
           </div>
@@ -51,7 +56,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div v-if="registrationEnabled" class="grid grid-cols-2 gap-3">
           <a :href="googleLoginUrl"
             class="flex justify-center items-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white hover:bg-gray-50 text-sm font-medium text-gray-700">
             Google
@@ -63,7 +68,7 @@
         </div>
       </form>
 
-      <div v-if="!success" class="text-center">
+      <div v-if="!success && registrationEnabled" class="text-center">
         <p class="text-sm text-gray-600">
           Already have an account?
           <NuxtLink to="/login" class="font-medium text-red-400 hover:text-red-500">Sign in</NuxtLink>
@@ -74,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const email = ref('')
 const password = ref('')
@@ -85,6 +90,7 @@ const success = ref(false)
 
 const { register } = useAuth()
 const config = useRuntimeConfig()
+const registrationEnabled = computed(() => config.public.registrationEnabled)
 const googleLoginUrl = `${config.public.apiURL}/social/login/google-oauth2/?next=/users/social/complete/`
 const facebookLoginUrl = `${config.public.apiURL}/social/login/facebook/?next=/users/social/complete/`
 

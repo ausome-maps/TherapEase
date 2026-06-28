@@ -50,7 +50,7 @@
             <NuxtLink to="/login" class="text-sm text-gray-600 hover:text-red-400 px-3 py-1 border border-gray-300 rounded-full hover:border-red-400">
               Sign in
             </NuxtLink>
-            <NuxtLink to="/register" class="text-sm text-white bg-red-400 hover:bg-red-500 px-3 py-1 rounded-full">
+            <NuxtLink v-if="registrationEnabled" to="/register" class="text-sm text-white bg-red-400 hover:bg-red-500 px-3 py-1 rounded-full">
               Register
             </NuxtLink>
           </template>
@@ -80,7 +80,7 @@
               class="block px-3 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
               Sign in
             </NuxtLink>
-            <NuxtLink to="/register" @click="mobileMenuOpen = false"
+            <NuxtLink v-if="registrationEnabled" to="/register" @click="mobileMenuOpen = false"
               class="block px-3 py-3 text-sm text-red-500 hover:bg-gray-100 rounded-lg font-medium">
               Register
             </NuxtLink>
@@ -96,6 +96,7 @@ import placeholder from "assets/images/logo_horizontal_1.png"
 
 const config = useRuntimeConfig()
 const authEnabled = computed(() => config.public.authEnabled)
+const registrationEnabled = computed(() => config.public.registrationEnabled)
 const image_placeholder = placeholder
 const mounted = ref(false)
 const showDropdown = ref(false)

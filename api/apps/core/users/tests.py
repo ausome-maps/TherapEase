@@ -232,7 +232,9 @@ class EmailVerificationTest(APITestCase):
         errors = (
             data
             if isinstance(data, list)
-            else data.get("errors", []) if isinstance(data, dict) else []
+            else data.get("errors", [])
+            if isinstance(data, dict)
+            else []
         )
         self.assertTrue(
             any("password" in e.get("source", {}).get("pointer", "") for e in errors)
@@ -268,7 +270,11 @@ class AuthFeatureFlagTest(APITestCase):
         with override_settings(FEATURE_AUTH_ENABLED=1):
             response = self.client.post(
                 self.register_url,
-                {"email": "enabled@example.com", "password": "testpass123", "re_password": "testpass123"},
+                {
+                    "email": "enabled@example.com",
+                    "password": "testpass123",
+                    "re_password": "testpass123",
+                },
                 format="json",
             )
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -281,6 +287,47 @@ class AuthFeatureFlagTest(APITestCase):
                 format="json",
             )
             self.assertIn(response.status_code, [200, 400])
+
+    def test_register_blocked_when_registration_disabled(self):
+        with override_settings(FEATURE_REGISTRATION_ENABLED=0):
+            response = self.client.post(
+                self.register_url,
+                {
+                    "email": "reg-off@example.com",
+                    "password": "testpass123",
+                    "re_password": "testpass123",
+                },
+                format="json",
+            )
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+            self.assertIn("disabled", response.json()["detail"])
+
+    def test_social_auth_blocked_when_registration_disabled(self):
+        with override_settings(FEATURE_REGISTRATION_ENABLED=0):
+            response = self.client.post(
+                "/users/social/jwt/",
+                {"provider": "google-oauth2", "access_token": "fake"},
+                format="json",
+            )
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_login_works_when_registration_disabled(self):
+        with override_settings(FEATURE_REGISTRATION_ENABLED=0):
+            response = self.client.post(
+                self.login_url,
+                {"email": "nonexistent@example.com", "password": "testpass123"},
+                format="json",
+            )
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_password_reset_works_when_registration_disabled(self):
+        with override_settings(FEATURE_REGISTRATION_ENABLED=0):
+            response = self.client.post(
+                "/auth/users/reset_password/",
+                {"email": "nonexistent@example.com"},
+                format="json",
+            )
+            self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
 
 class AdminStatsTest(APITestCase):

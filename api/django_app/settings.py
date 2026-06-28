@@ -29,6 +29,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "mysecret-key-1234")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get("DEBUG", 1))
 FEATURE_AUTH_ENABLED = int(os.environ.get("FEATURE_AUTH_ENABLED", 1))
+FEATURE_REGISTRATION_ENABLED = int(os.environ.get("FEATURE_REGISTRATION_ENABLED", 1))
 ALLOWED_HOSTS = os.environ.get(
     "DJANGO_ALLOWED_HOSTS", "localhost 127.0.0.1 [::1] *"
 ).split(" ")
