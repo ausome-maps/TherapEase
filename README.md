@@ -2,6 +2,13 @@
 
 TherapEase is a platform that helps in identifying location of special education facilities and services in the Philippines.
 
+## Features
+
+- **Facility search** — Full-text search with filters (services, caters to, accreditation, delivery mode) on an interactive Leaflet map
+- **Submit a facility** — Public multi-step wizard for submitting new facility data (basic info, contact, services, location picker with geocode search, image upload) — pending staff review
+- **Admin submission dashboard** — Staff-only review pipeline: view, approve & merge, reject with notes, or delete submissions; filtered search with pagination
+- **User accounts** — JWT-based authentication with registration, activation email, social login (Google/Facebook), profile management
+
 ## General Execution
 
 The entire platform can be run using `Docker` using `docker compose`. Refer to the `docker-compose.yml` for the extensive list of services.
@@ -62,6 +69,5 @@ These will validate files automatically at the commit stage (`git commit`).
 ### Running Tests
 
 - API: `python manage.py test`
-
-### TODO
-- Setup a testing framework for the frontend.
+- API (specific app): `python manage.py test apps.core.submissions.tests`
+- Frontend: `cd client && npm run test` (Vitest — see `docs/TODO.md` #91)

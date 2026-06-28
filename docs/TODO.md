@@ -97,7 +97,9 @@ The milestone description mentions "OSM-TherapEase DB connection." There is no d
 
 ### 2.4 (Implicit) Built-in Data Form Submission
 
-The milestone mentions "built-in data form submission." This overlaps with issue #90 (Self Service Facility Data Form). See section 4.3.
+The milestone mentions "built-in data form submission." This overlaps with issue #90 (Self Service Facility Data Form).
+
+- **Status:** ✅ **Done.** The public submission form (`client/pages/submit-facility.vue`) and admin review pipeline (`client/pages/admin/submissions.vue`) are implemented. See section 4.2 for details.
 
 ---
 
@@ -118,26 +120,19 @@ The milestone mentions "built-in data form submission." This overlaps with issue
 - **Estimated effort:** 3–5 days
 - **Dependencies:** Google Cloud Console project setup, Facebook App setup (admin tasks).
 
-### 3.2 Facilities Workflow and Permissions [#87](https://github.com/ausome-maps/TherapEase/issues/87)
+### 3.2 ~~Facilities Workflow and Permissions~~ [#87](https://github.com/ausome-maps/TherapEase/issues/87) ✅ CLOSED — June 2026
 
-- **Labels:** `backend`, `feature`
-- **Assignee:** lkpanganiban
-- **Description:** Configure permissions for facility CRUD operations using the existing user and organization schemas. Users in organizations with the `manage_organization_facilities` permission should be able to manage facilities.
-- **Current state:** A `FacilitiesPermissions` class exists at `api/apps/core/facilities/permissions.py`. It allows:
-  - `list`, `retrieve`, `search` — public access.
-  - `create`, `update`, `partial_update`, `destroy` — superusers, staff, or users with the `manage_organization_facilities` permission in an active `OrganizationRole`.
-  - Object-level permission on update/delete checks the same conditions.
-  - However, there is **no relationship between facilities and organizations** in the current `Facilities`/`FacilityProperties` model — the model has no `organization` ForeignKey field.
-- **Remaining work:**
-  1. **Add organization FK to Facility model:** Add `organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True, blank=True)` to `FacilityProperties` (or `Facilities`). Create and run the migration.
-  2. **Scope facilities by organization:** Update the `FacilitiesPermissions` to enforce that a user can only create/update/delete facilities belonging to their own organization(s). Currently the permission just checks if the user *has* the role, not whether the facility belongs to their org.
-  3. **Filter facilities by organization in API:** In the facility ViewSet, filter the queryset so that users only see facilities from their organization when performing mutating operations. For read-only operations (list/retrieve/search), all facilities remain public.
-  4. **Auto-assign organization on create:** When a user creates a facility via the API, automatically assign it to the user's organization (or let them choose from orgs they belong to).
-  5. **Admin panel support:** Update the Django admin for Facilities to show/edit the organization field.
-  6. **Update frontend manage-facility page:** The `pages/manage-facility.vue` already exists and performs CRUD, but it does not consider organization context. Update it to show only the user's organization's facilities (and guard against cross-org access).
-  7. **Update tests:** Extend `api/apps/core/facilities/tests.py` to cover org-scoped permission scenarios.
-- **Estimated effort:** 5–7 days
-- **Dependencies:** #89 (Registration flow — users need to be assigned to orgs) and #90 (Self-service facility form).
+- **Labels:** `backend`, `feature`, ~~`closed`~~
+- **What was delivered:** A `FacilitySubmission` model and `FacilitySubmissionViewset` (`api/apps/core/submissions/`) implementing a full review pipeline:
+  - Public `POST /submissions/` for anonymous form submissions with validation
+  - Staff-only review/approve/reject/merge workflow with granular permissions (`SubmissionPermissions`)
+  - Staff-only `DELETE /submissions/{id}/` for removing submissions
+  - Image upload to MinIO via `POST /submissions/upload-image/`
+  - Email notifications via Celery (staff notified of new submissions; submitters notified of approval/rejection)
+  - Admin dashboard UI (`client/pages/admin/submissions.vue`) with search, filters, sorting, pagination, detail modal with map
+  - CSRF fix: `SessionAuthentication` excluded to support JWT-only SPA usage
+  - Redis-down resilience: Celery `.delay()` calls wrapped in try/except
+- **Follow-up work (future issue):** Organization-scoped facility CRUD — add org FK to `FacilityProperties`, update `FacilitiesPermissions` for org-scoped mutations, update `manage-facility.vue` with org context.
 
 ---
 
@@ -168,24 +163,16 @@ The milestone mentions "built-in data form submission." This overlaps with issue
 - **Estimated effort:** 2–3 days (mostly QA and polish)
 - **Dependencies:** SendGrid API key (issue #85).
 
-### 4.2 Self Service Facility Data Form [#90](https://github.com/ausome-maps/TherapEase/issues/90)
+### 4.2 ~~Self Service Facility Data Form~~ [#90](https://github.com/ausome-maps/TherapEase/issues/90) ✅ CLOSED — June 2026
 
-- **Labels:** `backend`, `feature`, `interface`
-- **Description:** After providers are onboarded (registered, confirmed, assigned to an organization), they can create and modify facility information. Facilities belong to their organization. Users are manually assigned to organizations by TherapEase staff.
-- **Current state:** The frontend has `pages/manage-facility.vue` which is a comprehensive form for creating/editing facilities. It handles all fields from the data model: basic info, contact info, accreditation, services offered (with mode selection), and coordinates. The backend has full CRUD endpoints at `/api/facilities/`. However, there is no organization-to-facility link in the model and no organization-based scoping in the form.
-- **Remaining work:**
-  1. **Organization-facility model link:** Add `organization` FK to the facility model (same task as issue #87, section 3.2).
-  2. **Organization assignment UI:** Create an admin interface (Django admin page or a staff-only frontend page) where TherapEase staff can assign users to organizations with specific roles.
-  3. **Update manage-facility form:** After the org-facility link exists, update `manage-facility.vue` to:
-     - Show which organization the facility belongs to.
-     - Pre-filter the facility list to show only the current user's organization's facilities.
-     - Allow superusers/staff to select which organization a new facility belongs to.
-  4. **"My Facilities" dashboard:** Create a page that lists all facilities belonging to the user's organization with edit/delete actions.
-  5. **Submission workflow:** Consider adding a moderation/review step — when a provider creates/edits a facility, it goes into a "pending review" status before being published. This prevents bad data from reaching the public map.
-  6. **Image upload:** The current form does not support image upload. Extend it to allow uploading facility photos to MinIO via the backend.
-  7. **Validation:** Add client-side validation for required fields (placename) and coordinate bounds (must be within Philippines).
-- **Estimated effort:** 5–8 days
-- **Dependencies:** #87 (Facilities workflow/permissions), #89 (Registration flow).
+- **Labels:** `backend`, `feature`, `interface`, ~~`closed`~~
+- **What was delivered:**
+  - **Public submission form:** `client/pages/submit-facility.vue` — a 7-step wizard (Basic Info → Contact → Services → Details → Location → Your Info → Review) with geocode search, interactive Leaflet map picker (`AppLocationPicker`), image upload to MinIO, service mode configuration (teletherapy/onsite/home), accreditation and caters-to selection, and step validation.
+  - **Admin review pipeline:** `client/pages/admin/submissions.vue` — staff dashboard with search, status/sort filters, pagination, detail modal with embedded map, and review/approve/merge/reject/delete actions.
+  - **Submission API:** `api/apps/core/submissions/` — full backend with validation, state machine (new → in_review → approved/rejected → merged), image uploads, and Celery email notifications.
+  - **Geocode endpoint:** `api/geocode.py` — forwards address queries to Nominatim.
+  - **Map component:** `client/components/AppLocationPicker.vue` — reusable Leaflet map with readonly mode, `nextTick`-based size invalidation for modal/wizard usage.
+- **Follow-up work (future issue):** Organization-scoped provider dashboard — "My Facilities" page, submission tracking for authenticated users, org-facility model link.
 
 ### 4.3 Handle Mobile Support for Search and Detail Pages [#84](https://github.com/ausome-maps/TherapEase/issues/84)
 
@@ -325,10 +312,8 @@ These are improvements identified during the repository review that are not cove
 | Priority | Issue | Description | Est. Effort |
 |---|---|---|---|
 | 🔴 P0 | #91 | Client testing framework | 3–5 days |
-| 🔴 P0 | #87 | Facilities workflow & permissions | 5–7 days |
 | 🔴 P0 | #22 | UAT deployment | 3–5 days |
 | 🟡 P1 | #89 | Registration flow (QA & polish) | 2–3 days |
-| 🟡 P1 | #90 | Self-service facility form | 5–8 days |
 | 🟡 P1 | #84 | Mobile support for search/detail | 3–5 days |
 | 🟡 P1 | #94 | Social auth (frontend buttons) | 3–5 days |
 | 🟢 P2 | #20 | Repository organization | 1–2 days |
@@ -342,6 +327,8 @@ These are improvements identified during the repository review that are not cove
 | 🟣 P3 | — | Security audit | 2–3 days |
 | 🟣 P3 | — | i18n support | 3–5 days |
 | 🟣 P3 | — | Analytics integration | 1–2 days |
+| ✅ Done | #87 | ~~Facilities workflow & permissions~~ (submission review pipeline) | June 2026 |
+| ✅ Done | #90 | ~~Self-service facility form~~ (public form + admin review) | June 2026 |
 
 ---
 
@@ -353,3 +340,16 @@ These are improvements identified during the repository review that are not cove
 - "Estimated effort" is in developer-days and should be refined by the team.
 - This TODO.md should be updated whenever an issue is closed or a new feature is identified.
 - After closing an issue, move it to a "Completed" section at the bottom of this document with a completion date.
+
+---
+
+## Completed
+
+### June 2026 — Facility Submissions
+
+| Issue | Description | Key Deliverables |
+|---|---|---|
+| [#90](https://github.com/ausome-maps/TherapEase/issues/90) | Self service facility data form | Public 7-step wizard (`submit-facility.vue`), geocode endpoint, AppLocationPicker map component, image upload to MinIO, admin review dashboard |
+| [#87](https://github.com/ausome-maps/TherapEase/issues/87) | Facilities workflow and permissions | Submission review pipeline (approve/reject/merge/delete), staff-only permissions, search/filter/pagination, location map in detail modal, CSRF fix, Celery resilience |
+
+**Follow-up needed (future issue):** Organization-scoped facility CRUD — add org FK to `FacilityProperties`, update permissions for org-scoped mutations, create "My Facilities" provider dashboard.

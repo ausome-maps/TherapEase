@@ -29,7 +29,7 @@ services:
       - traefik.http.routers.client.rule=Host(`{{therapease_ui_domain_name}}`)
       - traefik.http.routers.client.tls=true
       - traefik.http.routers.client.tls.certresolver=lets-encrypt
-      - traefik.port=80
+      - traefik.http.services.client.loadbalancer.server.port=9002
     networks:
       - internal
       - web
@@ -47,7 +47,7 @@ services:
       - "traefik.http.routers.api.rule=Host(`{{therapease_api_domain_name}}`)" # need to be configured in DNS registrar
       - "traefik.http.routers.api.tls=true"
       - "traefik.http.routers.api.tls.certresolver=lets-encrypt"
-      - "traefik.port=80"
+      - "traefik.http.services.api.loadbalancer.server.port=9003"
     depends_on:
       - cache
       - db
@@ -75,7 +75,6 @@ services:
       - "traefik.http.routers.console.service=console"
       - "traefik.http.routers.console.tls.certresolver=lets-encrypt"
       - "traefik.http.services.console.loadbalancer.server.port=9000"
-      - "traefik.port=80"
     networks:
       - internal
       - web

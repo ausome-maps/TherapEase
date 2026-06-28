@@ -1,8 +1,16 @@
 ---
 therapease_ui_domain_name: "sample.com"
 therapease_api_domain_name: "api.sample.com"
+therapease_storage_domain_name: "storage.sample.com"
+therapease_api_storage_domain_name: "s3.sample.com"
 therapease_monitor_domain_name: "monitor.sample.com"
 is_ssl: false
+geocode_url: "https://nominatim.openstreetmap.org/search"
+feature_auth_enabled: 1
+feature_registration_enabled: 0
+feedback_url: "https://forms.gle/example"
+google_tag_manager: ""
+api_secret_key: "change-me"
 postgres:
   username: tuser
   password: tpassword
