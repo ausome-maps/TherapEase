@@ -154,6 +154,12 @@ GitHub Actions run backend tests with PostgreSQL + Redis service containers on p
 | `/api/auth/users/` | POST | Public | Register user |
 | `/api/auth/users/activation/` | POST | Public | Activate user account |
 | `/api/social/{google,facebook}/` | POST | Public | Social login |
+| `/api/submissions/` | GET/POST | Public (POST) / Staff (GET) | List/create facility submissions |
+| `/api/submissions/{id}/` | GET/PATCH/DELETE | Staff | Submission detail/update |
+| `/api/submissions/{id}/review/` | POST | Staff | Mark submission as in review |
+| `/api/submissions/{id}/approve/` | POST | Staff | Approve and merge into facilities |
+| `/api/submissions/{id}/reject/` | POST | Staff | Reject submission with notes |
+| `/api/submissions/upload-image/` | POST | Public | Upload facility image to MinIO |
 
 ## Important Notes
 

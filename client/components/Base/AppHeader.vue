@@ -17,6 +17,9 @@
         </svg>
       </button>
       <div class="hidden sm:flex items-center gap-2">
+        <NuxtLink to="/submit-facility" class="text-sm text-red-400 hover:text-red-500 px-3 py-1 border border-red-300 rounded-full hover:border-red-400">
+          Submit a Facility
+        </NuxtLink>
         <template v-if="mounted && authEnabled">
           <template v-if="isAuthenticated">
             <div class="relative">
@@ -58,32 +61,38 @@
       </div>
     </div>
     <transition name="mobile-slide">
-      <div v-if="mobileMenuOpen && mounted && authEnabled" class="sm:hidden border-t border-gray-200 bg-white dark:bg-gray-900">
+      <div v-if="mobileMenuOpen" class="sm:hidden border-t border-gray-200 bg-white dark:bg-gray-900">
         <div class="px-3 py-2 space-y-1">
-          <template v-if="isAuthenticated">
-            <div class="px-3 py-2 text-sm text-gray-500 border-b border-gray-100">{{ userEmail }}</div>
-            <NuxtLink to="/profile" @click="mobileMenuOpen = false"
-              class="block px-3 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
-              Profile
-            </NuxtLink>
-            <NuxtLink v-if="isStaff || isSuperuser" to="/admin" @click="mobileMenuOpen = false"
-              class="block px-3 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
-              Admin
-            </NuxtLink>
-            <button @click="handleLogout"
-              class="block w-full text-left px-3 py-3 text-sm text-red-500 hover:bg-gray-100 rounded-lg">
-              Sign out
-            </button>
-          </template>
-          <template v-else>
-            <NuxtLink to="/login" @click="mobileMenuOpen = false"
-              class="block px-3 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
-              Sign in
-            </NuxtLink>
-            <NuxtLink v-if="registrationEnabled" to="/register" @click="mobileMenuOpen = false"
-              class="block px-3 py-3 text-sm text-red-500 hover:bg-gray-100 rounded-lg font-medium">
-              Register
-            </NuxtLink>
+          <NuxtLink to="/submit-facility" @click="mobileMenuOpen = false"
+            class="block px-3 py-3 text-sm text-red-500 hover:bg-gray-100 rounded-lg font-medium border-b border-gray-100">
+            Submit a Facility
+          </NuxtLink>
+          <template v-if="mounted && authEnabled">
+            <template v-if="isAuthenticated">
+              <div class="px-3 py-2 text-sm text-gray-500">{{ userEmail }}</div>
+              <NuxtLink to="/profile" @click="mobileMenuOpen = false"
+                class="block px-3 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
+                Profile
+              </NuxtLink>
+              <NuxtLink v-if="isStaff || isSuperuser" to="/admin" @click="mobileMenuOpen = false"
+                class="block px-3 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
+                Admin
+              </NuxtLink>
+              <button @click="handleLogout"
+                class="block w-full text-left px-3 py-3 text-sm text-red-500 hover:bg-gray-100 rounded-lg">
+                Sign out
+              </button>
+            </template>
+            <template v-else>
+              <NuxtLink to="/login" @click="mobileMenuOpen = false"
+                class="block px-3 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
+                Sign in
+              </NuxtLink>
+              <NuxtLink v-if="registrationEnabled" to="/register" @click="mobileMenuOpen = false"
+                class="block px-3 py-3 text-sm text-red-500 hover:bg-gray-100 rounded-lg font-medium">
+                Register
+              </NuxtLink>
+            </template>
           </template>
         </div>
       </div>
