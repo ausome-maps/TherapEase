@@ -23,6 +23,8 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from geocode import geocode_view
+
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -45,8 +47,10 @@ routers = routers.SimpleRouter(trailing_slash=False)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("geocode", geocode_view, name="geocode"),
     path("facilities/", include("apps.core.facilities.urls")),
     path("feedback/", include("apps.core.feedback.urls")),
+    path("submissions/", include("apps.core.submissions.urls")),
     path("users/", include("apps.core.users.urls")),
     path("o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
     path("social/", include("social_django.urls", namespace="social")),

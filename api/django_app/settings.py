@@ -66,6 +66,7 @@ CORE_APPS = [
     "apps.core.users",
     "apps.core.facilities",
     "apps.core.feedback",
+    "apps.core.submissions",
 ]
 
 PLUGIN_APPS = []
@@ -318,6 +319,9 @@ EMAIL_SEND = int(os.getenv("EMAIL_SEND", 0))
 # SITE_URL
 SITE_URL = os.environ.get("UI_BASE_URL", "http://localhost:9002")
 SITE_NAME = "TherapEase"
+
+# GEOCODE_URL for geocoding service (Nominatim)
+GEOCODE_URL = os.environ.get("GEOCODE_URL", "https://nominatim.openstreetmap.org/search")
 
 # SIMPLE JWT
 SIMPLE_JWT = {

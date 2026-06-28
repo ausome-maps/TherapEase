@@ -10,6 +10,7 @@ from .serializers import (
     OrganizationSerializer,
 )
 from apps.core.feedback.models import Feedback
+from apps.core.submissions.models import FacilitySubmission
 from .permissions import OrganizationPermissions, IsStaffOrSuperuser
 
 
@@ -122,6 +123,10 @@ class AdminStatsView(APIView):
                 "feedback": {
                     "total": Feedback.objects.count(),
                     "new": Feedback.objects.filter(status="new").count(),
+                },
+                "submissions": {
+                    "total": FacilitySubmission.objects.count(),
+                    "new": FacilitySubmission.objects.filter(status="new").count(),
                 },
             }
         )
