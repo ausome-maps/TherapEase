@@ -216,9 +216,19 @@ export const useAuth = () => {
       const selfRes = await authedFetch(`${apiBase}/users/me/`)
       if (selfRes.ok) {
         const selfData = await selfRes.json()
-        const userData = selfData.data?.attributes || selfData
-        state.value.isStaff = !!userData.is_staff
-        state.value.isSuperuser = !!userData.is_superuser
+        const attrs = selfData.data?.attributes || selfData
+        // DRF JSON:API may return keys as snake_case, kebab-case, or camelCase
+        const getBool = (obj: Record<string, unknown>, ...keys: string[]) => {
+          for (const key of keys) {
+            if (key in obj) return Boolean(obj[key])
+          }
+          return false
+        }
+        state.value.isStaff = getBool(attrs, 'is_staff', 'is-staff', 'isStaff')
+        state.value.isSuperuser = getBool(attrs, 'is_superuser', 'is-superuser', 'isSuperuser')
+      } else {
+        state.value.isStaff = false
+        state.value.isSuperuser = false
       }
     } catch {
       state.value.isStaff = false
@@ -354,6 +364,15 @@ export const useAuth = () => {
     }
   }
 
+  const fetchAdminStats = async () => {
+    const res = await authedFetch(`${config.public.apiURL}/users/admin/stats/`)
+    if (!res.ok) {
+      const err = await res.json()
+      throw new Error(formatApiError(err, 'Failed to fetch admin stats'))
+    }
+    return res.json()
+  }
+
   const socialLogin = async (provider: string, socialToken: string) => {
     const res = await fetch(`${config.public.apiURL}/users/social/jwt/`, {
       method: 'POST',
@@ -373,6 +392,67 @@ export const useAuth = () => {
     state.value.refreshToken = data.refresh
     await fetchProfile()
     return data
+  }
+
+  const submitFeedback = async (payload: {
+    facility: string
+    email_address: string
+    contact_number: string
+    data_concerns: string
+    usability_concerns: string
+  }) => {
+    const res = await fetch(`${config.public.apiURL}/feedback/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: 'Submission failed' }))
+      throw new Error(formatApiError(err, 'Submission failed'))
+    }
+    return res.json()
+  }
+
+  const fetchFeedback = async (params?: string) => {
+    let url = `${config.public.apiURL}/feedback/`
+    if (params) url += `?${params}`
+    const res = await authedFetch(url)
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: 'Failed to fetch feedback' }))
+      throw new Error(formatApiError(err, 'Failed to fetch feedback'))
+    }
+    return res.json()
+  }
+
+  const fetchFeedbackDetail = async (id: string) => {
+    const res = await authedFetch(`${config.public.apiURL}/feedback/${id}`)
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: 'Failed to fetch feedback detail' }))
+      throw new Error(formatApiError(err, 'Failed to fetch feedback detail'))
+    }
+    return res.json()
+  }
+
+  const updateFeedback = async (id: string, data: { status?: string; admin_notes?: string }) => {
+    const res = await authedFetch(`${config.public.apiURL}/feedback/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: 'Failed to update feedback' }))
+      throw new Error(formatApiError(err, 'Failed to update feedback'))
+    }
+    return res.json()
+  }
+
+  const deleteFeedback = async (id: string) => {
+    const res = await authedFetch(`${config.public.apiURL}/feedback/${id}`, {
+      method: 'DELETE',
+    })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: 'Failed to delete feedback' }))
+      throw new Error(formatApiError(err, 'Failed to delete feedback'))
+    }
   }
 
   const logout = () => {
@@ -413,10 +493,17 @@ export const useAuth = () => {
     createUser,
     updateUser,
     deleteUser,
+    fetchAdminStats,
+    submitFeedback,
+    fetchFeedback,
+    fetchFeedbackDetail,
+    updateFeedback,
+    deleteFeedback,
     logout,
     initAuth,
     getHeaders,
     authedFetch,
     apiBase,
+    formatApiError,
   }
 }

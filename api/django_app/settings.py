@@ -64,6 +64,7 @@ INSTALLED_APPS = [
 CORE_APPS = [
     "apps.core.users",
     "apps.core.facilities",
+    "apps.core.feedback",
 ]
 
 PLUGIN_APPS = []
@@ -271,6 +272,7 @@ DJOSER = {
         "token_create": "apps.core.users.serializers.CustomTokenCreateSerializer",
         "user_create": "apps.core.users.serializers.CustomUserCreateSerializer",
         "user": "apps.core.users.serializers.UserDetailSerializer",
+        "current_user": "apps.core.users.serializers.UserDetailSerializer",
     },
     # The activation and reset URLs are based on the frontend. Where the frontend will fetch uid and token from the link.
     # and send the uid and token to the backend.

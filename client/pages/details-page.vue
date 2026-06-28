@@ -30,7 +30,7 @@
             </div>
             <div class="sidebar mx-auto mb-[50px] pt-4 w-full px-3 sm:w-[90%]">
               <AppContacts :facilityDetails="properties" />
-              <AppShareSubmit />
+              <AppShareSubmit :facility-id="id" />
             </div>
             <div class="pb-[80px]"></div>
           </template>
@@ -45,7 +45,7 @@
                 </div>
                 <div class="min-w-[34%] p-5 mr-2">
                   <AppContacts :facilityDetails="properties" />
-                  <AppShareSubmit :feedback-url="$config.public.feedbackURL" />
+                  <AppShareSubmit :facility-id="id" />
                 </div>
               </div>
             </div>
@@ -75,7 +75,6 @@ export default {
       error: null,
       isFetching: false,
       id: null,
-      feedbackUrl: '',
     };
   },
   beforeMount() {

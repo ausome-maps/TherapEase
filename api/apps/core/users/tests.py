@@ -281,3 +281,68 @@ class AuthFeatureFlagTest(APITestCase):
                 format="json",
             )
             self.assertIn(response.status_code, [200, 400])
+
+
+class AdminStatsTest(APITestCase):
+    staff_data = {
+        "username": "staff@example.com",
+        "password": "staffpass123",
+        "email": "staff@example.com",
+    }
+    user_data = {
+        "username": "regular@example.com",
+        "password": "regularpass123",
+        "email": "regular@example.com",
+    }
+
+    def setUp(self):
+        self.staff = User.objects.create(**self.staff_data)
+        self.staff.set_password(self.staff_data["password"])
+        self.staff.is_staff = True
+        self.staff.is_active = True
+        self.staff.save()
+
+        self.regular = User.objects.create(**self.user_data)
+        self.regular.set_password(self.user_data["password"])
+        self.regular.is_active = True
+        self.regular.save()
+
+        self.stats_url = "/users/admin/stats/"
+
+    def _get_jwt(self, email, password):
+        response = self.client.post(
+            "/auth/jwt/create/",
+            {"email": email, "password": password},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        return response.json()["access"]
+
+    def test_staff_can_access_stats(self):
+        token = self._get_jwt(self.staff_data["email"], self.staff_data["password"])
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+        response = self.client.get(self.stats_url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.json()
+        self.assertIn("users", data)
+        self.assertIn("organizations", data)
+        self.assertIsInstance(data["users"]["total"], int)
+
+    def test_superuser_can_access_stats(self):
+        self.staff.is_superuser = True
+        self.staff.is_staff = False
+        self.staff.save()
+        token = self._get_jwt(self.staff_data["email"], self.staff_data["password"])
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+        response = self.client.get(self.stats_url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_non_staff_denied(self):
+        token = self._get_jwt(self.user_data["email"], self.user_data["password"])
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+        response = self.client.get(self.stats_url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_unauthenticated_denied(self):
+        response = self.client.get(self.stats_url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

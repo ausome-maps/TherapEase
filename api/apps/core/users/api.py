@@ -1,13 +1,16 @@
 from rest_framework import permissions, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_tracking.mixins import LoggingMixin
+from django.contrib.auth import get_user_model
 from .models import Profile, Organization
 from .serializers import (
     ProfileSerializer,
     OrganizationSerializer,
 )
-from .permissions import OrganizationPermissions
+from apps.core.feedback.models import Feedback
+from .permissions import OrganizationPermissions, IsStaffOrSuperuser
 
 
 class ProfileViewset(LoggingMixin, viewsets.ModelViewSet):
@@ -100,3 +103,25 @@ class OrganizationViewset(LoggingMixin, viewsets.ModelViewSet):
     queryset = Organization.objects.all()
     permission_classes = (OrganizationPermissions,)
     serializer_class = OrganizationSerializer
+
+
+class AdminStatsView(APIView):
+    permission_classes = (IsStaffOrSuperuser,)
+
+    def get(self, request):
+        User = get_user_model()
+        return Response(
+            {
+                "users": {
+                    "total": User.objects.count(),
+                    "active": User.objects.filter(is_active=True).count(),
+                    "staff": User.objects.filter(is_staff=True).count(),
+                    "superusers": User.objects.filter(is_superuser=True).count(),
+                },
+                "organizations": Organization.objects.count(),
+                "feedback": {
+                    "total": Feedback.objects.count(),
+                    "new": Feedback.objects.filter(status="new").count(),
+                },
+            }
+        )

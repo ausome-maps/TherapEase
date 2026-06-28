@@ -1,5 +1,6 @@
-export default defineNuxtRouteMiddleware((to) => {
-  const protectedRoutes = ['/complete-profile', '/profile', '/users']
+export default defineNuxtRouteMiddleware(async (to) => {
+  const protectedRoutes = ['/complete-profile', '/profile']
+  const adminRoutes = ['/admin']
   const authPages = [
     '/login',
     '/register',
@@ -7,7 +8,7 @@ export default defineNuxtRouteMiddleware((to) => {
     '/user/activate',
     '/user/reset-password',
     '/profile',
-    '/users',
+    '/admin',
   ]
 
   if (import.meta.server) return
@@ -23,5 +24,14 @@ export default defineNuxtRouteMiddleware((to) => {
 
   if (protectedRoutes.some((p) => to.path.startsWith(p)) && !hasToken) {
     return navigateTo('/login')
+  }
+
+  if (adminRoutes.some((p) => to.path.startsWith(p))) {
+    if (!hasToken) return navigateTo('/login')
+    const { initAuth, isStaff, isSuperuser } = useAuth()
+    await initAuth()
+    if (!isStaff.value && !isSuperuser.value) {
+      return navigateTo('/')
+    }
   }
 })

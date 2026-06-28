@@ -59,9 +59,9 @@
                 :class="{ 'bg-red-50 text-red-600': showPasswordChange }">
                 Change Password
               </button>
-              <NuxtLink v-if="isStaff" to="/users"
+              <NuxtLink v-if="isStaff || isSuperuser" to="/admin"
                 class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-100">
-                Manage Users
+                Admin
               </NuxtLink>
             </nav>
           </div>
@@ -151,7 +151,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 
-const { currentUser, updateProfile, changePassword, isStaff, initAuth, fetchProfile } = useAuth()
+const { currentUser, updateProfile, changePassword, isStaff, isSuperuser, initAuth, fetchProfile } = useAuth()
 
 const firstName = ref('')
 const lastName = ref('')

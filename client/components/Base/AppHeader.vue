@@ -34,9 +34,9 @@
                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                   Profile
                 </NuxtLink>
-                <NuxtLink v-if="isStaff" to="/users"
+                <NuxtLink v-if="isStaff || isSuperuser" to="/admin"
                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Manage Users
+                  Admin
                 </NuxtLink>
                 <hr class="my-1 border-gray-200">
                 <button @click="handleLogout"
@@ -66,9 +66,9 @@
               class="block px-3 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
               Profile
             </NuxtLink>
-            <NuxtLink v-if="isStaff" to="/users" @click="mobileMenuOpen = false"
+            <NuxtLink v-if="isStaff || isSuperuser" to="/admin" @click="mobileMenuOpen = false"
               class="block px-3 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
-              Manage Users
+              Admin
             </NuxtLink>
             <button @click="handleLogout"
               class="block w-full text-left px-3 py-3 text-sm text-red-500 hover:bg-gray-100 rounded-lg">
@@ -101,7 +101,7 @@ const mounted = ref(false)
 const showDropdown = ref(false)
 const mobileMenuOpen = ref(false)
 
-const { isAuthenticated, currentUser, isStaff, initAuth, logout } = useAuth()
+const { isAuthenticated, currentUser, isStaff, isSuperuser, initAuth, logout } = useAuth()
 
 const userEmail = computed(() => {
   return currentUser.value?.email || localStorage.getItem('user_email') || ''

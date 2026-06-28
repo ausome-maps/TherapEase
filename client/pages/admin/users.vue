@@ -1,90 +1,78 @@
 <template>
-  <div class="min-h-screen bg-gray-50 px-4 py-8">
-    <div class="max-w-4xl mx-auto space-y-8">
-      <div class="flex items-center justify-between flex-col sm:flex-row gap-3 sm:gap-0">
-        <div>
-          <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">User Management</h2>
-          <p class="mt-1 text-sm text-gray-600">Manage all registered users</p>
-        </div>
-        <button @click="openCreateModal"
-          class="px-4 py-2 bg-red-400 text-white rounded-lg hover:bg-red-500 text-sm font-medium w-full sm:w-auto">
-          Create User
-        </button>
+  <div class="space-y-6">
+    <div class="flex items-center justify-between flex-col sm:flex-row gap-3 sm:gap-0">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-900">Users</h2>
+        <p class="mt-1 text-sm text-gray-600">Manage all registered users</p>
       </div>
+      <button @click="openCreateModal"
+        class="px-4 py-2 bg-red-400 text-white rounded-lg hover:bg-red-500 text-sm font-medium w-full sm:w-auto">
+        Create User
+      </button>
+    </div>
 
-      <div v-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-        {{ error }}
-      </div>
-      <div v-if="success" class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
-        {{ success }}
-      </div>
+    <div v-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+      {{ error }}
+    </div>
+    <div v-if="success" class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
+      {{ success }}
+    </div>
 
-      <div v-if="loading" class="text-center py-12">
-        <div class="inline-block animate-spin text-4xl text-red-400">&#9696;</div>
-        <p class="mt-4 text-gray-600">Loading users...</p>
-      </div>
+    <div v-if="loading" class="text-center py-12">
+      <div class="inline-block animate-spin text-4xl text-red-400">&#9696;</div>
+      <p class="mt-4 text-gray-600">Loading users...</p>
+    </div>
 
-      <div v-else-if="notAuthorized" class="text-center py-12">
-        <h3 class="text-xl font-bold text-gray-900">Access Denied</h3>
-        <p class="mt-2 text-gray-600">You do not have permission to access this page.</p>
-        <NuxtLink to="/" class="mt-4 inline-block text-red-400 hover:text-red-500">Back to Home</NuxtLink>
-      </div>
-
-      <div v-else class="bg-white shadow rounded-lg overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-              <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-              <th class="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
-              <th class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-for="user in users" :key="user.id" class="hover:bg-gray-50">
-              <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900">
-                  {{ user.first_name && user.last_name ? `${user.first_name} ${user.last_name}` : '—' }}
-                </div>
-                <div class="text-xs sm:text-sm text-gray-500">{{ user.email }}</div>
-              </td>
-              <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
-                  :class="user.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
-                  {{ user.is_active ? 'Active' : 'Inactive' }}
-                </span>
-              </td>
-              <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
-                <span v-if="user.is_superuser" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                  Superuser
-                </span>
-                <span v-else-if="user.is_staff" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  Staff
-                </span>
-                <span v-else class="text-xs sm:text-sm text-gray-500">User</span>
-              </td>
-              <td class="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {{ formatDate(user.date_joined) }}
-              </td>
-              <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-right text-xs sm:text-sm font-medium">
-                <button @click="openEditModal(user)" class="text-red-400 hover:text-red-500 mr-1 sm:mr-3">Edit</button>
-                <button @click="toggleActive(user)" class="text-gray-400 hover:text-gray-500 mr-1 sm:mr-3">
-                  {{ user.is_active ? 'Disable' : 'Enable' }}
-                </button>
-                <button @click="confirmDelete(user)" class="text-red-600 hover:text-red-800">Delete</button>
-              </td>
-            </tr>
-            <tr v-if="users.length === 0">
-              <td colspan="5" class="px-6 py-12 text-center text-gray-500">No users found</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="flex justify-center">
-        <NuxtLink to="/profile" class="text-sm text-gray-500 hover:text-gray-700">Back to Profile</NuxtLink>
-      </div>
+    <div v-else class="bg-white shadow rounded-lg overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+            <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+            <th class="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+            <th class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr v-for="user in users" :key="user.id" class="hover:bg-gray-50">
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-medium text-gray-900">
+                {{ user.first_name && user.last_name ? `${user.first_name} ${user.last_name}` : '—' }}
+              </div>
+              <div class="text-xs sm:text-sm text-gray-500">{{ user.email }}</div>
+            </td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                :class="user.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                {{ user.is_active ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
+              <span v-if="user.is_superuser" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                Superuser
+              </span>
+              <span v-else-if="user.is_staff" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                Staff
+              </span>
+              <span v-else class="text-xs sm:text-sm text-gray-500">User</span>
+            </td>
+            <td class="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              {{ formatDate(user.date_joined) }}
+            </td>
+            <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-right text-xs sm:text-sm font-medium">
+              <button @click="openEditModal(user)" class="text-red-400 hover:text-red-500 mr-1 sm:mr-3">Edit</button>
+              <button @click="toggleActive(user)" class="text-gray-400 hover:text-gray-500 mr-1 sm:mr-3">
+                {{ user.is_active ? 'Disable' : 'Enable' }}
+              </button>
+              <button @click="confirmDelete(user)" class="text-red-600 hover:text-red-800">Delete</button>
+            </td>
+          </tr>
+          <tr v-if="users.length === 0">
+            <td colspan="5" class="px-6 py-12 text-center text-gray-500">No users found</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- Create/Edit Modal -->
@@ -170,6 +158,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
+definePageMeta({ layout: 'admin' })
+
 interface AdminUser {
   id: number
   email: string
@@ -181,13 +171,12 @@ interface AdminUser {
   date_joined: string
 }
 
-const { isStaff, initAuth, fetchUsers, createUser, updateUser, deleteUser } = useAuth()
+const { isStaff, isSuperuser, initAuth, fetchUsers, createUser, updateUser, deleteUser } = useAuth()
 
 const users = ref<AdminUser[]>([])
 const loading = ref(true)
 const error = ref('')
 const success = ref('')
-const notAuthorized = ref(false)
 
 const showModal = ref(false)
 const showDeleteModal = ref(false)
@@ -220,8 +209,7 @@ const loadUsers = async () => {
 
 onMounted(async () => {
   await initAuth()
-  if (!isStaff.value) {
-    notAuthorized.value = true
+  if (!isStaff.value && !isSuperuser.value) {
     loading.value = false
     return
   }
