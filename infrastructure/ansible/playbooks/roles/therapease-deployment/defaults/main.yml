@@ -4,6 +4,7 @@ therapease_api_domain_name: "api.sample.com"
 therapease_storage_domain_name: "storage.sample.com"
 therapease_api_storage_domain_name: "s3.sample.com"
 therapease_monitor_domain_name: "monitor.sample.com"
+copyright_year: "2026"
 is_ssl: false
 geocode_url: "https://nominatim.openstreetmap.org/search"
 feature_auth_enabled: 1

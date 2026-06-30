@@ -1,14 +1,13 @@
 - name: stopping therapease
   become: yes
-  docker_compose:
+  community.docker.docker_compose_v2:
     project_src: "{{apps_directory}}"
     files: "docker-compose.therapease.yml"
-    state: present
-    stopped: yes
+    state: stopped
 
 - name: running therapease
   become: yes
-  docker_compose:
+  community.docker.docker_compose_v2:
     project_src: "{{apps_directory}}"
     files: "docker-compose.therapease.yml"
     state: present
