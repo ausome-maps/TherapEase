@@ -24,7 +24,53 @@ export default defineNuxtConfig({
       proxy: { to: "http://localhost:9001/geocode" }
     }
   },
-  modules: [],
+  modules: ['@vite-pwa/nuxt'],
+  pwa: {
+    registerType: 'autoUpdate',
+    manifest: {
+      name: 'TherapEase',
+      short_name: 'TherapEase',
+      description: 'Find special education facilities and services in the Philippines',
+      theme_color: '#f87171',
+      background_color: '#ffffff',
+      display: 'standalone',
+      orientation: 'portrait-primary',
+      start_url: '/',
+      icons: [
+        { src: '/pwa-192x192.png', sizes: '192x192', type: 'image/png' },
+        { src: '/pwa-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
+      ],
+    },
+    workbox: {
+      globPatterns: ['**/*.{js,css,html,png,svg,woff2}'],
+      runtimeCaching: [
+        {
+          urlPattern: /^https:\/\/.*\.tile\.openstreetmap\.org\/.*/,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'map-tiles',
+            expiration: { maxEntries: 200, maxAgeSeconds: 30 * 24 * 60 * 60 },
+          },
+        },
+        {
+          urlPattern: /\/api\/.*/,
+          handler: 'NetworkFirst',
+          options: {
+            cacheName: 'api-calls',
+            networkTimeoutSeconds: 5,
+            expiration: { maxEntries: 100, maxAgeSeconds: 5 * 60 },
+          },
+        },
+      ],
+    },
+    client: {
+      installPrompt: true,
+    },
+    devOptions: {
+      enabled: true,
+      type: 'module',
+    },
+  },
   vite: {
     plugins: [tailwindcss()],
     server: {
