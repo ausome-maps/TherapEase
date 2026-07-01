@@ -14,7 +14,7 @@ Browser ──> Traefik (reverse proxy) ──> Nuxt SPA (client/, port 9002)
                                           └── MinIO (S3-compatible storage)
 ```
 
-- **Frontend**: Nuxt 4 (SSR off), Vue 3, TypeScript, Tailwind CSS v4, Flowbite v4, Leaflet maps
+- **Frontend**: Nuxt 4 (SSR off), Vue 3, TypeScript, Tailwind CSS v4, Flowbite v4, Leaflet maps, @vite-pwa/nuxt (PWA)
 - **Backend**: Django 5.2 LTS, DRF, Djoser, simplejwt, celery, django-opensearch-dsl
 - **Infra**: Docker Compose (dev), Ansible + Traefik (prod), GitHub Actions CI
 
@@ -34,6 +34,7 @@ client/                     Nuxt frontend
   layouts/default.vue       Default layout wrapper
   middleware/auth.global.ts  Global auth route guard
   pages/                    Page components (index, search, details, login, etc.)
+  public/                   PWA icons, offline fallback, static assets
 docs/                       Architecture, auth, data model, search, UI docs
 infrastructure/             Ansible playbooks + Traefik configs
 utils/                      Python data-loading scripts
@@ -89,6 +90,8 @@ Runs on each commit: Black (Python formatting), Ruff (lint + format), check-yaml
 | `npm run build` | Production build → `.output/` |
 | `npm run generate` | Static site generation |
 | `npm run preview` | Preview production build |
+| `npm run test` | Run Vitest tests |
+| `npm run test:watch` | Run tests in watch mode |
 
 ## Testing
 
@@ -102,7 +105,13 @@ cd api && python manage.py test
 ```
 
 ### Frontend Tests
-No frontend testing framework is configured yet (noted as TODO in README).
+Tests use Vitest + @nuxt/test-utils. Test files:
+- `client/tests/components/AppFilter.test.ts` — Filter component tests
+- `client/tests/components/AppCardList.test.ts` — Card list component tests
+
+```bash
+cd client && npm run test
+```
 
 ### CI
 GitHub Actions run backend tests with PostgreSQL + Redis service containers on push/PR to `main`. Frontend CI only builds the Docker image.
@@ -132,6 +141,7 @@ GitHub Actions run backend tests with PostgreSQL + Redis service containers on p
 - **Components follow Vue 3 Composition API** with `<script setup lang="ts">`.
 - **Pages are file-based** routed via Nuxt's `pages/` directory.
 - **Deprecated code**: `deprecated/AppFilter.vue` — do not modify, use `components/Search/AppFilter.vue` instead.
+- **PWA**: The app is a Progressive Web App via `@vite-pwa/nuxt`. Configuration is in `nuxt.config.ts` under the `pwa` key. The `<NuxtPwaManifest />` component and viewport/mobile meta tags are in `app.vue`. PWA icons live in `public/`. Runtime caching strategies: map tiles (CacheFirst, 30-day), API calls (NetworkFirst, 5-min). The service worker is generated at build time and outputs to `.output/public/sw.js`.
 
 ### Infrastructure
 
@@ -170,3 +180,6 @@ GitHub Actions run backend tests with PostgreSQL + Redis service containers on p
 - The data model for facilities is detailed in `docs/data_model.md` — consult it before modifying facility schemas.
 - `social-core` and `social-auth-app-django` are used for social auth but not listed in `requirements.txt` directly (installed as dependencies).
 - This project has **no linter or typecheck script** for the frontend — TypeScript checking happens via `nuxt dev` / `nuxt build` automatically.
+- Frontend `node_modules/` is managed inside Docker and may be root-owned on the host. Use `docker compose up --build` to install/update dependencies.
+- The PWA service worker is only generated during production builds (`npm run build`). In dev mode (`npm run dev`), it registers with minimal precaching and warns about unmatched glob patterns — this is expected and harmless.
+- PR descriptions live in `PR.md`. Update it when creating a new PR with a summary of changes and affected issues.
