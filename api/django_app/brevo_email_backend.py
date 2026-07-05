@@ -114,9 +114,14 @@ class BrevoEmailBackend(BaseEmailBackend):
             from email.utils import parseaddr
 
             name, addr = parseaddr(sender_email)
+            sender_email = addr
             if name:
                 sender_name = name
-                sender_email = addr
+
+        # Brevo requires a non-empty sender name — fall back to the
+        # local-part of the email address when no display name is set.
+        if not sender_name and sender_email:
+            sender_name = sender_email.split("@")[0]
 
         payload: dict[str, Any] = {
             "sender": {
@@ -126,24 +131,28 @@ class BrevoEmailBackend(BaseEmailBackend):
         }
 
         # ── Recipients ──────────────────────────────────────────────
+        def _make_recipient(addr_str: str) -> dict[str, str]:
+            name, addr = parseaddr(addr_str)
+            entry: dict[str, str] = {"email": addr}
+            if name:
+                entry["name"] = name
+            return entry
+
         payload["to"] = [
-            {"email": addr, "name": name}
-            for name, addr in (parseaddr(r) for r in message.recipients())
-            if addr
+            _make_recipient(r) for r in message.recipients()
+            if parseaddr(r)[1]
         ]
 
         # Handle cc / bcc
         if message.cc:
             payload["cc"] = [
-                {"email": addr, "name": name}
-                for name, addr in (parseaddr(r) for r in message.cc)
-                if addr
+                _make_recipient(r) for r in message.cc
+                if parseaddr(r)[1]
             ]
         if message.bcc:
             payload["bcc"] = [
-                {"email": addr, "name": name}
-                for name, addr in (parseaddr(r) for r in message.bcc)
-                if addr
+                _make_recipient(r) for r in message.bcc
+                if parseaddr(r)[1]
             ]
 
         # ── Subject ─────────────────────────────────────────────────
