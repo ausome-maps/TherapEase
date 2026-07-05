@@ -38,6 +38,32 @@ services:
   cache:
     container_name: therapease_cache
     image: redis:7-alpine
+  worker:
+    container_name: therapease_worker
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    command: celery -A django_app worker -l info
+    volumes:
+      - ./api:/usr/src/app
+    env_file:
+      - ./.env.sample
+    depends_on:
+      - cache
+      - db
+  beat:
+    container_name: therapease_beat
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    command: celery -A django_app beat -l info
+    volumes:
+      - ./api:/usr/src/app
+    env_file:
+      - ./.env.sample
+    depends_on:
+      - cache
+      - db
   storage:
     image: minio/minio:latest
     command: server /data --console-address ":9001"

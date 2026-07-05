@@ -202,9 +202,9 @@ class BrevoEmailBackend(BaseEmailBackend):
                     })
 
         # ── Tags / headers for tracking ─────────────────────────────
-        payload["headers"] = {}
-        if getattr(message, "extra_headers", None):
-            payload["headers"].update(message.extra_headers)
+        extra = getattr(message, "extra_headers", None)
+        if extra:
+            payload["headers"] = dict(extra)
 
         return payload
 
