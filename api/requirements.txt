@@ -24,3 +24,4 @@ drf-yasg==1.21.15
 django-dbbackup==5.3.0
 djoser==2.3.3
 minio==7.2.18
+requests==2.34.2

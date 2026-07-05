@@ -21,7 +21,6 @@ minio:
   root: t_minio
   password: tpasswordminio
 
-brevo_smtp_key: xsmtp-placeholder
-brevo_smtp_user: login@sample.com
+brevo_api_key: xkeysib-placeholder
 therapease_system_email: system@sample.com
 therapease_admin_email: admin@sample.com

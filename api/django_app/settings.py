@@ -309,14 +309,9 @@ if DEBUG:
 
 DEV_EMAIL = int(os.environ.get("DEV_EMAIL", 0))
 if DEV_EMAIL or not DEBUG:
-    # EMAIL SETTINGS via Brevo (Sendinblue)
-    EMAIL_HOST = os.getenv("BREVO_SMTP_HOST", "smtp-relay.brevo.com")
-    EMAIL_HOST_USER = os.getenv("BREVO_SMTP_USER", "")
-    EMAIL_HOST_PASSWORD = os.getenv("BREVO_SMTP_KEY", "")
-    EMAIL_PORT = int(os.getenv("BREVO_SMTP_PORT", 587))
-    EMAIL_USE_TLS = True
-    EMAIL_USE_SSL = False
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    # EMAIL SETTINGS via Brevo API (transactional email)
+    BREVO_API_KEY = os.getenv("BREVO_API_KEY", "")
+    EMAIL_BACKEND = "django_app.brevo_email_backend.BrevoEmailBackend"
     DEFAULT_FROM_EMAIL = os.getenv("ADMIN_EMAIL", "admin@sample.com")
 
 EMAIL_SEND = int(os.getenv("EMAIL_SEND", 0))
