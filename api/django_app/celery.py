@@ -13,6 +13,11 @@ app.conf.beat_schedule = {
         "schedule": crontab(hour="*", minute="0"),
         "args": (),
     },
+    "weekly-analytics-report": {
+        "task": "apps.core.analytics.tasks.send_weekly_analytics_report",
+        "schedule": crontab(hour="8", minute="0", day_of_week="1"),
+        "args": (),
+    },
 }
 
 # WARNING: Changing the timezone in django can affect the periodic tasks.

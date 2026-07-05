@@ -67,6 +67,7 @@ CORE_APPS = [
     "apps.core.facilities",
     "apps.core.feedback",
     "apps.core.submissions",
+    "apps.core.analytics",
 ]
 
 PLUGIN_APPS = []

@@ -72,7 +72,11 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+const analytics = useAnalytics()
+</script>
+
+<script lang="ts">
 import L from 'leaflet';
 import "leaflet/dist/leaflet.css";
 
@@ -200,6 +204,9 @@ export default {
         this.currentPageResults = Math.min(this.paginationSize, this.data.length);
         this.hoveredFacilityId = null;
         [this.coordinates, this.bounds, this.center] = await this.getMapCoordinates();
+        // Track search query
+        const analytics = useAnalytics()
+        analytics.trackSearchQuery(this.searchQuery || '', this.totalResults || 0, this.filter || {})
       } catch (error) {
         console.log("error", error)
         this.totalResults = 0;

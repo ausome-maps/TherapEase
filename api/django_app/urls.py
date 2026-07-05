@@ -51,6 +51,7 @@ urlpatterns = [
     path("facilities/", include("apps.core.facilities.urls")),
     path("feedback/", include("apps.core.feedback.urls")),
     path("submissions/", include("apps.core.submissions.urls")),
+    path("analytics/", include("apps.core.analytics.urls")),
     path("users/", include("apps.core.users.urls")),
     path("o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
     path("social/", include("social_django.urls", namespace="social")),

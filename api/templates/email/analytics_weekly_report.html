@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ site_name }} Weekly Analytics Report</title>
+</head>
+<body style="font-family: Arial, sans-serif; background: #f9fafb; padding: 20px;">
+  <div style="max-width: 640px; margin: 0 auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <div style="background: #f87171; color: #fff; padding: 24px; text-align: center;">
+      <h1 style="margin: 0; font-size: 22px;">{{ site_name }} — Weekly Analytics</h1>
+      <p style="margin: 8px 0 0; font-size: 14px; opacity: 0.9;">{{ week_start }} to {{ week_end }}</p>
+    </div>
+
+    <div style="padding: 24px;">
+
+      <!-- Page Visits -->
+      <h2 style="color: #1f2937; border-bottom: 2px solid #f87171; padding-bottom: 6px;">📊 Page Visits</h2>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+        <tr style="background: #fef2f2;">
+          <td style="padding: 8px 12px; font-weight: bold;">Total Visits</td>
+          <td style="padding: 8px 12px; text-align: right;">{{ total_visits }}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 12px; font-weight: bold;">Unique Sessions</td>
+          <td style="padding: 8px 12px; text-align: right;">{{ unique_sessions }}</td>
+        </tr>
+      </table>
+
+      {% if visits_by_day %}
+      <h3 style="font-size: 14px; color: #6b7280;">Daily Breakdown</h3>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 13px;">
+        {% for day in visits_by_day %}
+        <tr>
+          <td style="padding: 4px 8px;">{{ day.day|date:"D, M j" }}</td>
+          <td style="padding: 4px 8px; text-align: right;">{{ day.count }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% endif %}
+
+      {% if top_pages %}
+      <h3 style="font-size: 14px; color: #6b7280;">Top Pages</h3>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
+        {% for page in top_pages %}
+        <tr>
+          <td style="padding: 4px 8px;">{{ page.path }}</td>
+          <td style="padding: 4px 8px; text-align: right; font-weight: 600;">{{ page.count }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% endif %}
+
+      <!-- Facility Views -->
+      <h2 style="color: #1f2937; border-bottom: 2px solid #f87171; padding-bottom: 6px;">🏥 Facility Views</h2>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+        <tr style="background: #fef2f2;">
+          <td style="padding: 8px 12px; font-weight: bold;">Total Facility Views</td>
+          <td style="padding: 8px 12px; text-align: right;">{{ total_facility_views }}</td>
+        </tr>
+      </table>
+
+      {% if facility_views_by_day %}
+      <h3 style="font-size: 14px; color: #6b7280;">Daily Breakdown</h3>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 13px;">
+        {% for day in facility_views_by_day %}
+        <tr>
+          <td style="padding: 4px 8px;">{{ day.day|date:"D, M j" }}</td>
+          <td style="padding: 4px 8px; text-align: right;">{{ day.count }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% endif %}
+
+      {% if top_facilities %}
+      <h3 style="font-size: 14px; color: #6b7280;">Top Facilities Viewed</h3>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
+        {% for f in top_facilities %}
+        <tr>
+          <td style="padding: 4px 8px;">{{ f.facility_name|default:f.facility_id }}</td>
+          <td style="padding: 4px 8px; text-align: right; font-weight: 600;">{{ f.count }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% endif %}
+
+      <!-- Search Queries -->
+      <h2 style="color: #1f2937; border-bottom: 2px solid #f87171; padding-bottom: 6px;">🔍 Search Queries</h2>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+        <tr style="background: #fef2f2;">
+          <td style="padding: 8px 12px; font-weight: bold;">Total Searches</td>
+          <td style="padding: 8px 12px; text-align: right;">{{ total_searches }}</td>
+        </tr>
+      </table>
+
+      {% if searches_by_day %}
+      <h3 style="font-size: 14px; color: #6b7280;">Daily Breakdown</h3>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 13px;">
+        {% for day in searches_by_day %}
+        <tr>
+          <td style="padding: 4px 8px;">{{ day.day|date:"D, M j" }}</td>
+          <td style="padding: 4px 8px; text-align: right;">{{ day.count }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% endif %}
+
+      {% if top_searches %}
+      <h3 style="font-size: 14px; color: #6b7280;">Top Search Queries</h3>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
+        {% for s in top_searches %}
+        <tr>
+          <td style="padding: 4px 8px;">"{{ s.query_text }}"</td>
+          <td style="padding: 4px 8px; text-align: right; font-weight: 600;">{{ s.count }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% endif %}
+
+      <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;">
+      <p style="color: #9ca3af; font-size: 12px; text-align: center;">
+        Generated by {{ site_name }} Analytics &bull; Every Monday
+      </p>
+    </div>
+  </div>
+</body>
+</html>

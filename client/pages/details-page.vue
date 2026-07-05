@@ -60,7 +60,11 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+const analytics = useAnalytics()
+</script>
+
+<script lang="ts">
 
 // placeholder data
 // import data from '../components/facility-data.json'
@@ -113,6 +117,10 @@ export default {
         this.properties = this.filteredData.features[0].properties;
         this.coordinates = this.filteredData.features[0].geometry.coordinates;
         console.log(this.coordinates[0], this.coordinates[1])
+        // Track facility view
+        const placename = this.properties?.placename || ''
+        const analytics = useAnalytics()
+        analytics.trackFacilityView(String(this.id || ''), placename)
       } catch (error) {
         console.log("Error on HandleSearch");
       }
