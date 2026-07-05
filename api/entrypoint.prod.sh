@@ -14,6 +14,7 @@ fi
 python manage.py makemigrations --merge --no-input
 python manage.py migrate
 python manage.py collectstatic --no-input --clear
+mkdir -p /home/app/web/files/analytics_archives
 
 {
   python manage.py shell -c "from django.contrib.auth.models import User;

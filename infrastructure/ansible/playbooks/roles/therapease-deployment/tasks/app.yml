@@ -19,6 +19,13 @@
     mode: 0777
     recurse: yes
 
+- name: Creates media data directory
+  file:
+    path: /datadrive/media
+    state: directory
+    mode: 0777
+    recurse: yes
+
 - name: Creates backups data directory
   file:
     path: /datadrive/backups

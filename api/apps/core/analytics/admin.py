@@ -1,8 +1,12 @@
+import logging
+
 from django.contrib import admin, messages
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.urls import path
 from django.utils import timezone
+
+logger = logging.getLogger(__name__)
 
 from .models import AnalyticsArchive, FacilityView, PageVisit, ReportRecipient, SearchQuery
 
@@ -68,15 +72,35 @@ class AnalyticsArchiveAdmin(admin.ModelAdmin):
         if request.method == "POST":
             from .tasks import send_report_only
 
-            # Allow selecting a custom week start
             week_start_str = request.POST.get("week_start", "") or None
-            result = send_report_only.delay(week_start_str=week_start_str)
 
-            self.message_user(
-                request,
-                f"Report queued (task {result.id}). It will be sent to all enabled recipients shortly.",
-                messages.SUCCESS,
-            )
+            # Try celery first; fall back to synchronous if broker is unreachable
+            try:
+                result = send_report_only.delay(week_start_str=week_start_str)
+                self.message_user(
+                    request,
+                    f"Report queued (task {result.id}). It will be sent to all enabled recipients shortly.",
+                    messages.SUCCESS,
+                )
+            except Exception:
+                # Broker unreachable → run inline
+                logger.warning("Celery broker unreachable, sending report synchronously.")
+                try:
+                    outcome = send_report_only(week_start_str=week_start_str)
+                    self.message_user(
+                        request,
+                        f"Report sent! Visits: {outcome['total_visits']}, "
+                        f"Facility views: {outcome['total_facility_views']}, "
+                        f"Searches: {outcome['total_searches']}.",
+                        messages.SUCCESS,
+                    )
+                except Exception as exc:
+                    self.message_user(
+                        request,
+                        f"Failed to send report: {exc}",
+                        messages.ERROR,
+                    )
+
             return redirect("admin:analytics_analyticsarchive_changelist")
 
         # GET → show confirmation page

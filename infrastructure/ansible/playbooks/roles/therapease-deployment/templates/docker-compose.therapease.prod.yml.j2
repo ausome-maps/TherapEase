@@ -41,6 +41,7 @@ services:
       - ./.env.therapease
     volumes:
       - backup_data:/home/app/web/backups
+      - media_data:/home/app/web/files
     labels:
       - "traefik.http.routers.api.rule=Host(`{{therapease_api_domain_name}}`)" # need to be configured in DNS registrar
       - "traefik.http.routers.api.tls=true"
@@ -89,13 +90,47 @@ services:
       - traefik.enable=false
   cache:
     container_name: therapease_cache
-    image: redis:6.0.20-alpine3.18
+    image: redis:7-alpine
+    networks:
+      - internal
+    labels:
+      - traefik.enable=false
+  worker:
+    container_name: therapease_worker
+    image: ghcr.io/ausome-maps/therapease-api:latest
+    command: celery -A django_app worker -l info
+    env_file:
+      - ./.env.therapease
+    volumes:
+      - media_data:/home/app/web/files
+    depends_on:
+      - cache
+      - db
+    networks:
+      - internal
+    labels:
+      - traefik.enable=false
+  beat:
+    container_name: therapease_beat
+    image: ghcr.io/ausome-maps/therapease-api:latest
+    command: celery -A django_app beat -l info
+    env_file:
+      - ./.env.therapease
+    depends_on:
+      - cache
+      - db
     networks:
       - internal
     labels:
       - traefik.enable=false
 
 volumes:
+  media_data:
+    driver: local
+    driver_opts:
+      o: 'bind'
+      device: /datadrive/media
+      type: 'none'
   backup_data:
     driver: local
     driver_opts:
