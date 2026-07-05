@@ -309,16 +309,13 @@ if DEBUG:
 
 DEV_EMAIL = int(os.environ.get("DEV_EMAIL", 0))
 if DEV_EMAIL or not DEBUG:
-    # EMAIL SETTINGS via Sendgrid
-    EMAIL_HOST = os.getenv("SENDGRID_HOST", "smtp.sendgrid.net")
-    EMAIL_REST_HOST = os.getenv(
-        "SENDGRID_REST_HOST", "https://api.sendgrid.com/v3/mail/send"
-    )
-    EMAIL_HOST_USER = os.getenv("SENDGRID_HOST_USER", "apikey")
-    EMAIL_HOST_PASSWORD = os.getenv("SENDGRID_HOST_PASSWORD", "")
-    EMAIL_PORT = os.getenv("SENDGRID_PORT", 465)
-    EMAIL_USE_TLS = False
-    EMAIL_USE_SSL = True
+    # EMAIL SETTINGS via Brevo (Sendinblue)
+    EMAIL_HOST = os.getenv("BREVO_SMTP_HOST", "smtp-relay.brevo.com")
+    EMAIL_HOST_USER = os.getenv("BREVO_SMTP_USER", "")
+    EMAIL_HOST_PASSWORD = os.getenv("BREVO_SMTP_KEY", "")
+    EMAIL_PORT = int(os.getenv("BREVO_SMTP_PORT", 587))
+    EMAIL_USE_TLS = True
+    EMAIL_USE_SSL = False
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     DEFAULT_FROM_EMAIL = os.getenv("ADMIN_EMAIL", "admin@sample.com")
 

@@ -21,6 +21,7 @@ minio:
   root: t_minio
   password: tpasswordminio
 
-sendgrid_api_key: api_key
+brevo_smtp_key: xsmtp-placeholder
+brevo_smtp_user: login@sample.com
 therapease_system_email: system@sample.com
 therapease_admin_email: admin@sample.com
