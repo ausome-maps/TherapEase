@@ -29,6 +29,11 @@ urlpatterns = [
         AnalyticsViewset.as_view({"post": "track_search_query"}),
         name="analytics-track-search-query",
     ),
+    path(
+        "cleanup-bots",
+        AnalyticsViewset.as_view({"post": "cleanup_bots"}),
+        name="analytics-cleanup-bots",
+    ),
 ]
 
 urlpatterns += router.urls

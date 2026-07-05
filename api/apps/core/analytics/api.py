@@ -1,5 +1,5 @@
 import logging
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
@@ -10,6 +10,7 @@ from .serializers import (
     FacilityViewSerializer,
     SearchQuerySerializer,
 )
+from .utils import is_bot_request
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +20,9 @@ class AnalyticsViewset(viewsets.GenericViewSet):
 
     @action(detail=False, methods=["post"], url_path="page-visit")
     def track_page_visit(self, request):
-        """Track a page visit."""
+        """Track a page visit (bot traffic is silently dropped)."""
+        if is_bot_request(request):
+            return Response({"status": "ignored", "reason": "bot"}, status=status.HTTP_200_OK)
         serializer = PageVisitSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -27,7 +30,9 @@ class AnalyticsViewset(viewsets.GenericViewSet):
 
     @action(detail=False, methods=["post"], url_path="facility-view")
     def track_facility_view(self, request):
-        """Track a facility detail page view."""
+        """Track a facility detail page view (bot traffic is silently dropped)."""
+        if is_bot_request(request):
+            return Response({"status": "ignored", "reason": "bot"}, status=status.HTTP_200_OK)
         serializer = FacilityViewSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -35,11 +40,37 @@ class AnalyticsViewset(viewsets.GenericViewSet):
 
     @action(detail=False, methods=["post"], url_path="search-query")
     def track_search_query(self, request):
-        """Track a search query."""
+        """Track a search query (bot traffic is silently dropped)."""
+        if is_bot_request(request):
+            return Response({"status": "ignored", "reason": "bot"}, status=status.HTTP_200_OK)
         serializer = SearchQuerySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({"status": "ok"}, status=201)
+
+    # ── Admin / cleanup actions ────────────────────────────────────────
+
+    @action(
+        detail=False,
+        methods=["post"],
+        url_path="cleanup-bots",
+        permission_classes=[AnalyticsPermissions],
+    )
+    def cleanup_bots(self, request):
+        """Remove all analytics entries that match known bot patterns.
+
+        Only accessible to staff/superusers.
+        """
+        if not (request.user.is_staff or request.user.is_superuser):
+            return Response({"error": "Permission denied"}, status=403)
+
+        from .tasks import cleanup_bot_analytics
+
+        result = cleanup_bot_analytics.delay()
+        return Response({
+            "status": "queued",
+            "task_id": result.id,
+        })
 
 
 class PageVisitViewset(viewsets.ReadOnlyModelViewSet):
@@ -51,7 +82,7 @@ class PageVisitViewset(viewsets.ReadOnlyModelViewSet):
         qs = super().get_queryset()
         days = self.request.query_params.get("days")
         if days:
-            from datetime import datetime, timedelta, timezone
+            from datetime import timedelta
             from django.utils import timezone
 
             cutoff = timezone.now() - timedelta(days=int(days))

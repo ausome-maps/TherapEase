@@ -9,12 +9,13 @@ from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.mail import EmailMultiAlternatives
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.db.models.functions import TruncDate
 from django.template.loader import get_template
 from django.utils import timezone
 
 from .models import AnalyticsArchive, FacilityView, PageVisit, ReportRecipient, SearchQuery
+from .utils import is_bot
 
 logger = get_task_logger(__name__)
 
@@ -370,4 +371,128 @@ def send_weekly_analytics_report():
         "total_facility_views": context["total_facility_views"],
         "total_searches": context["total_searches"],
         "archive_id": archive_result.get("archive_id") if archive_result else None,
+    }
+
+
+@shared_task
+def send_report_only(week_start_str: str | None = None) -> dict:
+    """Send the weekly analytics report email **without** archiving data.
+
+    Unlike ``send_weekly_analytics_report``, this task does **not** export
+    a CSV, does **not** create an AnalyticsArchive record, and does **not**
+    delete any rows from the live tables.  It simply builds the summary
+    and emails it to the configured recipients.
+
+    If *week_start_str* is ``None``, defaults to the previous calendar week.
+    """
+    now = timezone.now()
+
+    if week_start_str:
+        report_monday = datetime.strptime(week_start_str, "%Y-%m-%d").date()
+    else:
+        days_since_monday = now.weekday()
+        report_monday = (now - timedelta(days=days_since_monday + 7)).date()
+
+    report_sunday = report_monday + timedelta(days=6)
+
+    week_ago = timezone.make_aware(
+        datetime.combine(report_monday, datetime.min.time())
+    )
+    week_end = timezone.make_aware(
+        datetime.combine(report_sunday, datetime.max.time())
+    )
+
+    context = _build_report_context(week_ago, now)
+
+    text_content = get_template("email/analytics_weekly_report.txt").render(context)
+    html_content = get_template("email/analytics_weekly_report.html").render(context)
+
+    subject = (
+        f"[{settings.SITE_NAME}] Weekly Analytics Report: "
+        f"{report_monday.strftime('%b %d')} – {report_sunday.strftime('%b %d, %Y')}"
+    )
+    from_email = settings.DEFAULT_FROM_EMAIL
+
+    recipients = list(
+        ReportRecipient.objects.filter(enabled=True).values_list("email", flat=True)
+    )
+    if not recipients:
+        recipients = [settings.DEFAULT_FROM_EMAIL]
+
+    msg = EmailMultiAlternatives(subject, text_content, from_email, recipients)
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
+
+    logger.info(
+        "Report-only sent (no archive). Visits: %d, Facility views: %d, Searches: %d",
+        context["total_visits"],
+        context["total_facility_views"],
+        context["total_searches"],
+    )
+    return {
+        "total_visits": context["total_visits"],
+        "total_facility_views": context["total_facility_views"],
+        "total_searches": context["total_searches"],
+        "week_start": report_monday.isoformat(),
+        "week_end": report_sunday.isoformat(),
+    }
+
+
+@shared_task
+def cleanup_bot_analytics() -> dict:
+    """Scan all analytics tables and delete rows from known bots/crawlers.
+
+    Scheduled to run daily.  Deletes records where ``user_agent`` matches
+    bot patterns.  FacilityView and SearchQuery rows are joined via
+    ``session_id`` to PageVisit to infer bot status for rows that don't
+    carry their own user-agent.
+    """
+
+    # ── PageVisit ───────────────────────────────────────────────────
+    pv_qs = PageVisit.objects.all()
+    pv_bot_ids: list[str] = []
+    for pv in pv_qs.iterator(chunk_size=2000):
+        if is_bot(pv.user_agent):
+            pv_bot_ids.append(str(pv.id))
+
+    pv_deleted = 0
+    if pv_bot_ids:
+        pv_deleted, _ = PageVisit.objects.filter(id__in=pv_bot_ids).delete()
+
+    # ── FacilityView ────────────────────────────────────────────────
+    # Join via session_id to find bot-associated facility views
+    bot_session_ids = set(
+        PageVisit.objects.filter(
+            ~Q(session_id=""),
+            id__in=pv_bot_ids if pv_bot_ids else [],
+        ).values_list("session_id", flat=True)
+    )
+    # Also check facility views with obviously bot-like facility_id
+    # patterns (though rare, some bots hit random IDs)
+    fv_deleted = 0
+    if bot_session_ids:
+        fv_deleted, _ = FacilityView.objects.filter(
+            session_id__in=bot_session_ids
+        ).delete()
+
+    # ── SearchQuery ──────────────────────────────────────────────────
+    sq_deleted = 0
+    if bot_session_ids:
+        sq_deleted, _ = SearchQuery.objects.filter(
+            session_id__in=bot_session_ids
+        ).delete()
+
+    total = pv_deleted + fv_deleted + sq_deleted
+    logger.info(
+        "Bot cleanup complete: PV=%d  FV=%d  SQ=%d  (total %d)",
+        pv_deleted,
+        fv_deleted,
+        sq_deleted,
+        total,
+    )
+    return {
+        "page_visits_deleted": pv_deleted,
+        "facility_views_deleted": fv_deleted,
+        "search_queries_deleted": sq_deleted,
+        "total_deleted": total,
     }

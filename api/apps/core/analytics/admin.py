@@ -1,4 +1,9 @@
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.shortcuts import redirect
+from django.template.response import TemplateResponse
+from django.urls import path
+from django.utils import timezone
+
 from .models import AnalyticsArchive, FacilityView, PageVisit, ReportRecipient, SearchQuery
 
 
@@ -31,10 +36,57 @@ class SearchQueryAdmin(admin.ModelAdmin):
 
 @admin.register(AnalyticsArchive)
 class AnalyticsArchiveAdmin(admin.ModelAdmin):
-    list_display = ["week_start", "week_end", "page_visits_count", "facility_views_count", "search_queries_count", "created_at"]
+    list_display = [
+        "week_start",
+        "week_end",
+        "page_visits_count",
+        "facility_views_count",
+        "search_queries_count",
+        "created_at",
+    ]
     list_filter = ["week_start"]
     readonly_fields = ["id", "csv_file", "created_at"]
     ordering = ["-week_start"]
+
+    # ── Custom admin views ─────────────────────────────────────────
+
+    change_list_template = "admin/analytics/analyticsarchive_change_list.html"
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                "send-report/",
+                self.admin_site.admin_view(self.send_report_view),
+                name="analytics-analyticsarchive-send-report",
+            ),
+        ]
+        return custom_urls + urls
+
+    def send_report_view(self, request):
+        """Admin view that triggers a report-only send (no archive, no deletion)."""
+        if request.method == "POST":
+            from .tasks import send_report_only
+
+            # Allow selecting a custom week start
+            week_start_str = request.POST.get("week_start", "") or None
+            result = send_report_only.delay(week_start_str=week_start_str)
+
+            self.message_user(
+                request,
+                f"Report queued (task {result.id}). It will be sent to all enabled recipients shortly.",
+                messages.SUCCESS,
+            )
+            return redirect("admin:analytics_analyticsarchive_changelist")
+
+        # GET → show confirmation page
+        context = {
+            **self.admin_site.each_context(request),
+            "title": "Send analytics report",
+            "opts": self.model._meta,
+            "today": timezone.now().date().isoformat(),
+        }
+        return TemplateResponse(request, "admin/analytics/send_report_confirm.html", context)
 
 
 @admin.register(ReportRecipient)

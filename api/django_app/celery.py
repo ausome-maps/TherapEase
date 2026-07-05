@@ -18,6 +18,11 @@ app.conf.beat_schedule = {
         "schedule": crontab(hour="8", minute="0", day_of_week="1"),
         "args": (),
     },
+    "daily-bot-cleanup": {
+        "task": "apps.core.analytics.tasks.cleanup_bot_analytics",
+        "schedule": crontab(hour="3", minute="0"),
+        "args": (),
+    },
 }
 
 # WARNING: Changing the timezone in django can affect the periodic tasks.

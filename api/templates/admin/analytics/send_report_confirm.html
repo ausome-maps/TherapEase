@@ -1,0 +1,49 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+<div id="content-main">
+
+  <h1>📧 Send Analytics Report</h1>
+
+  <p style="margin-bottom: 16px;">
+    This will generate and email the weekly analytics summary to
+    <strong>all enabled recipients</strong> listed in
+    <a href="{% url 'admin:analytics_reportrecipient_changelist' %}">Report Recipients</a>.
+  </p>
+
+  <div style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 6px; padding: 12px 16px; margin-bottom: 20px;">
+    <strong>⚠️ No archiving or deletion will occur.</strong>
+    This only sends the summary email — raw analytics data remains untouched.
+  </div>
+
+  <form method="post" style="max-width: 520px;">
+    {% csrf_token %}
+
+    <fieldset class="module aligned" style="margin-bottom: 20px;">
+      <div class="form-row">
+        <label for="week_start" style="font-weight: 600;">Week start date (Monday):</label>
+        <input
+          type="date"
+          id="week_start"
+          name="week_start"
+          value="{{ today }}"
+          style="width: 200px; padding: 6px 8px; margin-top: 4px;"
+        />
+        <p class="help" style="color: #6b7280; font-size: 13px; margin-top: 4px;">
+          Leave blank or select a Monday. The report will cover that Monday through the following Sunday.
+        </p>
+      </div>
+    </fieldset>
+
+    <div class="submit-row">
+      <input type="submit" value="📧 Send Report Now" class="default"
+             style="background: #f87171; font-weight: bold;" />
+      <a href="{% url 'admin:analytics_analyticsarchive_changelist' %}"
+         class="button cancel-link"
+         style="margin-left: 12px;">Cancel</a>
+    </div>
+  </form>
+
+</div>
+{% endblock %}
